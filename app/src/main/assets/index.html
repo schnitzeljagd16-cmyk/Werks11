@@ -25,13 +25,21 @@
   --body:"Source Sans 3","Roboto","Segoe UI",sans-serif;
   color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root{
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]){
   --bg:#0f0b0c; --surface:#1b1517; --surface-2:#221b1d; --fg:#f4edef; --muted:#a6989b; --line:#30272a;
   --red:#ee1c36; --red-2:#b3001a; --soft:#33171c; --night:#070405; --night-2:#2b0a10;
   --win:#3fca7e; --draw:#e8b13a; --loss:#ff4a5f;
   --cl:#6d97ff; --el:#ffa13d; --ecl:#4fd1a0; --rel:#ff4a5f;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px -10px rgba(0,0,0,.7);
   color-scheme:dark}}
+:root[data-theme=dark]{
+  --bg:#0f0b0c; --surface:#1b1517; --surface-2:#221b1d; --fg:#f4edef; --muted:#a6989b; --line:#30272a;
+  --red:#ee1c36; --red-2:#b3001a; --soft:#33171c; --night:#070405; --night-2:#2b0a10;
+  --win:#3fca7e; --draw:#e8b13a; --loss:#ff4a5f;
+  --cl:#6d97ff; --el:#ffa13d; --ecl:#4fd1a0; --rel:#ff4a5f;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px -10px rgba(0,0,0,.7);
+  color-scheme:dark}
+:root[data-theme=light]{color-scheme:light}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;
@@ -44,7 +52,8 @@ button{font:inherit;color:inherit}
 /* Kopfzeile */
 header{position:sticky;top:0;z-index:20;background:var(--red);color:#fff;padding-top:env(safe-area-inset-top,0px);
   background-image:linear-gradient(115deg,transparent 0 62%,rgba(0,0,0,.14) 62% 70%,transparent 70% 76%,rgba(0,0,0,.14) 76% 84%,transparent 84%)}
-@media (prefers-color-scheme: dark){header{background-color:#1a0a0d;border-bottom:1px solid #3a1118}}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) header{background-color:#1a0a0d;border-bottom:1px solid #3a1118}}
+:root[data-theme=dark] header{background-color:#1a0a0d;border-bottom:1px solid #3a1118}
 header .wrap{display:flex;align-items:center;gap:8px;height:58px}
 .crest{width:36px;height:36px;border-radius:10px;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
 .brand{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -360,7 +369,8 @@ tr.me td{background:var(--soft);font-weight:700}
 .tro b{display:block;font:700 16px/1.1 var(--display)}
 .tro small{font-size:12.5px;color:var(--muted)}
 .tro.gold{background:linear-gradient(140deg,#fff7d6,var(--surface));border-color:#e9cf6a}
-@media (prefers-color-scheme: dark){.tro.gold{background:linear-gradient(140deg,#3a3010,var(--surface));border-color:#7a6420}}
+@media (prefers-color-scheme: dark){:root:not([data-theme=light]) .tro.gold{background:linear-gradient(140deg,#3a3010,var(--surface));border-color:#7a6420}}
+:root[data-theme=dark] .tro.gold{background:linear-gradient(140deg,#3a3010,var(--surface));border-color:#7a6420}
 .chron{position:relative;padding-left:22px}
 .chron::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
 .ch{position:relative;padding:0 0 16px}
@@ -394,6 +404,27 @@ tr.me td{background:var(--soft);font-weight:700}
 .upd{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--fg);color:var(--bg);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
 .upd b{display:block;font-size:15px}
 .upd small{display:block;font-size:12.5px;opacity:.8}
+/* Suche, Merken, Abzeichen */
+.search{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:0 10px;margin-bottom:10px;box-shadow:var(--shadow)}
+.search svg{width:18px;height:18px;color:var(--muted);flex:none}
+.search input{flex:1;min-width:0;border:0;background:none;color:var(--fg);font:500 15px/1 var(--body);padding:12px 0;outline:none}
+.search input::-webkit-search-cancel-button{display:none}
+.search button{border:0;background:none;color:var(--muted);font-size:15px;cursor:pointer;padding:6px}
+.savebtn{margin-left:auto;font-size:16px}
+.savebtn.on{color:var(--draw);opacity:1}
+.savebtn+.hidebtn{margin-left:0}
+.bench span.on{background:var(--red);border-color:var(--red);color:#fff}
+.badges{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bdg{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:3px;opacity:.75}
+.bdg.on{opacity:1;border-color:var(--draw);background:linear-gradient(150deg,var(--soft),var(--surface))}
+.bdg .bi{font-size:26px;filter:grayscale(1)}
+.bdg.on .bi{filter:none}
+.bdg b{font-size:14.5px}
+.bdg small{font-size:12px;color:var(--muted);line-height:1.3}
+.bdg em{font-style:normal;font:700 11px/1 var(--body);color:var(--muted);margin-top:4px}
+.bdg.on em{color:var(--win)}
+.game.k{background:linear-gradient(150deg,#6b2bb3,#2e0f55)}
+.game.b{background:linear-gradient(150deg,#c58a00,#5c3d00)}
 /* Spielerprofil */
 .phero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;
   background:radial-gradient(90% 80% at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(150deg,#d6001c,#5e000d)}
@@ -514,8 +545,8 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
   <div class="wrap">
     <img class="crest" src="icon-192.png" alt="" aria-hidden="true">
     <div class="brand"><b>Werks<span class="eleven">11</span></b><small id="stamp">Lade …</small></div>
-    <button class="iconbtn" id="bell" type="button" aria-label="Benachrichtigungen" title="Benachrichtigungen">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+    <button class="iconbtn" id="bell" type="button" aria-label="Einstellungen" title="Einstellungen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
     </button>
     <button class="iconbtn" id="refresh" type="button" aria-label="Aktualisieren" title="Aktualisieren">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
@@ -540,6 +571,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       </div>
       <div style="margin-top:22px">
         <div class="sec-h"><h2>Neueste Meldungen</h2></div>
+        <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Meldungen durchsuchen, z. B. Schick" autocomplete="off" aria-label="Meldungen durchsuchen"><button type="button" id="qClear" hidden aria-label="Suche löschen">✕</button></div>
         <div class="filters" id="filters" role="group" aria-label="Nach Quelle filtern"></div>
         <div class="feed" id="newsList">
           <div class="sk" style="height:220px;border-radius:18px"></div><div class="sk" style="height:96px"></div><div class="sk" style="height:96px"></div>
@@ -1127,7 +1159,16 @@ function rumorCard(i){
     <div class="baro r-${i.rel}"><span class="bars"><i></i><i></i><i></i></span>${label}</div>
     <div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span>${hideBtn(i)}</div></a>`;
 }
-function hideBtn(i){ return `<button type="button" class="hidebtn" data-hide="${esc(artKey(i))}" aria-label="Meldung ausblenden" title="Passt nicht – ausblenden">✕</button>`; }
+function hideBtn(i){ const sv=isSaved(i); return `<button type="button" class="hidebtn savebtn${sv?" on":""}" data-save="${esc(artKey(i))}" aria-label="${sv?"Aus Merkliste entfernen":"Merken"}" title="Merken">${sv?"★":"☆"}</button><button type="button" class="hidebtn" data-hide="${esc(artKey(i))}" aria-label="Meldung ausblenden" title="Passt nicht – ausblenden">✕</button>`; }
+function savedMap(){ return load("saved")||{}; }
+function savedList(){ return Object.values(savedMap()).sort((a,b)=>b.savedAt-a.savedAt); }
+function isSaved(i){ return !!savedMap()[artKey(i)]; }
+function toggleSave(key){
+  const m=savedMap();
+  if(m[key]) delete m[key];
+  else { const it=[...(state.news||[]),...(state.rumors||[])].find(x=>artKey(x)===key); if(it) m[key]={title:it.title,link:it.link,source:it.source,t:it.t,img:it.img||"",desc:it.desc||"",savedAt:Date.now()}; }
+  store("saved",m); renderNews(); renderRumors(); badge();
+}
 function logo(url,name){ return `<div class="logo">${url?`<img src="${esc(url)}" alt="" onerror="this.outerHTML='<span class=mono>${esc(initials(name))}</span>'">`:`<span class="mono">${esc(initials(name))}</span>`}</div>`; }
 function outcome(m){ if(!m.finished||m.g1==null) return ""; const us=m.home?m.g1:m.g2, them=m.home?m.g2:m.g1; return us>them?"w":us<them?"l":"d"; }
 
@@ -1155,26 +1196,37 @@ function openSources(){
     ${Object.keys(hiddenIds()).length?`<button type="button" class="bigbtn sec" data-unhide>Ausgeblendete Meldungen wieder zeigen (${Object.keys(hiddenIds()).length})</button>`:""}`);
 }
 function setSrc(off){ store("srcPrefs",{off}); renderNews(); renderRumors(); }
+document.addEventListener("input",e=>{ if(e.target.id==="q"){ newsLimit=20; renderNews(); } });
+document.addEventListener("click",e=>{ if(e.target.closest("#qClear")){ $("q").value=""; renderNews(); } });
 document.addEventListener("change",e=>{ const c=e.target.closest("[data-srcpref]"); if(!c) return; const p=srcPrefs(); const n=c.dataset.srcpref; p.off=p.off.filter(x=>x!==n); if(!c.checked) p.off.push(n); setSrc(p.off); });
 document.addEventListener("click",e=>{
   const a=e.target.closest("[data-srcall]"); if(a){ const all=[...new Set(SOURCES.map(x=>x[0]).concat(["Weitere Quellen"]))]; const m=a.dataset.srcall;
     setSrc(m==="on"?[]:m==="off"?all:all.filter(n=>reliability(n)!=="hoch")); openSources(); return; }
   if(e.target.closest("[data-unhide]")){ store("hiddenNews",{}); renderNews(); renderRumors(); openSources(); return; }
-  if(e.target.closest("#srcSettings")){ openSources(); return; }
+  if(e.target.closest("#srcSettings")||e.target.closest("#srcSettings2")){ openSources(); return; }
+  const sv=e.target.closest("[data-save]"); if(sv){ e.preventDefault(); e.stopImmediatePropagation(); toggleSave(sv.dataset.save); return; }
   const h=e.target.closest("[data-hide]"); if(h){ e.preventDefault(); e.stopImmediatePropagation(); const x=hiddenIds(); x[h.dataset.hide]=Date.now(); store("hiddenNews",x); renderNews(); renderRumors();
     notice("Meldung ausgeblendet. Über „Quellen“ kannst du sie wiederherstellen."); setTimeout(()=>notice(""),4000); }
 },true);
 function renderNews(){
   if(!state.news.length && !state.ts.news) return; // erster Start: Platzhalter stehen lassen
-  const vis=visibleNews(state.news), counts={};
+  const q=norm(($("q")&&$("q").value)||"").trim();
+  const saved=savedList();
+  let vis=visibleNews(state.news);
+  if(q) vis=vis.concat(visibleNews(state.rumors).filter(r=>!vis.some(v=>artKey(v)===artKey(r)))).filter(i=>q.split(/\s+/).every(w=>norm(i.title+" "+(i.desc||"")+" "+i.source).includes(w))).sort((a,b)=>b.t-a.t);
+  if($("qClear")) $("qClear").hidden=!q;
+  const counts={};
   vis.forEach(i=>{const k=srcKey(i.source); counts[k]=(counts[k]||0)+1;});
   const keys=Object.keys(counts).sort((a,b)=>(a==="Weitere Quellen")-(b==="Weitere Quellen")||counts[b]-counts[a]);
-  if(srcFilter!=="Alle" && !counts[srcFilter]) srcFilter="Alle";
-  $("filters").innerHTML=[`<button type="button" data-src="Alle" aria-pressed="${srcFilter==="Alle"}">Alle<span>${vis.length}</span></button>`]
+  if(srcFilter!=="Alle" && srcFilter!=="Gemerkt" && !counts[srcFilter]) srcFilter="Alle";
+  if(srcFilter==="Gemerkt" && !saved.length) srcFilter="Alle";
+  $("filters").innerHTML=[`<button type="button" data-src="Alle" aria-pressed="${srcFilter==="Alle"}">${q?"Treffer":"Alle"}<span>${vis.length}</span></button>`]
+    .concat(saved.length?[`<button type="button" data-src="Gemerkt" aria-pressed="${srcFilter==="Gemerkt"}">★ Gemerkt<span>${saved.length}</span></button>`]:[])
     .concat(keys.map(k=>`<button type="button" data-src="${esc(k)}" aria-pressed="${srcFilter===k}">${esc(k)}<span>${counts[k]}</span></button>`))
     .concat([`<button type="button" id="srcSettings" class="srcset">⚙ Quellen</button>`]).join("");
   $("filters").hidden=false;
-  const list=srcFilter==="Alle"?vis:vis.filter(i=>srcKey(i.source)===srcFilter);
+  const list=srcFilter==="Gemerkt"?saved:srcFilter==="Alle"?vis:vis.filter(i=>srcKey(i.source)===srcFilter);
+  if(q && !list.length){ $("newsList").innerHTML=`<div class="empty">Keine Meldungen zu „${esc($("q").value)}“.</div>`; return; }
   if(!list.length){ $("newsList").innerHTML=`<div class="empty">${state.news.length?"Keine Meldungen aus den gewählten Quellen. Tippe auf „⚙ Quellen“, um weitere einzuschalten.":"Keine Meldungen gefunden. Tippe oben auf Aktualisieren."}</div>`; return; }
   const lead=list[0]; // streng nach Zeit: die neueste Meldung ist immer oben
   const rest=list.filter(i=>i!==lead).slice(0,newsLimit);
@@ -1415,7 +1467,7 @@ function tvInfo(m){
 /* ---------- „Ich schaue das Spiel“ (Spoiler-Schutz) ---------- */
 function watchList(){ const w=load("watch")||{}; const now=Date.now(); Object.keys(w).forEach(k=>{ if(now-w[k]>3*86400e3) delete w[k]; }); return w; }
 function isWatching(m){ return !!(m && watchList()[m.id]); }
-function setWatch(id,on){ const w=watchList(); if(on) w[id]=Date.now(); else delete w[id]; store("watch",w); pushNoti(); renderAll(); }
+function setWatch(id,on){ if(on) bump("watch"); const w=watchList(); if(on) w[id]=Date.now(); else delete w[id]; store("watch",w); pushNoti(); renderAll(); }
 function liveOf(m){ return m && !m.finished && Date.now()>=m.t && Date.now()<m.t+3*3600e3; }
 function liveMinute(m){
   const e=Math.floor((Date.now()-m.t)/60000);
@@ -1479,7 +1531,7 @@ function tipBoxHTML(m){
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-tip]"); if(!b) return;
   const id=+b.dataset.tip, m=state.matches.find(x=>x.id===id); if(!m||Date.now()>=m.t) return;
-  const T=tips(); const t=T[id]||{h:0,a:0}; t[b.dataset.k]=Math.max(0,Math.min(15,t[b.dataset.k]+ +b.dataset.d)); t.at=Date.now(); T[id]=t; store("tips",T);
+  const T=tips(); const t=T[id]||{h:0,a:0}; t[b.dataset.k]=Math.max(0,Math.min(15,t[b.dataset.k]+ +b.dataset.d)); t.at=Date.now(); T[id]=t; store("tips",T); badge();
   const box=b.closest(".tipbox"); if(box) box.outerHTML=tipBoxHTML(m); renderFan();
 });
 function openTipps(){
@@ -1530,7 +1582,7 @@ function answerWho(v){
   setTimeout(()=>{ who.i++; who.shown=1; if(who.i<who.rounds.length) showWho(); else endWho(); }, ok?900:1700);
 }
 function endWho(){
-  const best=hs("hsWho"), rec=who.score>best; if(rec) store("hsWho",who.score);
+  const best=hs("hsWho"), rec=who.score>best; if(rec) store("hsWho",who.score); setTimeout(badge,500);
   openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${who.right===who.rounds.length?"Alle erkannt – du kennst deinen Kader!":who.right>=5?"Starke Leistung!":"Da hilft nur: mehr Spiele schauen!"}</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
     <div class="qscore"><div><b>${who.score}</b><small>Punkte</small></div><div><b>${who.right}/${who.rounds.length}</b><small>erkannt</small></div><div><b>${Math.max(best,who.score)}</b><small>Rekord</small></div></div>
     <button type="button" class="bigbtn" data-game="who">Nochmal spielen</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
@@ -1666,7 +1718,9 @@ async function openArticle(item){
       body().innerHTML=articleBlocksHTML(a)+`<p class="legend" style="margin-top:14px">ca. ${Math.max(1,Math.round(words/220))} Min. Lesezeit</p>`;
     }
     foot().innerHTML=`<div class="artsrc">Quelle: ${esc(it.source||new URL(a.url).hostname.replace(/^www\./,""))}. Alle Rechte beim Verlag.</div>
+      <div class="btnrow" style="margin-bottom:10px"><button type="button" class="reveal" data-share="${esc(a.url)}" data-sharetitle="${esc(it.title||a.title)}">Teilen</button>${it.title?`<button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" data-artsave="${esc(artKey(it))}">${isSaved(it)?"★ Gemerkt":"☆ Merken"}</button>`:""}</div>
       <button type="button" class="bigbtn sec" data-inapp="${esc(a.url)}">Originalseite in der App ansehen</button>`;
+    bump("read");
   }catch(e){
     if(!body()) return;
     body().innerHTML=`<div class="notice">Der Artikel konnte nicht direkt geladen werden. Du kannst ihn aber in der App auf der Originalseite ansehen.</div>`;
@@ -1682,7 +1736,7 @@ document.addEventListener("click",e=>{
   const a=e.target.closest("a[href]"); if(!a) return;
   const href=a.getAttribute("href"); if(!/^https?:/i.test(href)) return;
   e.preventDefault(); e.stopPropagation();
-  const it=[...(state.news||[]),...(state.rumors||[])].find(n=>n.link===href);
+  const it=[...(state.news||[]),...(state.rumors||[]),...savedList()].find(n=>n.link===href);
   if(it || a.closest(".story,.card,.rumor,.plnews,.inj,#outBox")) openArticle(it||{link:href,title:a.textContent.trim().replace(/Zur Meldung →/,"")});
   else openInAppBrowser(href);
 },true);
@@ -1869,6 +1923,7 @@ function openMatch(id){
     ${tipBoxHTML(m)}
     ${m.finished?"":`<div class="box"><h4>${ICON.tv}Im TV &amp; Stream</h4><div class="tv"><div class="chan">${tv.main.map(c=>`<b>${esc(c)}</b>`).join("")}${tv.alt.map(c=>`<b class="alt">${esc(c)}</b>`).join("")}</div></div><p>${esc(tv.note)} Sender können sich kurzfristig ändern.</p></div>`}
     ${!m.finished&&m.t-Date.now()<3*86400e3 || live?`<div class="box"><h4>Aufstellung Bayer 04</h4><div id="lineupBox"><div class="sk" style="height:120px"></div></div></div>`:""}
+    ${m.finished&&!hide?motmHTML(m):""}
     ${(live||m.finished)&&!hide?`<div class="box" id="tickerBox"><h4>${live?'<span class="pill live" style="font-size:11px;padding:4px 7px">Live</span> Ticker':"Spielverlauf &amp; Statistik"}</h4><div class="sk" style="height:110px"></div></div>`:""}
     ${!m.finished&&!live?`<div class="box" id="oppBox"><h4>${ICON.vs}Gegner-Check: ${esc(short(opp))}</h4><div class="sk" style="height:110px"></div></div>`:""}
     ${!hide&&(m.finished||m.goals.length)?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
@@ -2025,7 +2080,7 @@ function renderFact(){
   const [cat,txt]=B04_FACTS[factIdx];
   $("factBox").innerHTML=`<div class="factcard"><div class="k"><span class="chipc">${esc(cat)}</span><button type="button" id="nextFact">Nächster Fakt →</button></div><p data-fact="${factIdx}" role="button" tabindex="0">${esc(txt)}<span class="factmore">Antippen für mehr ›</span></p></div>`;
 }
-function openFact(i){
+function openFact(i){ bump("fact");
   const [cat,txt]=B04_FACTS[i], [more,wiki]=FACT_MORE[i]||["",""];
   openSheetRaw(`<div class="factcard" style="box-shadow:none"><div class="k"><span class="chipc" id="sheetTitle">${esc(cat)}</span></div><p style="cursor:default">${esc(txt)}</p></div>
     ${more?`<div class="box"><h4>${ICON.bulb}Die Geschichte dahinter</h4><p style="margin:0;color:var(--fg);font-size:15.5px;line-height:1.55">${esc(more)}</p>
@@ -2119,6 +2174,8 @@ function renderFan(){
     <button type="button" class="game q" data-game="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg><span class="hs">Rekord ${hs("hsQuiz")}</span><span><b>Werkself-Quiz</b><br><small>10 Fragen, schnell sein lohnt sich</small></span></button>
     <button type="button" class="game t" data-game="tipp"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="hs">${tipTotal().p} Punkte</span><span><b>Tippspiel</b><br><small>Tippe die Ergebnisse der Werkself</small></span></button>
     <button type="button" class="game w" data-game="who"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><span class="hs">Rekord ${hs("hsWho")}</span><span><b>Wer ist das?</b><br><small>Erkenne Spieler an Hinweisen</small></span></button>
+    <button type="button" class="game k" data-game="week"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="hs">Diese Woche ${hs("hsWeek_"+weekKey())}</span><span><b>Wochenquiz</b><br><small>Fragen zum aktuellen Geschehen</small></span></button>
+    <button type="button" class="game b" data-game="badges"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="M8.5 14l-2 7 5.5-3 5.5 3-2-7"/></svg><span class="hs">${Object.keys(load("badgesGot")||{}).length}/${BADGES.length} Abzeichen</span><span><b>Meine Saison</b><br><small>Abzeichen und Spieler des Spiels</small></span></button>
     <button type="button" class="game e" data-game="pen"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg><span class="hs">Rekord ${hs("hsPen")}</span><span><b>Elfer-König</b><br><small>Wie viele verwandelst du in Folge?</small></span></button>
   </div>`;
 }
@@ -2245,7 +2302,7 @@ function renderClub(){
     $("clubHistorie").dataset.done="1";
   }
 }
-function openLegend(key){
+function openLegend(key){ bump("legend");
   const [kind,i]=key.split(":"); const L=(kind==="c"?LEGEND_COACHES:LEGENDS)[+i]; if(!L) return;
   const [name,role,years,desc,facts,wiki]=L;
   openSheetRaw(`<div class="phero" data-nr=""><div class="ph" id="lgPhoto">${esc(initials(name))}</div>
@@ -2260,6 +2317,104 @@ document.addEventListener("click",e=>{
   const l=e.target.closest("[data-legend]"); if(l) openLegend(l.dataset.legend);
 });
 
+/* ---------- Teilen ---------- */
+async function shareLink(title,url){
+  if(NATIVE && typeof window.AndroidNet.share==="function"){ window.AndroidNet.share(title,url); return; }
+  try{ if(navigator.share){ await navigator.share({title,url}); return; } }catch(e){ return; }
+  try{ await navigator.clipboard.writeText(title+"\n"+url); notice("Link kopiert."); setTimeout(()=>notice(""),2500); }catch(e){ notice(url); }
+}
+document.addEventListener("click",e=>{
+  const sh=e.target.closest("[data-share]"); if(sh){ shareLink(sh.dataset.sharetitle||"Werks11",sh.dataset.share); return; }
+  const as=e.target.closest("[data-artsave]"); if(as){ toggleSave(as.dataset.artsave); as.textContent=savedMap()[as.dataset.artsave]?"★ Gemerkt":"☆ Merken"; }
+});
+
+/* ---------- Darstellung ---------- */
+function applyLook(){
+  const l=load("look")||{}; const r=document.documentElement;
+  if(l.theme==="light"||l.theme==="dark") r.setAttribute("data-theme",l.theme); else r.removeAttribute("data-theme");
+  document.body.style.zoom=({s:0.9,m:1,l:1.12,xl:1.25})[l.size||"m"];
+}
+function setLook(k,v){ const l=load("look")||{}; l[k]=v; store("look",l); applyLook(); }
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-look]"); if(b){ const [k,v]=b.dataset.look.split(":"); setLook(k,v); b.parentNode.querySelectorAll("[data-look]").forEach(x=>x.setAttribute("aria-pressed",String(x===b))); } });
+applyLook();
+
+/* ---------- Zähler & Abzeichen ---------- */
+function stats(){ return load("me")||{}; }
+function bump(k,n){ const m=stats(); m[k]=(m[k]||0)+(n||1); store("me",m); badge(k); }
+(function(){ const m=stats(); const d=new Date().toDateString(); m.days=m.days||[]; if(!m.days.includes(d)){ m.days.push(d); m.days=m.days.slice(-60); store("me",m); } })();
+function streakDays(){ const m=stats(); const set=new Set(m.days||[]); let n=0; const d=new Date(); while(set.has(d.toDateString())){ n++; d.setDate(d.getDate()-1); } return n; }
+const BADGES=[
+  ["stamm","Stammgast","7 Tage hintereinander reingeschaut","📅",()=>streakDays(),7],
+  ["leser","Bücherwurm","10 Artikel in der App gelesen","📰",()=>stats().read||0,10],
+  ["quiz","Quizmaster","800 Punkte im Werkself-Quiz","🧠",()=>hs("hsQuiz"),800],
+  ["week","Am Puls der Zeit","Wochenquiz gespielt","🗓️",()=>stats().weekq||0,1],
+  ["pen","Elfer-König","5 Elfmeter in Folge verwandelt","🥅",()=>hs("hsPen"),5],
+  ["pen10","Eiskalt","10 Elfmeter in Folge","🧊",()=>hs("hsPen"),10],
+  ["who","Kaderkenner","600 Punkte bei „Wer ist das?“","🕵️",()=>hs("hsWho"),600],
+  ["tipp","Tippkönig","10 Punkte im Tippspiel","🎯",()=>tipTotal().p,10],
+  ["exakt","Volltreffer","Ein Ergebnis exakt getippt","💯",()=>state.matches.filter(m=>tipPoints(m,tips()[m.id])===4).length,1],
+  ["motm","Experte","3× Spieler des Spiels gewählt","⭐",()=>Object.keys(load("motm")||{}).length,3],
+  ["legend","Historiker","5 Legenden angeschaut","🏛️",()=>stats().legend||0,5],
+  ["fact","Fakten-Fan","10 Fakten gelesen","💡",()=>stats().fact||0,10],
+  ["save","Sammler","5 Meldungen gemerkt","★",()=>savedList().length,5],
+  ["spoil","Spoiler-frei","„Ich schaue das Spiel“ genutzt","🙈",()=>stats().watch||0,1]
+];
+function badge(){
+  const got=load("badgesGot")||{}; let fresh=null;
+  BADGES.forEach(([id,name,,icon,f,goal])=>{ try{ if(!got[id] && f()>=goal){ got[id]=Date.now(); fresh=[name,icon]; } }catch(e){} });
+  if(fresh){ store("badgesGot",got); notice(`${fresh[1]} Abzeichen freigeschaltet: ${fresh[0]}!`); setTimeout(()=>notice(""),5000); renderFan(); }
+}
+function openBadges(){
+  const got=load("badgesGot")||{};
+  const mm=load("motm")||{}; const cnt={}; Object.values(mm).forEach(n=>cnt[n]=(cnt[n]||0)+1);
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Meine Saison</p>
+    <div class="qscore" style="margin-bottom:14px"><div><b>${Object.keys(got).length}/${BADGES.length}</b><small>Abzeichen</small></div><div><b>${streakDays()}</b><small>Tage in Folge</small></div><div><b>${stats().read||0}</b><small>Artikel gelesen</small></div></div>
+    <div class="badges">${BADGES.map(([id,name,desc,icon,f,goal])=>{ let v=0; try{ v=Math.min(goal,f()); }catch(e){} const on=!!got[id];
+      return `<div class="bdg${on?" on":""}"><span class="bi">${icon}</span><b>${esc(name)}</b><small>${esc(desc)}</small>${on?`<em>freigeschaltet</em>`:`<div class="goalbar"><i style="width:${v/goal*100}%"></i></div><em>${v} / ${goal}</em>`}</div>`; }).join("")}</div>
+    <div class="mgroup" style="margin-top:18px">Deine Spieler des Spiels</div>
+    ${top.length?`<div class="mlist">${top.map(([n,c],i)=>`<div class="scorer${i<3?" top":""}" data-pname="${esc(n)}" style="cursor:pointer"><span class="rk">${i+1}</span><div class="who"><b>${esc(n)}</b></div><span class="g">${c}<small>${c===1?"Wahl":"Wahlen"}</small></span></div>`).join("")}</div>`:`<div class="empty">Wähle nach jedem Spiel in den Spieldetails deinen Spieler des Spiels.</div>`}`);
+}
+
+/* ---------- Spieler des Spiels ---------- */
+function motmHTML(m){
+  const mm=load("motm")||{}, pick=mm[m.id];
+  const scorers=[...new Set(m.goals.filter(g=>g.team===TEAM_ID&&!g.og).map(g=>g.name))];
+  const ps=(state.squad?.players||SQUAD_FALLBACK.players).map(p=>p[3].replace(/\(.*?\)/,"").trim());
+  const isSc=n=>scorers.some(sc=>norm(surname(sc))===norm(surname(n)));
+  const ordered=[...new Set(ps.filter(isSc).concat(ps))];
+  return `<div class="box" id="motmBox"><h4>⭐ Dein Spieler des Spiels</h4>${pick?`<p style="margin:0 0 10px;color:var(--fg)">Deine Wahl: <b>${esc(pick)}</b></p>`:`<p style="margin:0 0 10px">Wer war für dich der Beste auf dem Platz?</p>`}
+    <div class="bench">${ordered.slice(0,30).map(n=>`<span data-motm="${m.id}" data-n="${esc(n)}" class="${pick===n?"on":""}">${isSc(n)?"⚽ ":""}${esc(n)}</span>`).join("")}</div></div>`;
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-motm]"); if(!b) return; e.stopImmediatePropagation();
+  const mm=load("motm")||{}; mm[b.dataset.motm]=b.dataset.n; store("motm",mm); badge();
+  const m=state.matches.find(x=>x.id===+b.dataset.motm); if(m&&$("motmBox")) $("motmBox").outerHTML=motmHTML(m);
+},true);
+
+/* ---------- Wochenquiz aus aktuellen Daten ---------- */
+function weekKey(){ const d=new Date(); const j=new Date(d.getFullYear(),0,1); return d.getFullYear()+"-"+Math.ceil(((d-j)/86400e3+j.getDay()+1)/7); }
+function buildWeekQuiz(){
+  const Q=[]; const add=(q,right,wrong)=>{ wrong=[...new Set(wrong.map(String))].filter(w=>w!==String(right)).slice(0,3); if(wrong.length===3) Q.push({q,right:String(right),opts:shuffle([String(right),...wrong])}); };
+  const tb=state.table||[]; const me=tb.findIndex(r=>r.id===TEAM_ID);
+  if(me>=0){ add("Auf welchem Tabellenplatz steht Bayer 04 gerade?",(me+1)+".",[me+2,me+3,Math.max(1,me),me+5].filter(x=>x>0&&x<=18).map(x=>x+".")); add("Wie viele Punkte hat Bayer 04 in der Bundesliga?",tb[me].pkt,[tb[me].pkt+2,tb[me].pkt-1,tb[me].pkt+4,tb[me].pkt-3].filter(x=>x>=0)); }
+  if(tb.length) add("Wer ist aktuell Tabellenführer der Bundesliga?",tb[0].name,tb.slice(1,6).map(r=>r.name));
+  const sc=scorersFrom(state.matches.filter(m=>(+m.season||0)===(state.season||season())),{}).filter(x=>x.team===TEAM_ID);
+  const sq=(state.squad?.players||SQUAD_FALLBACK.players).map(p=>p[3].replace(/\(.*?\)/,"").trim());
+  if(sc.length){ add("Wer ist der beste Torschütze der Werkself in dieser Saison?",sc[0].name,shuffle(sq.filter(n=>norm(surname(n))!==norm(surname(sc[0].name)))).slice(0,3)); add(`Wie viele Pflichtspieltore hat ${sc[0].name} in dieser Saison?`,sc[0].goals,[sc[0].goals+1,sc[0].goals-1,sc[0].goals+2,sc[0].goals+3].filter(x=>x>=0)); }
+  const last=state.matches.filter(m=>m.finished&&m.g1!=null&&!isWatching(m)).slice(-1)[0];
+  if(last){ const r=`${last.g1}:${last.g2}`; add(`Wie endete das letzte Spiel ${short(last.t1)} gegen ${short(last.t2)}?`,r,[`${last.g2}:${last.g1}`,`${last.g1+1}:${last.g2}`,`${last.g1}:${last.g2+1}`,`${Math.max(0,last.g1-1)}:${last.g2}`]); }
+  const n=nextMatch(); if(n){ const opp=n.home?n.t2:n.t1; add("Gegen wen spielt Bayer 04 als Nächstes?",opp,shuffle(tb.map(r=>r.full||r.name).filter(x=>norm(x)!==norm(opp))).slice(0,6)); }
+  const inj=state.injuries||[]; if(inj.length){ const p=inj[0].name; add("Welcher dieser Spieler fällt gerade aus?",p,shuffle(sq.filter(x=>!inj.some(i=>norm(surname(i.name))===norm(surname(x))))).slice(0,3)); }
+  if(n){ const tv=tvInfo(n).main[0]; if(tv&&tv!=="–") add("Wo läuft das nächste Spiel live?",tv,["Sky","DAZN","RTL+","Prime Video","ARD","ZDF"].filter(x=>x!==tv)); }
+  return Q;
+}
+function startWeekQuiz(){
+  const qs=buildWeekQuiz();
+  if(qs.length<4){ openSheetRaw(`<p class="qq" id="sheetTitle">Wochenquiz</p><div class="empty">Für das Wochenquiz fehlen gerade aktuelle Daten. Tippe auf Aktualisieren und versuche es gleich noch einmal.</div>`); return; }
+  quiz={qs:shuffle(qs), i:0, score:0, correct:0, week:true}; bump("weekq"); showQ();
+}
+
 /* ---------- Quiz ---------- */
 let quiz=null, qTimer=null;
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
@@ -2273,7 +2428,7 @@ function startQuiz(){
 function showQ(){
   clearInterval(qTimer);
   const Q=quiz.qs[quiz.i]; const T=15000, t0=Date.now();
-  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Frage ${quiz.i+1} von ${quiz.qs.length}</span><span>${quiz.score} Punkte</span></div>
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">${quiz.week?"Wochenquiz · ":""}Frage ${quiz.i+1} von ${quiz.qs.length}</span><span>${quiz.score} Punkte</span></div>
     <div class="qbar"><i id="qt" style="width:100%"></i></div><p class="qq">${esc(Q.q)}</p>
     <div class="qa">${Q.opts.map(o=>`<button type="button" data-ans="${esc(o)}">${esc(o)}</button>`).join("")}</div>`);
   quiz.t0=t0;
@@ -2287,12 +2442,14 @@ function answer(val){
   setTimeout(()=>{ quiz.i++; if(quiz.i<quiz.qs.length) showQ(); else endQuiz(); }, ok?900:1600);
 }
 function endQuiz(){
-  const best=hs("hsQuiz"), rec=quiz.score>best; if(rec) store("hsQuiz",quiz.score);
-  const msg=quiz.correct===10?"Perfekt! Echte Werkself-Legende.":quiz.correct>=7?"Stark! Da kennt sich jemand aus.":quiz.correct>=4?"Solide – da geht noch was.":"Nächstes Mal klappt's besser!";
+  const key=quiz.week?"hsWeek_"+weekKey():"hsQuiz";
+  const best=hs(key), rec=quiz.score>best; if(rec) store(key,quiz.score);
+  const n=quiz.qs.length;
+  const msg=quiz.correct===n?"Perfekt! Echte Werkself-Legende.":quiz.correct>=n*0.7?"Stark! Da kennt sich jemand aus.":quiz.correct>=n*0.4?"Solide – da geht noch was.":"Nächstes Mal klappt's besser!";
   openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${msg}</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
-    <div class="qscore"><div><b>${quiz.score}</b><small>Punkte</small></div><div><b>${quiz.correct}/10</b><small>richtig</small></div><div><b>${Math.max(best,quiz.score)}</b><small>Rekord</small></div></div>
-    <button type="button" class="bigbtn" data-game="quiz">Nochmal spielen</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
-  quiz=null; renderFan();
+    <div class="qscore"><div><b>${quiz.score}</b><small>Punkte</small></div><div><b>${quiz.correct}/${n}</b><small>richtig</small></div><div><b>${Math.max(best,quiz.score)}</b><small>Rekord</small></div></div>
+    <button type="button" class="bigbtn" data-game="${quiz.week?"week":"quiz"}">Nochmal spielen</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
+  quiz=null; renderFan(); badge();
 }
 document.addEventListener("click",e=>{ const a=e.target.closest("[data-ans]"); if(a&&!a.disabled&&quiz) answer(a.dataset.ans); });
 
@@ -2318,7 +2475,7 @@ function shoot(z){
   setTimeout(()=>{
     const m=$("pmsg");
     if(saved){
-      m.textContent="Gehalten!"; const best=hs("hsPen"); const rec=pen.streak>best; if(rec) store("hsPen",pen.streak);
+      m.textContent="Gehalten!"; const best=hs("hsPen"); const rec=pen.streak>best; if(rec) store("hsPen",pen.streak); setTimeout(badge,1200);
       setTimeout(()=>{ openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${pen.streak} ${pen.streak===1?"Treffer":"Treffer"} in Folge</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
         <div class="qscore"><div><b>${pen.streak}</b><small>Serie</small></div><div><b>${Math.max(best,pen.streak)}</b><small>Rekord</small></div></div>
         <button type="button" class="bigbtn" data-game="pen">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`); pen=null; renderFan(); },1100);
@@ -2329,7 +2486,7 @@ function shoot(z){
   },380);
 }
 document.addEventListener("click",e=>{
-  const g=e.target.closest("[data-game]"); if(g){ ({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho})[g.dataset.game](); return; }
+  const g=e.target.closest("[data-game]"); if(g){ ({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges})[g.dataset.game](); return; }
   const s=e.target.closest("[data-shot]"); if(s) shoot(+s.dataset.shot);
 });
 
@@ -2340,7 +2497,14 @@ function openNoti(){
   const s=notiSettings(); const native=NATIVE && typeof window.AndroidNet.setNotify==="function";
   let perm=true; try{ if(native && window.AndroidNet.hasNotifyPermission) perm=window.AndroidNet.hasNotifyPermission(); }catch(e){}
   const row=(k,t,d)=>`<div class="set"><div><b>${t}</b><small>${d}</small></div><label class="sw"><input type="checkbox" data-noti="${k}" ${s[k]?"checked":""} ${native?"":"disabled"}><span></span></label></div>`;
-  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Benachrichtigungen</p>
+  const look=load("look")||{}; const lb=(k,v,t)=>`<button type="button" data-look="${k}:${v}" aria-pressed="${(look[k]||(k==="theme"?"system":"m"))===v}">${t}</button>`;
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Einstellungen</p>
+    <div class="mgroup">Darstellung</div>
+    <div class="box"><b style="font-size:15px">Design</b><div class="seg" style="margin:8px 0 14px">${lb("theme","system","Wie Handy")}${lb("theme","light","Hell")}${lb("theme","dark","Dunkel")}</div>
+      <b style="font-size:15px">Schriftgröße</b><div class="seg" style="margin:8px 0 0">${lb("size","s","Klein")}${lb("size","m","Normal")}${lb("size","l","Groß")}${lb("size","xl","Sehr groß")}</div></div>
+    <div class="mgroup">Nachrichten</div>
+    <button type="button" class="bigbtn sec" id="srcSettings2">⚙ Quellen auswählen</button>
+    <div class="mgroup">Benachrichtigungen</div>
     ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
     ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
     <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}</div>
