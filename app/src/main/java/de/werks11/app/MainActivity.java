@@ -73,6 +73,32 @@ public class MainActivity extends Activity {
     /** Lädt Webseiten direkt übers Handy – ohne die Sperren eines Browsers. */
     public class Net {
         @JavascriptInterface
+        public void setNotify(String json) {
+            Notifier.apply(getApplicationContext(), json);
+            try {
+                if (Notifier.anyOn(new org.json.JSONObject(json)) && android.os.Build.VERSION.SDK_INT >= 33
+                        && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                    runOnUiThread(() -> requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 11));
+                }
+            } catch (Exception ignored) { }
+        }
+
+        @JavascriptInterface
+        public boolean hasNotifyPermission() {
+            return Notifier.permitted(getApplicationContext());
+        }
+
+        @JavascriptInterface
+        public void testNotify() {
+            if (!Notifier.permitted(getApplicationContext()) && android.os.Build.VERSION.SDK_INT >= 33) {
+                runOnUiThread(() -> requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 11));
+                return;
+            }
+            Notifier.show(getApplicationContext(), 99, Notifier.CH_MATCH, "Werks11", "So sehen deine Benachrichtigungen aus. Auf geht's, Werkself! ⚫🔴", null);
+            pool.execute(() -> { try { Notifier.check(getApplicationContext()); } catch (Exception ignored) { } });
+        }
+
+        @JavascriptInterface
         public void get(final String id, final String url) {
             pool.execute(() -> {
                 boolean ok = false;

@@ -45,7 +45,7 @@ button{font:inherit;color:inherit}
 header{position:sticky;top:0;z-index:20;background:var(--red);color:#fff;padding-top:env(safe-area-inset-top,0px);
   background-image:linear-gradient(115deg,transparent 0 62%,rgba(0,0,0,.14) 62% 70%,transparent 70% 76%,rgba(0,0,0,.14) 76% 84%,transparent 84%)}
 @media (prefers-color-scheme: dark){header{background-color:#1a0a0d;border-bottom:1px solid #3a1118}}
-header .wrap{display:flex;align-items:center;gap:10px;height:58px}
+header .wrap{display:flex;align-items:center;gap:8px;height:58px}
 .crest{width:36px;height:36px;border-radius:10px;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
 .brand{flex:1;min-width:0;display:flex;flex-direction:column}
 .brand b{font:italic 800 25px/1 var(--display);letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
@@ -249,6 +249,95 @@ tr.me td{background:var(--soft);font-weight:700}
 .oppform i{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font:800 12px/1 var(--display);font-style:normal;color:#fff}
 .btnrow{display:flex;gap:8px;flex-wrap:wrap}
 .btnrow a{flex:1;text-align:center;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;font-weight:700;font-size:14px}
+/* Fakt des Tages */
+.factcard{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 16px 14px;box-shadow:var(--shadow)}
+.factcard::after{content:"04";position:absolute;right:-6px;bottom:-26px;font:italic 800 120px/1 var(--display);color:var(--red);opacity:.07;pointer-events:none}
+.factcard .k{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.chipc{font:700 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--red);padding:5px 8px;border-radius:999px}
+.factcard p{margin:0;font:600 19px/1.3 var(--display);text-wrap:pretty;position:relative}
+.factcard button{border:0;background:none;color:var(--red);font:700 13px/1 var(--body);cursor:pointer;padding:6px 0}
+/* Ausfälle kompakt */
+.outrow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 2px}
+.outrow::-webkit-scrollbar{display:none}
+.outchip{flex:none;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 12px 8px 8px;box-shadow:var(--shadow);cursor:pointer;color:inherit;font:inherit;text-align:left}
+.outchip .ic2{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font:800 20px/1 var(--display);color:#fff;background:var(--loss);flex:none}
+.outchip .ic2.reh{background:var(--draw)} .outchip .ic2.ban{background:var(--fg);color:var(--bg)}
+.outchip b{display:block;font-size:14px}
+.outchip small{display:block;font-size:12px;color:var(--muted);max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Fanzone */
+.fan{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.game{border:0;text-align:left;cursor:pointer;color:#fff;border-radius:18px;padding:14px;min-height:118px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.game.q{background:linear-gradient(150deg,#d6001c,#7d0012)}
+.game.e{background:linear-gradient(150deg,#1d6b3a,#0d3a1f)}
+.game b{font:italic 800 22px/1 var(--display);text-transform:uppercase;letter-spacing:.02em;position:relative}
+.game small{font-size:12px;opacity:.85;position:relative}
+.game .hs{font:700 12px/1 var(--body);background:rgba(255,255,255,.18);padding:5px 8px;border-radius:999px;align-self:flex-start;position:relative}
+.game svg{position:absolute;right:-8px;bottom:-8px;width:76px;height:76px;opacity:.18}
+/* Verletzte */
+.inj{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:12px 14px;align-items:start}
+.inj+.inj{border-top:1px solid var(--line)}
+.inj .ic2{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font:800 24px/1 var(--display);color:#fff;background:var(--loss)}
+.inj .ic2.reh{background:var(--draw)} .inj .ic2.ban{background:var(--fg);color:var(--bg)} .inj .ic2.q{background:var(--muted)}
+.inj b{font-size:16px}
+.inj .why{font-size:14px;margin-top:2px}
+.inj .meta{margin-top:6px}
+.inj .eta{display:inline-flex;align-items:center;gap:5px;font:700 12px/1 var(--body);padding:4px 8px;border-radius:999px;background:var(--soft);color:var(--red);margin-top:6px}
+.inj a{color:var(--red);font-size:13px;text-decoration:none;font-weight:600;display:inline-block;margin-top:6px}
+/* Kader */
+.pos-h{font:700 13px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 2px 8px}
+.pl{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:9px 14px}
+.pl+.pl{border-top:1px solid var(--line)}
+.pl .nr{width:36px;height:36px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font:800 17px/1 var(--display);font-variant-numeric:tabular-nums}
+.pl b{font-size:15px;display:block}
+.pl small{font-size:12px;color:var(--muted)}
+.pl .st{display:flex;gap:6px;align-items:center;font:700 12px/1 var(--body)}
+.pl .goals{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 8px}
+.pl .hurt{background:var(--loss);color:#fff;border-radius:999px;padding:4px 8px}
+.pl .hurt.reh{background:var(--draw)}
+.pl.out b{opacity:.75}
+/* Quiz */
+.qhead{padding-right:48px;display:flex;justify-content:space-between;align-items:center;font:700 13px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.qbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:10px 0 14px}
+.qbar i{display:block;height:100%;background:var(--red);transition:width .2s linear}
+.qq{font:700 24px/1.15 var(--display);margin:0 0 14px;text-wrap:balance}
+.qa{display:flex;flex-direction:column;gap:8px}
+.qa button{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:14px;font:600 16px/1.2 var(--body);text-align:left;cursor:pointer;box-shadow:var(--shadow);color:var(--fg)}
+.qa button.ok{background:var(--win);border-color:var(--win);color:#fff}
+.qa button.no{background:var(--loss);border-color:var(--loss);color:#fff}
+.qa button:disabled{cursor:default}
+.qscore{display:flex;gap:10px}
+.qscore div{flex:1;background:var(--surface-2);border-radius:14px;padding:12px;text-align:center}
+.qscore b{display:block;font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.qscore small{font-size:12px;color:var(--muted)}
+.bigbtn{border:0;background:var(--red);color:#fff;border-radius:14px;padding:15px;font:800 18px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;width:100%}
+.bigbtn.sec{background:var(--surface-2);color:var(--fg);border:1px solid var(--line)}
+.newrec{text-align:center;font:italic 800 22px/1 var(--display);color:var(--red);text-transform:uppercase}
+/* Elfmeter */
+.pitch{position:relative;border-radius:18px;overflow:hidden;background:linear-gradient(#2e8a4a,#1f6a37);aspect-ratio:3/4;max-width:100%;touch-action:manipulation;user-select:none}
+.pitch .stripes{position:absolute;inset:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.05) 0 40px,transparent 40px 80px)}
+.goalf{position:absolute;left:8%;right:8%;top:8%;height:38%;border:5px solid #fff;border-bottom:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 1px,transparent 1px 14px),repeating-linear-gradient(0deg,rgba(255,255,255,.18) 0 1px,transparent 1px 14px),rgba(0,0,0,.15)}
+.zones3{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr)}
+.zones3 button{border:0;background:transparent;cursor:pointer;border:1px dashed rgba(255,255,255,.25)}
+.zones3 button:active{background:rgba(255,255,255,.15)}
+.keeper,.ball,.spot,.pmsg,.pscore{pointer-events:none}
+.keeper{position:absolute;top:22%;left:50%;width:22%;height:20%;transform:translateX(-50%);transition:left .35s cubic-bezier(.3,.8,.3,1),top .35s,transform .35s;display:grid;place-items:center}
+.keeper i{display:block;width:100%;height:100%;background:#ffcf33;border-radius:40% 40% 18% 18%;box-shadow:0 0 0 3px rgba(0,0,0,.25)}
+.ball{position:absolute;left:50%;top:80%;width:9%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff 0 45%,#ddd 46%);box-shadow:0 3px 6px rgba(0,0,0,.4);transform:translate(-50%,-50%);transition:left .35s ease-out,top .35s ease-out,width .35s}
+.spot{position:absolute;left:50%;top:80%;width:2%;aspect-ratio:1;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}
+.pmsg{position:absolute;left:0;right:0;top:56%;text-align:center;font:italic 800 34px/1 var(--display);color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.5);text-transform:uppercase}
+.pscore{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between;color:#fff;font:700 14px/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+/* Einstellungen */
+.set{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+.set+.set{border-top:1px solid var(--line)}
+.set b{display:block;font-size:15px}
+.set small{display:block;font-size:13px;color:var(--muted)}
+.sw{position:relative;width:50px;height:30px;flex:none}
+.sw input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1}
+.sw span{position:absolute;inset:0;border-radius:15px;background:var(--line);transition:background .2s}
+.sw span::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .2s}
+.sw input:checked+span{background:var(--red)}
+.sw input:checked+span::after{transform:translateX(20px)}
+.sw input:focus-visible+span{outline:3px solid var(--red);outline-offset:2px}
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
 .foot{font-size:12.5px;color:var(--muted);margin:0}
 .foot a{color:var(--red)}
@@ -260,13 +349,14 @@ tr.me td{background:var(--soft);font-weight:700}
 /* Reiterleiste */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
-nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
-.tabs button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 10px;cursor:pointer;position:relative;font:700 12px/1 var(--body);letter-spacing:.02em}
+nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+.tabs button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 10px;cursor:pointer;position:relative;font:700 11.5px/1 var(--body);letter-spacing:0;min-width:0}
 .tabs svg{width:24px;height:24px}
 .tabs button[aria-selected="true"]{color:var(--red)}
 .tabs button[aria-selected="true"] .ic{background:var(--soft)}
-.tabs .ic{width:52px;height:30px;border-radius:15px;display:grid;place-items:center;position:relative}
-.badge{position:absolute;top:-3px;right:4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font:700 11px/17px var(--body);text-align:center}
+.tabs .ic{width:46px;height:30px;border-radius:15px;display:grid;place-items:center;position:relative}
+.badge.dot{min-width:10px;width:10px;height:10px;padding:0;top:0;right:8px}
+.badge{position:absolute;top:-3px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font:700 11px/17px var(--body);text-align:center}
 [data-view]{animation:fade .25s ease}
 @keyframes fade{from{opacity:.4;transform:translateY(4px)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -277,6 +367,9 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
   <div class="wrap">
     <img class="crest" src="icon-192.png" alt="" aria-hidden="true">
     <div class="brand"><b>Werks<span class="eleven">11</span></b><small id="stamp">Lade …</small></div>
+    <button class="iconbtn" id="bell" type="button" aria-label="Benachrichtigungen" title="Benachrichtigungen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+    </button>
     <button class="iconbtn" id="refresh" type="button" aria-label="Aktualisieren" title="Aktualisieren">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
     </button>
@@ -292,6 +385,9 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       <div class="feed">
         <div id="heroBox"></div>
         <div id="formBox"></div>
+        <div id="factBox"></div>
+        <div id="outBox"></div>
+        <div id="fanBox"></div>
       </div>
       <div style="margin-top:22px">
         <div class="sec-h"><h2>Neueste Meldungen</h2></div>
@@ -323,7 +419,14 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       <div id="scorerBox"><div class="sk" style="height:260px;border-radius:16px"></div></div>
     </section>
 
-    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabelle von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>. Werks11 ist eine inoffizielle Fan-App.</p>
+    <section data-view="squad" hidden>
+      <div class="sec-h"><h2>Ausfälle</h2><span class="legend" id="outStamp"></span></div>
+      <div id="injBox"><div class="sk" style="height:120px;border-radius:16px"></div></div>
+      <div class="sec-h" style="margin-top:24px"><h2>Kader</h2><span class="legend" id="squadStamp"></span></div>
+      <div id="squadBox"><div class="sk" style="height:400px;border-radius:16px"></div></div>
+    </section>
+
+    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabellen von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>, Ausfälle von <a href="https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/" target="_blank" rel="noopener">LigaInsider</a>, Kader von Wikipedia. Werks11 ist eine inoffizielle Fan-App.</p>
   </div>
 </main>
 
@@ -342,6 +445,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
     <button role="tab" data-tab="rumors" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/></svg><span class="badge" id="rumorBadge" hidden></span></span>Gerüchte</button>
     <button role="tab" data-tab="games" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>Spiele</button>
     <button role="tab" data-tab="table" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4"/></svg></span>Tabellen</button>
+    <button role="tab" data-tab="squad" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z"/></svg><span class="badge" id="injBadge" hidden></span></span>Kader</button>
   </div>
 </nav>
 
@@ -406,6 +510,83 @@ const CLUB_FACTS = [
   [/be(s|ş)ikta(s|ş)/i, "Gegründet 1903 in Istanbul, die Heimspiele sind für ihre Lautstärke berüchtigt."],
   [/bournemouth/i, "Die „Cherries“ spielen im Vitality Stadium, einem der kleinsten Stadien der Premier League."]
 ];
+/* ---------- Fakten & Anekdoten (nur gesicherte Inhalte) ---------- */
+const B04_FACTS = [
+  ["Geschichte","Bayer 04 wurde am 1. Juli 1904 gegründet. Den Anstoß gaben 170 Mitarbeiter der Bayer-Werke, die ihr Unternehmen per Brief um Unterstützung für einen Sportverein baten."],
+  ["Geschichte","Der Spitzname „Werkself“ erinnert bis heute an die Herkunft des Vereins als Werksverein der Bayer-Werke."],
+  ["Geschichte","Seit dem Aufstieg 1979 spielt Bayer 04 ununterbrochen in der Bundesliga."],
+  ["Titel","1988 holte Leverkusen den UEFA-Pokal: Nach einem 0:3 im Hinspiel bei Espanyol Barcelona glich die Werkself zu Hause mit 3:0 aus und gewann das Elfmeterschießen."],
+  ["Titel","Trainer beim UEFA-Pokal-Triumph 1988 war Erich Ribbeck, der spätere Bundestrainer."],
+  ["Titel","Den ersten DFB-Pokal gewann Bayer 04 1993 mit 1:0 gegen die Amateure von Hertha BSC. Torschütze war Ulf Kirsten."],
+  ["Rekord","In der Saison 2023/24 wurde Leverkusen als erster Klub ungeschlagen Deutscher Meister – mit 28 Siegen, 6 Unentschieden und 90 Punkten."],
+  ["Rekord","2023/24 blieb Bayer 04 in 51 Pflichtspielen in Folge ungeschlagen. Erst im Europa-League-Finale in Dublin gegen Atalanta Bergamo riss die Serie."],
+  ["Titel","2024 gelang das Double: Im Pokalfinale gegen den 1. FC Kaiserslautern traf Granit Xhaka zum 1:0 – Leverkusen spielte fast eine Halbzeit lang zu zehnt."],
+  ["Anekdote","„Vizekusen“: 2002 wurde Leverkusen Zweiter in der Bundesliga, im DFB-Pokal und in der Champions League – drei zweite Plätze in einer Saison."],
+  ["Anekdote","Das Champions-League-Finale 2002 in Glasgow entschied Zinédine Zidane mit einem legendären Volleytor für Real Madrid (2:1)."],
+  ["Anekdote","Im Mai 2000 reichte Leverkusen am letzten Spieltag ein Unentschieden in Unterhaching zur Meisterschaft – das Spiel ging 0:2 verloren, ein Tor davon war ein Eigentor von Michael Ballack."],
+  ["Anekdote","Das berühmte Phantomtor: Im Oktober 2013 köpfte Stefan Kießling in Hoffenheim den Ball durch ein Loch im Seitennetz – der Treffer zählte trotzdem."],
+  ["Spieler","Stefan Kießling wurde 2012/13 mit 25 Toren Torschützenkönig der Bundesliga."],
+  ["Spieler","Ulf Kirsten ist Leverkusens Rekordtorschütze in der Bundesliga und wurde dreimal Torschützenkönig (1993, 1997 und 1998)."],
+  ["Spieler","Bernd Schneider spielte von 1999 bis 2009 für Bayer 04. Wegen seiner Technik nannte man ihn den „weißen Brasilianer“."],
+  ["Spieler","Michael Ballack spielte zweimal für Leverkusen: von 1999 bis 2002 und noch einmal von 2010 bis 2012."],
+  ["Spieler","Rudi Völler spielte von 1994 bis 1996 für Bayer 04 und prägte den Verein danach viele Jahre als Sportdirektor und Geschäftsführer."],
+  ["Spieler","Heung-min Son kam 2013 vom Hamburger SV nach Leverkusen und wechselte 2015 zu Tottenham."],
+  ["Spieler","Kai Havertz ging 2020 aus Leverkusen zum FC Chelsea – und schoss 2021 das Siegtor im Champions-League-Finale."],
+  ["Spieler","Florian Wirtz wechselte 2025 zum FC Liverpool – für eine der höchsten Ablösen der Bundesliga-Geschichte."],
+  ["Spieler","Patrik Schick traf bei der EM 2021 gegen Schottland aus rund 45 Metern – eines der schönsten Tore des Turniers."],
+  ["Trainer","Xabi Alonso übernahm Bayer 04 im Oktober 2022 auf einem Abstiegsplatz – eineinhalb Jahre später feierte er das Double."],
+  ["Stadion","Die BayArena hieß bis 1998 Ulrich-Haberland-Stadion und bietet rund 30.000 Zuschauern Platz."],
+  ["Verein","Das Maskottchen von Bayer 04 ist Brian, der Löwe."],
+  ["Verein","Die Vereinsfarben von Bayer 04 sind Rot und Schwarz."],
+  ["Derby","Das Duell gegen den 1. FC Köln ist das Rheinderby – eines der emotionalsten Spiele der Saison."],
+  ["Spieler","Granit Xhaka kam 2023 vom FC Arsenal und war im Meisterjahr einer der Taktgeber im Mittelfeld."],
+  ["Spieler","Rudi Völlers Spitzname lautet „Tante Käthe“ – wegen seiner Lockenpracht."],
+  ["Rekord","Leverkusen ist der erste Bundesliga-Meister, der in einer Saison kein einziges Ligaspiel verlor."]
+];
+const QUIZ = [
+  ["In welchem Jahr wurde Bayer 04 Leverkusen gegründet?",["1904","1900","1912","1919"]],
+  ["Wann wurde Leverkusen zum ersten Mal Deutscher Meister?",["2024","2002","2011","2000"]],
+  ["Gegen wen gewann Leverkusen 1988 das UEFA-Pokal-Finale?",["Espanyol Barcelona","Real Madrid","Inter Mailand","Ajax Amsterdam"]],
+  ["Gegen wen verlor Leverkusen das Champions-League-Finale 2002?",["Real Madrid","FC Barcelona","AC Mailand","Manchester United"]],
+  ["Wer schoss das Siegtor im DFB-Pokalfinale 2024?",["Granit Xhaka","Florian Wirtz","Victor Boniface","Patrik Schick"]],
+  ["Gegen wen gewann Bayer 04 das DFB-Pokalfinale 2024?",["1. FC Kaiserslautern","VfB Stuttgart","RB Leipzig","1. FC Köln"]],
+  ["Wie viele Pflichtspiele blieb Leverkusen 2023/24 in Folge ungeschlagen?",["51","39","45","60"]],
+  ["Welches Team beendete im Mai 2024 die lange Serie ohne Niederlage?",["Atalanta Bergamo","West Ham United","AS Rom","FC Bayern"]],
+  ["Wie hieß das Stadion, bevor es BayArena hieß?",["Ulrich-Haberland-Stadion","Carl-Duisberg-Stadion","Rheinstadion","Werkstadion"]],
+  ["Welches Tier ist das Maskottchen von Bayer 04?",["Löwe","Adler","Bär","Wolf"]],
+  ["Seit welchem Jahr spielt Leverkusen durchgehend in der Bundesliga?",["1979","1963","1985","1975"]],
+  ["Wer war Trainer beim Double 2024?",["Xabi Alonso","Gerardo Seoane","Peter Bosz","Roger Schmidt"]],
+  ["Gegen welchen Gegner fiel Stefan Kießlings Phantomtor?",["TSG Hoffenheim","Mainz 05","FC Augsburg","Hannover 96"]],
+  ["Wie oft wurde Ulf Kirsten Torschützenkönig der Bundesliga?",["3","1","2","4"]],
+  ["Gegen wen gewann Leverkusen 1993 den DFB-Pokal?",["Hertha BSC Amateure","Werder Bremen","Borussia Dortmund","Eintracht Frankfurt"]],
+  ["Nach welcher Saison entstand der Spitzname „Vizekusen“?",["2001/02","1999/00","2009/10","2010/11"]],
+  ["Zu welchem Klub wechselte Florian Wirtz 2025?",["FC Liverpool","FC Bayern","Real Madrid","Manchester City"]],
+  ["Zu welchem Klub ging Kai Havertz 2020?",["FC Chelsea","FC Arsenal","Real Madrid","Juventus Turin"]],
+  ["Von welchem Klub kam Heung-min Son 2013 nach Leverkusen?",["Hamburger SV","Borussia Dortmund","FC Seoul","Werder Bremen"]],
+  ["Welche Farben hat Bayer 04?",["Rot und Schwarz","Rot und Weiß","Schwarz und Gelb","Blau und Weiß"]],
+  ["Wie heißt das Duell gegen den 1. FC Köln?",["Rheinderby","Revierderby","Nordderby","Domderby"]],
+  ["Aus welchem Land kommt Patrik Schick?",["Tschechien","Slowakei","Polen","Österreich"]],
+  ["Wie viele Punkte holte Leverkusen in der Meistersaison 2023/24?",["90","84","88","92"]],
+  ["In welcher Stadt fand das Europa-League-Finale 2024 statt?",["Dublin","Budapest","Sevilla","Berlin"]],
+  ["In welcher Stadt fand das Champions-League-Finale 2002 statt?",["Glasgow","Paris","Mailand","Madrid"]],
+  ["Welchen Spitznamen hatte Bernd Schneider?",["Der weiße Brasilianer","Der Kaiser","Der Bomber","Der Titan"]],
+  ["Aus welchem Land kommt Granit Xhaka?",["Schweiz","Albanien","Kosovo","Österreich"]],
+  ["Wie viele Mitarbeiter baten 1904 per Brief um einen Sportverein?",["170","50","404","1.000"]],
+  ["Wie viele Zuschauer passen ungefähr in die BayArena?",["30.000","45.000","22.000","60.000"]],
+  ["Wer war Leverkusens Trainer beim UEFA-Pokal-Sieg 1988?",["Erich Ribbeck","Rinus Michels","Christoph Daum","Klaus Toppmöller"]],
+  ["Welchen Spitznamen hat Rudi Völler?",["Tante Käthe","Der Bomber","Kaiser","Lockenkopf"]],
+  ["Wie viele Tore erzielte Stefan Kießling in seiner Torschützenkönig-Saison 2012/13?",["25","20","30","22"]],
+  ["Welcher Spieler kam 2023 vom FC Arsenal nach Leverkusen?",["Granit Xhaka","Jonas Hofmann","Victor Boniface","Alejandro Grimaldo"]],
+  ["Wie heißt das Maskottchen von Bayer 04?",["Brian","Leo","Bayer-Bär","Leon"]]
+];
+const SQUAD_FALLBACK = {asOf:"20.10.2026", players:[
+  [1,"TW","NED","Mark Flekken"],[2,"AB","ARG","Facundo Medina"],[3,"AB","ESP","Miguel Gutiérrez"],[4,"AB","ENG","Jarell Quansah"],[5,"AB","FRA","Loïc Badé"],
+  [6,"MF","ARG","Equi Fernández"],[7,"MF","GER","Jonas Hofmann"],[8,"MF","GER","Robert Andrich"],[9,"ST","POR","Afonso Moreira"],[10,"ST","USA","Malik Tillman"],
+  [11,"ST","FRA","Martin Terrier"],[12,"AB","BFA","Edmond Tapsoba (Kapitän)"],[13,"AB","BRA","Arthur"],[14,"ST","CZE","Patrik Schick"],[15,"AB","GER","Tim Oermann"],
+  [16,"AB","FRA","Axel Tape"],[17,"AB","ESP","Lucas Vázquez"],[18,"MF","GER","Kennet Eichhorn"],[22,"ST","NGA","Victor Boniface"],[23,"ST","NGA","Nathan Tella"],
+  [24,"MF","ESP","Aleix García"],[28,"TW","GER","Janis Blaswich"],[30,"MF","ALG","Ibrahim Maza"],[35,"ST","CMR","Christian Kofane"],[36,"TW","GER","Niklas Lomb"],
+  [42,"MF","GER","Montrell Culbreath"],[44,"AB","FRA","Jeanuël Belocian"],[45,"MF","GER","Naba Mensah"],[null,"ST","MAR","Eliesse Ben Seghir"]]};
+
 const $ = id => document.getElementById(id);
 const state = { news:[], rumors:[], matches:[], table:[], ts:{} };
 
@@ -524,7 +705,15 @@ function reliability(src){
 function relevant(it){
   if(/frauen|u19|u17|u23|basketball|handball|elfen|giants/i.test(it.title)) return false;
   if(Date.now()-it.t > 10*86400e3) return false;
-  return it.team || /leverkusen|bayer 04|werkself|\bb04\b/i.test(it.hay||it.title);
+  if(it.team || /leverkusen|bayer 04|werkself|\bb04\b/i.test(it.hay||it.title)) return true;
+  return squadRe().test(norm(it.title)); // Meldungen, die einen Spieler aus dem Kader nennen
+}
+let _sqRe=null, _sqN=0;
+function squadRe(){
+  const ps=(state.squad?.players||SQUAD_FALLBACK.players);
+  if(_sqRe && _sqN===ps.length) return _sqRe;
+  const names=ps.map(p=>norm(surname(p[3].replace(/\(.*?\)/,"")))).filter(n=>n.length>=5 && !/^(arthur|garcia|fernandez|hofmann)$/.test(n));
+  _sqN=ps.length; _sqRe=new RegExp("\\b("+names.map(n=>n.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")\\b"); return _sqRe;
 }
 function dedupe(items){
   const seen=new Map(), out=[];
@@ -882,6 +1071,7 @@ function openMatch(id){
 }
 function closeSheet(fromPop){
   if($("sheet").hidden) return;
+  clearInterval(qTimer); quiz=null; pen=null;
   $("sheet").hidden=true; document.body.style.overflow="";
   if(sheetOpen){ sheetOpen=false; if(!fromPop){ try{ history.back(); }catch(e){} } }
 }
@@ -893,7 +1083,257 @@ function renderStamp(){
   const src = state.feedsAll ? " · "+state.feedsOk+" von "+state.feedsAll+" Quellen" : "";
   $("stamp").textContent = t ? "Stand "+fmtDate(new Date(t),{hour:"2-digit",minute:"2-digit"})+" Uhr"+src : "Lade …";
 }
-function renderAll(){ renderGames(); renderNews(); renderRumors(); renderTable(); renderStamp(); }
+function renderAll(){ renderGames(); renderNews(); renderRumors(); renderTable(); renderOut(); renderSquad(); renderStamp(); }
+
+
+/* ---------- Text-Abruf (HTML-Seiten) ---------- */
+async function getText(url){
+  if(NATIVE) return await nativeGet(url, 20000);
+  for(const b of ["https://api.allorigins.win/raw?url=","https://corsproxy.io/?url=","https://api.codetabs.com/v1/proxy/?quest="]){
+    try{ return await (await fetchWithTimeout(b+encodeURIComponent(url),15000)).text(); }catch(e){}
+  }
+  throw new Error("nicht erreichbar");
+}
+function surname(n){ n=String(n||"").replace(/\(.*?\)/g,"").trim(); const w=n.split(/\s+/); return w[w.length-1]||n; }
+function norm(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,""); }
+
+/* ---------- Kader (Wikipedia, sonst gespeicherter Stand) ---------- */
+const NAT_DE={Netherlands:"NED",Argentina:"ARG",Spain:"ESP",England:"ENG",France:"FRA",Germany:"GER",Portugal:"POR","United States":"USA","Burkina Faso":"BFA",Brazil:"BRA","Czech Republic":"CZE",Nigeria:"NGA",Algeria:"ALG",Cameroon:"CMR",Morocco:"MAR",Switzerland:"SUI",Belgium:"BEL",Senegal:"SEN",Mali:"MLI",Ukraine:"UKR",Austria:"AUT",Ecuador:"ECU",Colombia:"COL",Croatia:"CRO",Poland:"POL","Ivory Coast":"CIV",Ghana:"GHA",Japan:"JPN",Denmark:"DEN",Sweden:"SWE",Norway:"NOR",Finland:"FIN",Italy:"ITA",Scotland:"SCO",Wales:"WAL",Ireland:"IRL",Turkey:"TUR",Greece:"GRE",Kosovo:"KOS",Albania:"ALB",Serbia:"SRB",Slovakia:"SVK",Hungary:"HUN",Mexico:"MEX",Chile:"CHI",Uruguay:"URU",Paraguay:"PAR",Canada:"CAN",Jamaica:"JAM",Haiti:"HAI",Tunisia:"TUN",Egypt:"EGY","DR Congo":"COD",Guinea:"GUI",Gabon:"GAB",Zambia:"ZAM","South Korea":"KOR",Australia:"AUS",Iceland:"ISL",Slovenia:"SVN"};
+const POS_DE={GK:"TW",DF:"AB",MF:"MF",FW:"ST"};
+function parseWikiSquad(html){
+  const doc=new DOMParser().parseFromString(html,"text/html");
+  const out=[]; const seen=new Set();
+  doc.querySelectorAll("table").forEach(tb=>{
+    // Überschrift vor der Tabelle prüfen (Leihspieler/Jugend auslassen)
+    let el=tb, head="";
+    for(let i=0;i<12 && el;i++){ el=el.previousElementSibling||el.parentElement; if(!el) break; if(/^H[2-4]$/.test(el.tagName)||el.classList?.contains("mw-heading")){ head=el.textContent; break; } }
+    if(/loan|reserve|youth|ii\b|academy|former|retired|staff/i.test(head)) return;
+    tb.querySelectorAll("tr").forEach(tr=>{
+      const tds=[...tr.children].filter(c=>c.tagName==="TD"); if(tds.length<4) return;
+      const txts=tds.map(td=>td.textContent.replace(/\[\w+\]/g,"").replace(/\s+/g," ").trim());
+      const pi=txts.findIndex(t=>/^(GK|DF|MF|FW)$/.test(t)); if(pi<0) return;
+      const nr=parseInt(txts[0],10);
+      const pcell=tds[tds.length-1]; let name=txts[txts.length-1];
+      if(/\(at |\bon loan\b/i.test(name)) return;
+      const cap=/\(captain\)/i.test(name), vice=/vice/i.test(name);
+      name=name.replace(/\((vice-)?captain\)/i,"").replace(/\(.*?\)/g,"").trim(); if(!name||seen.has(name)) return; seen.add(name);
+      const natEl=tds[pi+1]; const natName=(natEl?.querySelector("a[title]")?.getAttribute("title")||natEl?.textContent||"").trim();
+      out.push([isNaN(nr)?null:nr, POS_DE[txts[pi]], NAT_DE[natName]||natName.slice(0,3).toUpperCase(), name+(cap?" (Kapitän)":"")]);
+    });
+  });
+  return out.length>=18 ? out : null;
+}
+async function loadSquad(){
+  try{
+    const list=parseWikiSquad(await getText("https://en.wikipedia.org/wiki/Bayer_04_Leverkusen"));
+    if(list){ state.squad={players:list, asOf:fmtDate(new Date(),{day:"2-digit",month:"2-digit",year:"numeric"}), live:true}; return; }
+  }catch(e){}
+  if(!state.squad||!state.squad.players) state.squad={...SQUAD_FALLBACK, live:false};
+}
+
+/* ---------- Ausfälle (LigaInsider + Prognosen aus den Nachrichten) ---------- */
+const INJ_WORDS=/verletz|ausfall|fällt .*aus|fehlt|muskel|kreuzband|bänder|sehne|oberschenkel|wade|knie|sprunggelenk|zerrung|faserriss|bruch|operation|op\b|reha|aufbautraining|saison-?aus|gesperrt|sperre|rote karte|krank|infekt|comeback|zurück im training|rückschlag/i;
+const ETA_RE=/(Saison-?[Aa]us|(?:bis|erst) (?:(?:Anfang|Mitte|Ende) )?(?:Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember|zur Winterpause|nach der Winterpause|Jahresende|Saisonende|zur Rückrunde)|wochenlang|monatelang|mehrere(?:n)? (?:Wochen|Monate(?:n)?)|\d+(?:\s*bis\s*\d+)? Wochen|\d+(?:\s*bis\s*\d+)? Monate|vor dem Comeback|zurück im (?:Mannschafts)?[Tt]raining|steht vor (?:seinem|dem) Comeback|einsatzbereit|fraglich)/i;
+function parseLigaInsider(html){
+  const doc=new DOMParser().parseFromString(html,"text/html");
+  const heads=[...doc.querySelectorAll("h1,h2,h3,h4")];
+  const h=heads.find(x=>/Bayer 04 Leverkusen/i.test(x.textContent)); if(!h) return null;
+  const next=heads.slice(heads.indexOf(h)+1).find(x=>x.tagName===h.tagName);
+  const inRange=n=> (h.compareDocumentPosition(n)&Node.DOCUMENT_POSITION_FOLLOWING) && (!next || (next.compareDocumentPosition(n)&Node.DOCUMENT_POSITION_PRECEDING));
+  const isPlayer=a=>/^\/?[a-z0-9-]+_\d+\/?$/i.test((a.getAttribute("href")||"").replace(/^https?:\/\/[^/]+/,"")) && a.textContent.trim().length>2;
+  const anchors=[...doc.querySelectorAll("a[href]")].filter(a=>isPlayer(a)&&inRange(a));
+  const out=[]; const seen=new Set();
+  anchors.forEach(a=>{
+    const name=a.textContent.replace(/\s+/g," ").trim(); if(seen.has(name)) return;
+    let row=a; while(row.parentElement && row.parentElement!==doc.body && [...row.parentElement.querySelectorAll("a[href]")].filter(isPlayer).length===1 && !row.parentElement.querySelector("h1,h2,h3,h4")) row=row.parentElement;
+    seen.add(name);
+    let text=row.textContent.replace(/\s+/g," ").replace(/Spieler|Letzte News zu diesem Status|Fehlt seit:?|Grund/g," ").trim();
+    text=text.replace(name,"").trim();
+    const dm=text.match(/(\d+\s+(?:Tag|Tagen|Woche|Wochen|Monat|Monaten|Jahr|Jahren)(?:\s+und\s+\d+\s+(?:Tag|Tagen|Woche|Wochen|Monat|Monaten))?)\s*$/);
+    const since=dm?dm[1]:""; let reason=(dm?text.slice(0,dm.index):text).replace(/\s+/g," ").trim();
+    const alts=[...row.querySelectorAll("img[alt]")].map(i=>i.getAttribute("alt")).join(" ");
+    const kind=/gesperrt|sperre|karte/i.test(alts+" "+reason)?"ban":/aufbau/i.test(alts)?"reh":/fraglich|angeschlagen/i.test(alts)?"q":"inj";
+    const link=[...row.querySelectorAll("a[href]")].find(x=>x!==a&&!isPlayer(x)&&x.textContent.trim().length>8);
+    out.push({name, reason:reason.slice(0,140), since, kind, link:link?new URL(link.getAttribute("href"),"https://www.ligainsider.de").href:""});
+  });
+  return out;
+}
+function enrichFromNews(list){
+  const news=state.news||[];
+  list.forEach(p=>{
+    const sn=norm(surname(p.name));
+    const hits=news.filter(n=>norm(n.title+" "+(n.desc||"")).includes(sn) && INJ_WORDS.test(n.title+" "+(n.desc||""))).sort((a,b)=>b.t-a.t);
+    const withEta=hits.find(n=>ETA_RE.test(n.title+" "+(n.desc||"")));
+    if(withEta){ p.eta=(withEta.title+" "+(withEta.desc||"")).match(ETA_RE)[1]; p.etaSrc=withEta.source; p.etaT=withEta.t; p.etaLink=withEta.link; }
+    if(hits[0]){ p.news=hits[0]; }
+  });
+  return list;
+}
+function injuriesFromNews(){
+  const players=(state.squad?.players||SQUAD_FALLBACK.players).map(x=>x[3].replace(/\(.*?\)/,"").trim());
+  const out=[];
+  players.forEach(n=>{
+    const sn=norm(surname(n)); if(sn.length<4) return;
+    const hit=(state.news||[]).filter(x=>Date.now()-x.t<6*86400e3 && norm(x.title).includes(sn) && /verletz|fällt .*aus|fehlt|muskel|kreuzband|saison-?aus|zerrung|faserriss|bruch|operation|rückschlag|gesperrt/i.test(x.title)).sort((a,b)=>b.t-a.t)[0];
+    if(hit) out.push({name:n, reason:hit.title, since:"", kind:/gesperrt/i.test(hit.title)?"ban":"inj", link:hit.link, fromNews:true});
+  });
+  return out;
+}
+async function loadInjuries(){
+  let list=null;
+  try{ list=parseLigaInsider(await getText("https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/")); }catch(e){}
+  if(list){ state.injSrc="LigaInsider"; }
+  else { list=injuriesFromNews(); state.injSrc="Nachrichten"; }
+  state.injuries=enrichFromNews(list);
+  state.injAt=Date.now();
+}
+
+/* ---------- Anzeige: Fakt, Ausfälle, Fanzone, Kader ---------- */
+let factIdx=(()=>{ let last=load("factLast"); let i; do{ i=Math.floor(Math.random()*B04_FACTS.length); }while(B04_FACTS.length>1 && i===last); store("factLast",i); return i; })();
+function renderFact(){
+  const [cat,txt]=B04_FACTS[factIdx];
+  $("factBox").innerHTML=`<div class="factcard"><div class="k"><span class="chipc">${esc(cat)}</span><button type="button" id="nextFact">Nächster Fakt →</button></div><p>${esc(txt)}</p></div>`;
+}
+document.addEventListener("click",e=>{ if(e.target.closest("#nextFact")){ factIdx=(factIdx+1+Math.floor(Math.random()*(B04_FACTS.length-1)))%B04_FACTS.length; store("factLast",factIdx); renderFact(); } });
+const KIND={inj:["+","Verletzt"],reh:["↻","Aufbautraining"],ban:["■","Gesperrt"],q:["?","Fraglich"]};
+function renderOut(){
+  const l=state.injuries||[];
+  const b=$("injBadge"); b.hidden=!l.length; b.className="badge dot"; b.textContent="";
+  if(!l.length){ $("outBox").innerHTML=""; return; }
+  $("outBox").innerHTML=`<div class="sec-h" style="margin:4px 0 8px"><h2>Fehlen aktuell</h2><button type="button" data-go="squad">Alle Details</button></div>
+    <div class="outrow">${l.map(p=>`<button type="button" class="outchip" data-go="squad"><span class="ic2 ${p.kind}">${KIND[p.kind][0]}</span><span><b>${esc(surname(p.name))}</b><small>${esc(p.eta||p.reason||KIND[p.kind][1])}</small></span></button>`).join("")}</div>`;
+}
+function hs(k){ return load(k)||0; }
+function renderFan(){
+  $("fanBox").innerHTML=`<div class="sec-h" style="margin:4px 0 8px"><h2>Fanzone</h2></div><div class="fan">
+    <button type="button" class="game q" data-game="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg><span class="hs">Rekord ${hs("hsQuiz")}</span><span><b>Werkself-Quiz</b><br><small>10 Fragen, schnell sein lohnt sich</small></span></button>
+    <button type="button" class="game e" data-game="pen"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg><span class="hs">Rekord ${hs("hsPen")}</span><span><b>Elfer-König</b><br><small>Wie viele verwandelst du in Folge?</small></span></button>
+  </div>`;
+}
+function renderSquad(){
+  // Ausfälle
+  const l=state.injuries;
+  $("outStamp").textContent=state.injAt?"Quelle: "+(state.injSrc||"")+" · "+fmtDate(new Date(state.injAt),{hour:"2-digit",minute:"2-digit"})+" Uhr":"";
+  if(l){
+    $("injBox").innerHTML=l.length?`<div class="mlist">${l.map(p=>`<div class="inj"><span class="ic2 ${p.kind}">${KIND[p.kind][0]}</span><div style="min-width:0">
+      <b>${esc(p.name)}</b><div class="why">${esc(p.reason||KIND[p.kind][1])}</div>
+      <div class="meta"><span>${esc(KIND[p.kind][1])}</span>${p.since?`<span class="sep"></span><span>fehlt seit ${esc(p.since)}</span>`:""}</div>
+      ${p.eta?`<span class="eta">Prognose: ${esc(p.eta)}</span><div class="meta" style="margin-top:4px">laut ${esc(p.etaSrc||"Medien")}, ${esc(ago(p.etaT))}</div>`:""}
+      ${p.etaLink||p.link?`<a href="${esc(p.etaLink||p.link)}" target="_blank" rel="noopener">Zur Meldung →</a>`:""}
+    </div></div>`).join("")}</div>`:`<div class="empty">Aktuell keine gemeldeten Ausfälle. 💪</div>`;
+  }
+  // Kader
+  const sq=state.squad; if(!sq) return;
+  $("squadStamp").textContent=(sq.live?"Stand ":"gespeichert ")+sq.asOf;
+  const goals={}; scorersFrom(state.matches.filter(m=>(+m.season||0)===(state.season||season())),{}).filter(x=>x.team===TEAM_ID).forEach(x=>goals[norm(surname(x.name))]=x.goals);
+  const injMap={}; (l||[]).forEach(p=>injMap[norm(surname(p.name))]=p);
+  const groups=[["TW","Tor"],["AB","Abwehr"],["MF","Mittelfeld"],["ST","Sturm"]];
+  $("squadBox").innerHTML=groups.map(([k,label])=>{
+    const ps=sq.players.filter(p=>p[1]===k).sort((a,b)=>(a[0]??99)-(b[0]??99)); if(!ps.length) return "";
+    return `<div class="pos-h">${label}</div><div class="mlist">${ps.map(p=>{
+      const key=norm(surname(p[3].replace(/\(.*?\)/,""))), ij=injMap[key], g=goals[key];
+      return `<div class="pl${ij?" out":""}"><span class="nr">${p[0]??"–"}</span><div style="min-width:0"><b>${esc(p[3])}</b><small>${esc(p[2])}</small></div>
+        <span class="st">${g?`<span class="goals">⚽ ${g}</span>`:""}${ij?`<span class="hurt ${ij.kind==="reh"?"reh":""}">${ij.kind==="ban"?"Gesperrt":ij.kind==="reh"?"Reha":"Verletzt"}</span>`:""}</span></div>`;
+    }).join("")}</div>`;
+  }).join("");
+}
+
+/* ---------- Quiz ---------- */
+let quiz=null, qTimer=null;
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function openSheetRaw(html){ $("sheetBody").innerHTML=html; $("sheet").hidden=false; document.body.style.overflow="hidden"; if(!sheetOpen){ sheetOpen=true; try{ history.pushState({sheet:1},""); }catch(e){} } $("sheet").querySelector(".panel").scrollTop=0; }
+function startQuiz(){
+  const used=load("quizUsed")||[]; let pool=QUIZ.map((q,i)=>i).filter(i=>!used.includes(i)); if(pool.length<10){ pool=QUIZ.map((q,i)=>i); store("quizUsed",[]); }
+  const pick=shuffle(pool).slice(0,10); store("quizUsed",(load("quizUsed")||[]).concat(pick));
+  quiz={qs:pick.map(i=>({q:QUIZ[i][0], right:QUIZ[i][1][0], opts:shuffle(QUIZ[i][1])})), i:0, score:0, correct:0};
+  showQ();
+}
+function showQ(){
+  clearInterval(qTimer);
+  const Q=quiz.qs[quiz.i]; const T=15000, t0=Date.now();
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Frage ${quiz.i+1} von ${quiz.qs.length}</span><span>${quiz.score} Punkte</span></div>
+    <div class="qbar"><i id="qt" style="width:100%"></i></div><p class="qq">${esc(Q.q)}</p>
+    <div class="qa">${Q.opts.map(o=>`<button type="button" data-ans="${esc(o)}">${esc(o)}</button>`).join("")}</div>`);
+  quiz.t0=t0;
+  qTimer=setInterval(()=>{ const left=Math.max(0,T-(Date.now()-t0)); const b=$("qt"); if(b) b.style.width=(left/T*100)+"%"; if(!left){ answer(null); } },100);
+}
+function answer(val){
+  clearInterval(qTimer); if(!quiz) return;
+  const Q=quiz.qs[quiz.i]; const left=Math.max(0,15000-(Date.now()-quiz.t0));
+  const ok=val===Q.right; if(ok){ quiz.correct++; quiz.score+=100+Math.round(left/150); }
+  document.querySelectorAll(".qa button").forEach(b=>{ b.disabled=true; if(b.dataset.ans===Q.right) b.classList.add("ok"); else if(b.dataset.ans===val) b.classList.add("no"); });
+  setTimeout(()=>{ quiz.i++; if(quiz.i<quiz.qs.length) showQ(); else endQuiz(); }, ok?900:1600);
+}
+function endQuiz(){
+  const best=hs("hsQuiz"), rec=quiz.score>best; if(rec) store("hsQuiz",quiz.score);
+  const msg=quiz.correct===10?"Perfekt! Echte Werkself-Legende.":quiz.correct>=7?"Stark! Da kennt sich jemand aus.":quiz.correct>=4?"Solide – da geht noch was.":"Nächstes Mal klappt's besser!";
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${msg}</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
+    <div class="qscore"><div><b>${quiz.score}</b><small>Punkte</small></div><div><b>${quiz.correct}/10</b><small>richtig</small></div><div><b>${Math.max(best,quiz.score)}</b><small>Rekord</small></div></div>
+    <button type="button" class="bigbtn" data-game="quiz">Nochmal spielen</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
+  quiz=null; renderFan();
+}
+document.addEventListener("click",e=>{ const a=e.target.closest("[data-ans]"); if(a&&!a.disabled&&quiz) answer(a.dataset.ans); });
+
+/* ---------- Elfer-König ---------- */
+let pen=null;
+function startPen(){
+  pen={streak:0,busy:false};
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elfer-König</span><span>Rekord ${hs("hsPen")}</span></div>
+    <p style="font-size:14px;color:var(--muted);margin:8px 0 12px">Tippe in eine Ecke des Tores. Der Keeper springt in eine Richtung – triffst du dieselbe Seite, hält er.</p>
+    <div class="pitch" id="pitch"><div class="stripes"></div><div class="goalf"><div class="zones3">${[0,1,2,3,4,5].map(z=>`<button type="button" data-shot="${z}" aria-label="Schuss ${["oben links","oben Mitte","oben rechts","unten links","unten Mitte","unten rechts"][z]}"></button>`).join("")}</div></div>
+      <div class="keeper" id="keeper"><i></i></div><div class="spot"></div><div class="ball" id="ball"></div><div class="pmsg" id="pmsg"></div>
+      <div class="pscore"><span>Serie: <b id="pstreak">0</b></span><span>Rekord: ${hs("hsPen")}</span></div></div>`);
+}
+function shoot(z){
+  if(!pen||pen.busy) return; pen.busy=true;
+  const col=z%3, row=Math.floor(z/3);
+  const kc=Math.floor(Math.random()*3); // Keeper wählt eine Seite
+  const lefts=["22%","50%","78%"], tops=["18%","36%"];
+  const k=$("keeper"), b=$("ball");
+  k.style.left=lefts[kc]; k.style.transform=`translateX(-50%) rotate(${kc===0?-25:kc===2?25:0}deg)`;
+  b.style.left=lefts[col]; b.style.top=tops[row]; b.style.width="6%";
+  const saved = kc===col && !(col===1 && row===0 && Math.random()<0.5); // Mitte oben: halbe Chance
+  setTimeout(()=>{
+    const m=$("pmsg");
+    if(saved){
+      m.textContent="Gehalten!"; const best=hs("hsPen"); const rec=pen.streak>best; if(rec) store("hsPen",pen.streak);
+      setTimeout(()=>{ openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${pen.streak} ${pen.streak===1?"Treffer":"Treffer"} in Folge</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
+        <div class="qscore"><div><b>${pen.streak}</b><small>Serie</small></div><div><b>${Math.max(best,pen.streak)}</b><small>Rekord</small></div></div>
+        <button type="button" class="bigbtn" data-game="pen">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`); pen=null; renderFan(); },1100);
+    } else {
+      pen.streak++; m.textContent="Tor!"; $("pstreak").textContent=pen.streak;
+      setTimeout(()=>{ m.textContent=""; k.style.left="50%"; k.style.transform="translateX(-50%)"; b.style.left="50%"; b.style.top="80%"; b.style.width="9%"; pen.busy=false; },850);
+    }
+  },380);
+}
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-game]"); if(g){ g.dataset.game==="quiz"?startQuiz():startPen(); return; }
+  const s=e.target.closest("[data-shot]"); if(s) shoot(+s.dataset.shot);
+});
+
+/* ---------- Benachrichtigungen (nur Android-App) ---------- */
+const NOTI_DEF={news:false, rumors:true, kickoff:true, goals:true};
+function notiSettings(){ return Object.assign({},NOTI_DEF,load("noti")||{}); }
+function openNoti(){
+  const s=notiSettings(); const native=NATIVE && typeof window.AndroidNet.setNotify==="function";
+  let perm=true; try{ if(native && window.AndroidNet.hasNotifyPermission) perm=window.AndroidNet.hasNotifyPermission(); }catch(e){}
+  const row=(k,t,d)=>`<div class="set"><div><b>${t}</b><small>${d}</small></div><label class="sw"><input type="checkbox" data-noti="${k}" ${s[k]?"checked":""} ${native?"":"disabled"}><span></span></label></div>`;
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Benachrichtigungen</p>
+    ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
+    ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
+    <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}</div>
+    <p class="legend">Die App schaut etwa alle 15 Minuten im Hintergrund nach. Tore können deshalb mit kurzer Verzögerung kommen.</p>
+    ${native?`<button type="button" class="bigbtn sec" id="testNoti">Test-Benachrichtigung senden</button>`:""}`);
+}
+function pushNoti(){
+  const s=notiSettings(); store("noti",s);
+  if(NATIVE && typeof window.AndroidNet.setNotify==="function"){ try{ window.AndroidNet.setNotify(JSON.stringify(s)); }catch(e){} }
+}
+document.addEventListener("change",e=>{ const c=e.target.closest("[data-noti]"); if(!c) return; const s=notiSettings(); s[c.dataset.noti]=c.checked; store("noti",s); pushNoti(); });
+document.addEventListener("click",e=>{
+  if(e.target.closest("#bell")) openNoti();
+  if(e.target.closest("#testNoti")){ try{ window.AndroidNet.testNotify(); }catch(e){} }
+});
 
 /* ---------- Reiter ---------- */
 let current="news";
@@ -914,10 +1354,10 @@ async function refresh(){
   if(!navigator.onLine){ notice("Kein Internet. Du siehst den zuletzt geladenen Stand."); }
   const failed=[];
   const run=async(k,fn)=>{ try{ await fn(); state.ts[k]=Date.now(); }catch(e){ failed.push(k); } renderAll(); };
-  await Promise.all([ run("news",loadNews), run("matches",loadMatches).then(()=>run("table",loadTable)) ]);
+  await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)) ]);
   store("cache",state);
   if(navigator.onLine){
-    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen"};
+    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle"};
     notice(failed.length? failed.map(k=>names[k]).join(" und ")+" konnten gerade nicht geladen werden. Angezeigt wird der letzte Stand." : "");
   }
   btn.disabled=false; btn.classList.remove("busy"); busy=false;
@@ -934,8 +1374,10 @@ $("refresh").addEventListener("click",refresh);
 
 const cached=load("cache");
 if(cached){ Object.assign(state,cached); state.matches=(state.matches||[]).filter(m=>m.goals&&m.id); }
+renderFact(); renderFan();
 renderAll();
 refresh();
+pushNoti();
 let lastAuto=Date.now();
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden && Date.now()-lastAuto>10*60e3){ lastAuto=Date.now(); refresh(); } });
 setInterval(()=>{ if(!document.hidden){ lastAuto=Date.now(); refresh(); } }, 15*60e3);
