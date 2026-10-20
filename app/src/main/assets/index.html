@@ -372,6 +372,28 @@ tr.me td{background:var(--soft);font-weight:700}
 .rec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow)}
 .rec b{display:block;font:800 30px/1 var(--display);color:var(--red)}
 .rec small{font-size:13px;color:var(--fg)}
+/* Live-Ticker, Statistik, Gegner, Update */
+.tl2{display:flex;flex-direction:column}
+.ev2{display:grid;grid-template-columns:44px 24px 1fr;gap:8px;align-items:center;padding:7px 0;font-size:14px}
+.ev2+.ev2{border-top:1px solid var(--line)}
+.ev2 .m{font:800 14px/1 var(--display);color:var(--muted);text-align:right}
+.ev2.us b{color:var(--red)}
+.stats{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.sh{display:flex;justify-content:space-between;font:700 13px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.st2{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:4px 8px}
+.st2 span{font:800 16px/1 var(--display);font-variant-numeric:tabular-nums}
+.st2 small{text-align:center;font-size:12px;color:var(--muted)}
+.st2 .bar{grid-column:1/-1;display:flex;gap:3px;height:6px}
+.st2 .bar i{display:block;height:100%;border-radius:3px;background:var(--red)}
+.st2 .bar i+i{background:var(--muted)}
+.olist{display:flex;flex-direction:column;margin-top:10px;font-size:13.5px}
+.olist div{display:grid;grid-template-columns:44px 1fr auto;gap:8px;padding:6px 0;align-items:center}
+.olist div+div{border-top:1px solid var(--line)}
+.olist b{font:800 14px/1 var(--display);padding:4px 7px;border-radius:7px;color:#fff}
+.olist b.f-w{background:var(--win)}.olist b.f-d{background:var(--draw)}.olist b.f-l{background:var(--loss)}
+.upd{display:flex;align-items:center;gap:12px;justify-content:space-between;background:var(--fg);color:var(--bg);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.upd b{display:block;font-size:15px}
+.upd small{display:block;font-size:12.5px;opacity:.8}
 /* Spielerprofil */
 .phero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;
   background:radial-gradient(90% 80% at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(150deg,#d6001c,#5e000d)}
@@ -505,6 +527,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
 <main>
   <div class="wrap">
     <div id="notice" class="notice" hidden></div>
+    <div id="updBox"></div>
 
     <section data-view="news">
       <div class="feed">
@@ -1420,7 +1443,7 @@ async function liveTick(){
       const j=await getJson(`https://api.openligadb.de/getmatchdata/${m.id}`);
       const nm=mapMatch(Array.isArray(j)?j[0]:j); const i=state.matches.findIndex(x=>x.id===m.id);
       if(i>=0 && nm.id){ const before=state.matches[i].goals.length; state.matches[i]=nm;
-        if(nm.goals.length>before && !isWatching(nm)){ const g=nm.goals[nm.goals.length-1]; notice((g.team===TEAM_ID?"TOOOR! ":"Gegentor: ")+short(nm.t1)+" "+g.s1+":"+g.s2+" "+short(nm.t2)+(g.name?" – "+g.name:"")); setTimeout(()=>notice(""),12000); }
+        if(nm.goals.length>before && !isWatching(nm)){ const g=nm.goals[nm.goals.length-1]; if(g.team===TEAM_ID) goalSound(); notice((g.team===TEAM_ID?"TOOOR! ":"Gegentor: ")+short(nm.t1)+" "+g.s1+":"+g.s2+" "+short(nm.t2)+(g.name?" – "+g.name:"")); setTimeout(()=>notice(""),12000); }
       }
     }catch(e){}
   }
@@ -1665,6 +1688,110 @@ document.addEventListener("click",e=>{
 },true);
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-inapp]"); if(b) openInAppBrowser(b.dataset.inapp); });
 
+
+/* ---------- Live-Ticker & Statistik (ESPN) ---------- */
+const STAT_NAMES=[["possessionPct","Ballbesitz","%"],["totalShots","Schüsse",""],["shotsOnTarget","Aufs Tor",""],["wonCorners","Ecken",""],["foulsCommitted","Fouls",""],["yellowCards","Gelbe Karten",""],["offsides","Abseits",""],["saves","Paraden",""]];
+function evIcon(t){ t=(t||"").toLowerCase(); return /own goal|eigentor/.test(t)?"⚽":/goal|tor|penalty - scored/.test(t)?"⚽":/red card|rote/.test(t)?"🟥":/yellow card|gelb/.test(t)?"🟨":/substitution|wechsel/.test(t)?"🔁":/half|halbzeit|kick off|anpfiff|end|abpfiff/.test(t)?"⏱":/var/.test(t)?"📺":/miss|saved/.test(t)?"❌":"•"; }
+function evText(t){ t=(t||"").toLowerCase(); return /own goal/.test(t)?"Eigentor":/penalty - scored/.test(t)?"Elfmetertor":/goal/.test(t)?"Tor":/red card/.test(t)?"Rote Karte":/yellow card/.test(t)?"Gelbe Karte":/substitution/.test(t)?"Wechsel":/halftime|half time/.test(t)?"Halbzeit":/kickoff|kick off|start/.test(t)?"Anpfiff":/end/.test(t)?"Abpfiff":/var/.test(t)?"Videobeweis":/penalty - missed|penalty - saved/.test(t)?"Elfmeter vergeben":t; }
+function parseTicker(j){
+  const teams=(j.boxscore?.teams||[]).map(t=>({id:String(t.team?.id||""), name:t.team?.shortDisplayName||t.team?.displayName||"", stats:Object.fromEntries((t.statistics||[]).map(x=>[x.name,x.displayValue??x.value]))}));
+  const evs=(j.keyEvents||[]).map(e=>({min:e.clock?.displayValue||"", type:e.type?.text||e.type?.type||"", team:String(e.team?.id||""),
+    who:(e.participants||[]).map(p=>p.athlete?.displayName).filter(Boolean), text:e.shortText||e.text||""})).filter(e=>e.type);
+  return {teams, evs};
+}
+function tickerHTML(T){
+  let h="";
+  if(T.evs.length){
+    h+=`<div class="tl2">${T.evs.slice().reverse().map(e=>{ const us=e.team===String(ESPN_TEAM);
+      const who=evText(e.type)==="Wechsel"&&e.who.length>1?`${esc(e.who[0])} ⇄ ${esc(e.who[1])}`:esc(e.who.join(", "));
+      return `<div class="ev2${us?" us":""}"><span class="m">${esc(e.min)}</span><span class="i">${evIcon(e.type)}</span><div><b>${esc(evText(e.type))}</b>${who?` · ${who}`:""}</div></div>`; }).join("")}</div>`;
+  }
+  if(T.teams.length===2 && Object.keys(T.teams[0].stats).length){
+    const [a,b]=T.teams;
+    h+=`<div class="stats"><div class="sh"><b>${esc(a.name)}</b><b>${esc(b.name)}</b></div>${STAT_NAMES.filter(([k])=>a.stats[k]!=null&&b.stats[k]!=null).map(([k,l,u])=>{
+      const x=parseFloat(a.stats[k])||0, y=parseFloat(b.stats[k])||0, sum=x+y||1;
+      return `<div class="st2"><span>${esc(a.stats[k])}${u}</span><small>${l}</small><span>${esc(b.stats[k])}${u}</span><div class="bar"><i style="width:${x/sum*100}%"></i><i style="width:${y/sum*100}%"></i></div></div>`; }).join("")}</div>`;
+  }
+  return h||`<p style="margin:0">Noch keine Ereignisse.</p>`;
+}
+let tickerTimer=null;
+async function loadTicker(m){
+  clearInterval(tickerTimer);
+  const run=async()=>{
+    const box=$("tickerBox"); if(!box){ clearInterval(tickerTimer); return; }
+    const ev=espnFor(m); const head=box.querySelector("h4").outerHTML;
+    if(!ev){ box.innerHTML=head+`<p style="margin:0">Für dieses Spiel gibt es gerade keinen Ticker.</p>`; return; }
+    try{ const T=parseTicker(await getJson(`https://site.api.espn.com/apis/site/v2/sports/soccer/${ev.lg}/summary?event=${ev.id}`)); if($("tickerBox")) $("tickerBox").innerHTML=head+tickerHTML(T); }
+    catch(e){ if($("tickerBox")) $("tickerBox").innerHTML=head+`<p style="margin:0">Der Ticker konnte gerade nicht geladen werden.</p>`; }
+  };
+  await run();
+  if(liveOf(m)) tickerTimer=setInterval(run,60000);
+}
+
+/* ---------- Gegner-Check ---------- */
+async function loadOppCheck(m){
+  const box=$("oppBox"); if(!box) return; const head=box.querySelector("h4").outerHTML;
+  const oppId=m.home?m.id2:m.id1, oppName=m.home?m.t2:m.t1;
+  let h="";
+  try{
+    const j=await getJson(`https://api.openligadb.de/getmatchesbyteamid/${oppId}/6/0`);
+    const last=j.map(mapMatch).filter(x=>x.finished&&x.g1!=null&&/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*|bl2)$/i.test(x.sc)).sort((a,b)=>b.t-a.t).slice(0,5);
+    if(last.length){
+      const res=x=>{ const home=x.id1===oppId, us=home?x.g1:x.g2, th=home?x.g2:x.g1; return us>th?"w":us<th?"l":"d"; };
+      const L={w:"S",d:"U",l:"N"};
+      h+=`<p style="margin:0 0 6px">Letzte Spiele von ${esc(short(oppName))}:</p><div class="oppform">${last.slice().reverse().map(x=>`<i class="f-${res(x)}">${L[res(x)]}</i>`).join("")}</div>
+        <div class="olist">${last.map(x=>`<div><span>${esc(fmtDate(new Date(x.t),{day:"2-digit",month:"2-digit"}))}</span><span>${esc(short(x.t1))} – ${esc(short(x.t2))}</span><b class="f-${res(x)}">${x.g1}:${x.g2}</b></div>`).join("")}</div>`;
+    }
+  }catch(e){}
+  const chk=oppCheck(m); if(chk.items.length) h+=`<ul class="facts">${chk.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
+  const inj=(state.injuries||[]); h+=`<p style="margin-top:10px">${inj.length?`Bei Bayer 04 fehlen voraussichtlich: <b style="color:var(--fg)">${inj.map(p=>esc(surname(p.name))).join(", ")}</b>`:"Bei Bayer 04 sind aktuell keine Ausfälle gemeldet."}</p>`;
+  h+=`<p class="legend">Die Aufstellungen werden meist etwa eine Stunde vor Anpfiff bekannt gegeben.</p>`;
+  if($("oppBox")) $("oppBox").innerHTML=head+(h||`<p style="margin:0">Keine Daten zum Gegner gefunden.</p>`);
+}
+
+/* ---------- Torjubel-Ton ---------- */
+let audioCtx=null;
+function goalSound(){
+  if(notiSettings().sound===false) return;
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const t0=audioCtx.currentTime;
+    [[0,523],[0.18,659],[0.36,784],[0.6,1047]].forEach(([dt,f])=>{
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain(); o.type="sawtooth"; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t0+dt); g.gain.exponentialRampToValueAtTime(0.25,t0+dt+0.03); g.gain.exponentialRampToValueAtTime(0.0001,t0+dt+(dt>=0.6?0.7:0.2));
+      o.connect(g).connect(audioCtx.destination); o.start(t0+dt); o.stop(t0+dt+(dt>=0.6?0.75:0.25));
+    });
+    if(navigator.vibrate) navigator.vibrate([120,60,120,60,300]);
+  }catch(e){}
+}
+
+/* ---------- Updates direkt in der App ---------- */
+const REPO="schnitzeljagd16-cmyk/Werks11";
+async function checkUpdate(manual){
+  if(!NATIVE || typeof window.AndroidNet.versionCode!=="function") return;
+  const last=load("updCheck")||0; if(!manual && Date.now()-last<3*3600e3 && !load("updAvail")) return;
+  try{
+    const r=await getJson(`https://api.github.com/repos/${REPO}/releases/latest`); store("updCheck",Date.now());
+    const code=+((r.body||"").match(/versionCode=(\d+)/)||[])[1]||0, mine=window.AndroidNet.versionCode();
+    const apk=(r.assets||[]).find(a=>/\.apk$/i.test(a.name));
+    if(code>mine && apk){ store("updAvail",{name:r.name||r.tag_name, url:apk.browser_download_url, code}); }
+    else { store("updAvail",null); if(manual){ notice("Du hast die neueste Version."); setTimeout(()=>notice(""),3000); } }
+  }catch(e){}
+  renderUpdate();
+}
+function renderUpdate(){
+  const u=load("updAvail"); const box=$("updBox"); if(!box) return;
+  box.innerHTML=u?`<div class="upd"><div><b>Neue Version: ${esc(u.name)}</b><small>Jetzt aktualisieren – deine Daten bleiben erhalten.</small></div><button type="button" class="reveal" id="doUpdate">Installieren</button></div>`:"";
+}
+window.__updState=(pct,st)=>{
+  const b=$("doUpdate"); if(!b) return;
+  if(st==="download"){ b.disabled=true; b.textContent=pct>=0?`Lädt ${pct} %`:"Lädt …"; }
+  else if(st==="install"){ b.textContent="Installieren …"; }
+  else if(st==="permission"){ b.disabled=false; b.textContent="Erneut versuchen"; notice("Erlaube Werks11 einmal, Apps zu installieren (Einstellung hat sich geöffnet), und tippe dann erneut."); }
+  else if(st.startsWith("error")){ b.disabled=false; b.textContent="Erneut versuchen"; notice("Der Download hat nicht geklappt. Prüfe deine Internetverbindung."); }
+};
+document.addEventListener("click",e=>{ if(e.target.closest("#doUpdate")){ const u=load("updAvail"); if(u) window.AndroidNet.installUpdate(u.url); } if(e.target.closest("#checkUpd")) checkUpdate(true); });
+
 /* ---------- Detailansicht eines Spiels ---------- */
 const h2hCache={};
 async function loadH2H(oppId){
@@ -1742,6 +1869,8 @@ function openMatch(id){
     ${tipBoxHTML(m)}
     ${m.finished?"":`<div class="box"><h4>${ICON.tv}Im TV &amp; Stream</h4><div class="tv"><div class="chan">${tv.main.map(c=>`<b>${esc(c)}</b>`).join("")}${tv.alt.map(c=>`<b class="alt">${esc(c)}</b>`).join("")}</div></div><p>${esc(tv.note)} Sender können sich kurzfristig ändern.</p></div>`}
     ${!m.finished&&m.t-Date.now()<3*86400e3 || live?`<div class="box"><h4>Aufstellung Bayer 04</h4><div id="lineupBox"><div class="sk" style="height:120px"></div></div></div>`:""}
+    ${(live||m.finished)&&!hide?`<div class="box" id="tickerBox"><h4>${live?'<span class="pill live" style="font-size:11px;padding:4px 7px">Live</span> Ticker':"Spielverlauf &amp; Statistik"}</h4><div class="sk" style="height:110px"></div></div>`:""}
+    ${!m.finished&&!live?`<div class="box" id="oppBox"><h4>${ICON.vs}Gegner-Check: ${esc(short(opp))}</h4><div class="sk" style="height:110px"></div></div>`:""}
     ${!hide&&(m.finished||m.goals.length)?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
     ${fact||check.items.length?`<div class="box fact"><h4>${ICON.bulb}Wusstest du?</h4>${fact?`<p class="big">${esc(fact)}</p>`:""}${check.items.length||check.form?`<ul class="facts">${check.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${check.form?`<p style="margin-top:10px">Form von ${esc(short(opp))}:</p>${check.form}`:""}`:""}</div>`:""}
     <div class="box"><h4>${ICON.vs}Bilanz gegen ${esc(short(opp))}</h4><div id="h2hBox"><div class="sk" style="height:110px"></div></div></div>
@@ -1750,12 +1879,14 @@ function openMatch(id){
   if(!sheetOpen){ sheetOpen=true; try{ history.pushState({sheet:1},""); }catch(e){} }
   $("sheet").querySelector(".panel").scrollTop=0;
   if($("lineupBox")) loadLineup(m);
+  if($("tickerBox")) loadTicker(m);
+  if($("oppBox")) loadOppCheck(m);
   if(oppId) loadH2H(oppId).then(list=>{ const b=$("h2hBox"); if(b) b.innerHTML=h2hHTML(list.filter(x=>x.t<m.t-3600e3 || m.finished), opp); })
     .catch(()=>{ const b=$("h2hBox"); if(b) b.innerHTML=`<p style="margin:0">Die Bilanz konnte gerade nicht geladen werden.</p>`; });
 }
 function closeSheet(fromPop){
   if($("sheet").hidden) return;
-  clearInterval(qTimer); quiz=null; pen=null; who=null;
+  clearInterval(qTimer); clearInterval(tickerTimer); quiz=null; pen=null; who=null;
   $("sheet").hidden=true; document.body.style.overflow="";
   if(sheetOpen){ sheetOpen=false; if(!fromPop){ try{ history.back(); }catch(e){} } }
 }
@@ -2203,7 +2334,7 @@ document.addEventListener("click",e=>{
 });
 
 /* ---------- Benachrichtigungen (nur Android-App) ---------- */
-const NOTI_DEF={news:false, rumors:true, kickoff:true, goals:true};
+const NOTI_DEF={news:false, rumors:true, kickoff:true, goals:true, sound:true};
 function notiSettings(){ return Object.assign({},NOTI_DEF,load("noti")||{}); }
 function openNoti(){
   const s=notiSettings(); const native=NATIVE && typeof window.AndroidNet.setNotify==="function";
@@ -2213,6 +2344,8 @@ function openNoti(){
     ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
     ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
     <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}</div>
+    <div class="box"><div class="set"><div><b>Torjubel-Ton</b><small>Kurzer Jubel, wenn Bayer 04 trifft und die App offen ist</small></div><label class="sw"><input type="checkbox" data-noti="sound" ${s.sound!==false?"checked":""}><span></span></label></div></div>
+    ${native?`<button type="button" class="bigbtn sec" id="checkUpd">Nach Updates suchen</button>`:""}
     <p class="legend">Die App schaut etwa alle 15 Minuten im Hintergrund nach. Tore können deshalb mit kurzer Verzögerung kommen.</p>
     ${native?`<button type="button" class="bigbtn sec" id="testNoti">Test-Benachrichtigung senden</button>`:""}`);
 }
@@ -2265,7 +2398,7 @@ $("refresh").addEventListener("click",refresh);
 
 const cached=load("cache");
 if(cached){ Object.assign(state,cached); state.matches=(state.matches||[]).filter(m=>m.goals&&m.id&&/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i.test(m.sc||"")); state.comps=(state.comps||[]).filter(c=>/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i.test(c.sc||"")); }
-renderFact(); renderDay(); renderFan();
+renderFact(); renderDay(); renderFan(); renderUpdate(); setTimeout(()=>checkUpdate(false),4000);
 renderAll();
 refresh();
 pushNoti();

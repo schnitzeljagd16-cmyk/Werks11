@@ -121,6 +121,30 @@ public class MainActivity extends Activity {
     /** Lädt Webseiten direkt übers Handy – ohne die Sperren eines Browsers. */
     public class Net {
         @JavascriptInterface
+        public int versionCode() { return Updater.versionCode(getApplicationContext()); }
+
+        @JavascriptInterface
+        public void installUpdate(final String url) {
+            if (!Updater.ensurePermission(MainActivity.this)) {
+                runOnUiThread(() -> web.evaluateJavascript("window.__updState && window.__updState(-1,'permission')", null));
+                return;
+            }
+            pool.execute(() -> Updater.install(getApplicationContext(), url, (pct, st) ->
+                runOnUiThread(() -> web.evaluateJavascript("window.__updState && window.__updState(" + pct + "," + org.json.JSONObject.quote(st) + ")", null))));
+        }
+
+        @JavascriptInterface
+        public void share(final String title, final String url) {
+            runOnUiThread(() -> {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, title);
+                i.putExtra(Intent.EXTRA_TEXT, title + "\n" + url + "\n\nGeteilt aus Werks11");
+                startActivity(Intent.createChooser(i, "Teilen"));
+            });
+        }
+
+        @JavascriptInterface
         public void openInApp(String url) {
             if (url != null && (url.startsWith("https://") || url.startsWith("http://"))) runOnUiThread(() -> MainActivity.this.openInApp(url));
         }

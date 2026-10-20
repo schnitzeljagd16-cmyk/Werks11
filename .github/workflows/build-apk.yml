@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,3 +32,22 @@ jobs:
         with:
           name: Werks11-APK
           path: Werks11.apk
+
+      - name: Version lesen
+        id: ver
+        run: |
+          echo "name=$(grep -oP 'versionName "\K[^"]+' app/build.gradle)" >> "$GITHUB_OUTPUT"
+          echo "code=$(grep -oP 'versionCode \K[0-9]+' app/build.gradle)" >> "$GITHUB_OUTPUT"
+
+      # Öffentliche Veröffentlichung: die App findet hier neue Versionen und installiert sie selbst
+      - name: Veröffentlichen
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.name }}
+          name: Werks11 ${{ steps.ver.outputs.name }}
+          body: |
+            Neue Version von Werks11.
+            versionCode=${{ steps.ver.outputs.code }}
+          files: Werks11.apk
+          make_latest: true
+          overwrite_files: true
