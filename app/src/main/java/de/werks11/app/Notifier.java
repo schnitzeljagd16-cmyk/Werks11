@@ -51,12 +51,13 @@ public class Notifier {
     }
 
     static boolean anyOn(JSONObject s) {
-        return s.optBoolean("news") || s.optBoolean("rumors") || s.optBoolean("kickoff") || s.optBoolean("goals");
+        return s.optBoolean("news") || s.optBoolean("rumors") || s.optBoolean("kickoff") || s.optBoolean("goals") || s.optBoolean("inj");
     }
 
     static void apply(Context c, String json) {
         prefs(c).edit().putString("settings", json).apply();
         createChannels(c);
+        try { DailyFact.schedule(c); } catch (Exception ignored) { }
         JobScheduler js = (JobScheduler) c.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         if (js == null) return;
         try {
@@ -85,6 +86,13 @@ public class Notifier {
         NotificationChannel n = new NotificationChannel(CH_NEWS, "Nachrichten & Gerüchte", NotificationManager.IMPORTANCE_DEFAULT);
         n.setDescription("Neue Meldungen rund um Bayer 04");
         nm.createNotificationChannel(n);
+        NotificationChannel f = new NotificationChannel(DailyFact.CH_FACT, "Brians Fakt des Tages", NotificationManager.IMPORTANCE_HIGH);
+        f.setDescription("Jeden Tag um 19:04 Uhr ein Fakt oder eine Anekdote");
+        f.setSound(DailyFact.jingle(c), new android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+        f.enableVibration(true);
+        nm.createNotificationChannel(f);
     }
 
     static boolean permitted(Context c) {
@@ -186,6 +194,7 @@ public class Notifier {
         int found = -1;
         if (s.optBoolean("news") || s.optBoolean("rumors")) { try { found = checkNews(c, s); } catch (Exception e) { err = String.valueOf(e.getMessage()); } }
         if (s.optBoolean("kickoff") || s.optBoolean("goals")) { try { checkMatches(c, s); } catch (Exception e) { if (err.isEmpty()) err = String.valueOf(e.getMessage()); } }
+        try { found = Math.max(found, 0) + checkInjuries(c, s, false); } catch (Exception ignored) { }
         prefs(c).edit().putLong("lastCheck", System.currentTimeMillis()).putInt("lastSent", Math.max(0, found)).putString("lastErr", err).apply();
     }
 
@@ -245,6 +254,56 @@ public class Notifier {
         while (seenList.size() > 600) seenList.remove(0);
         p.edit().putString("seenList", new JSONArray(seenList).toString()).apply();
         return sent;
+    }
+
+    // ---------- Ausfälle (LigaInsider), etwa alle 6 Stunden ----------
+    static final String LI_URL = "https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/";
+
+    static int checkInjuries(Context c, JSONObject s, boolean force) throws Exception {
+        SharedPreferences p = prefs(c);
+        long now = System.currentTimeMillis();
+        if (!force && now - p.getLong("injAt", 0) < 6 * 3600 * 1000L) return 0;
+        String html = get(LI_URL);
+        Matcher h = Pattern.compile("(?is)<h([1-4])[^>]*>(?:(?!</h\\1>).){0,600}?Bayer 04 Leverkusen(?:(?!</h\\1>).){0,600}?</h\\1>").matcher(html);
+        if (!h.find()) return 0;
+        int start = h.start();
+        Matcher nx = Pattern.compile("(?i)<h" + h.group(1) + "[\\s>]").matcher(html);
+        int end = nx.find(h.end()) ? nx.start() : Math.min(html.length(), h.end() + 60000);
+        String sec = html.substring(start, end);
+        List<String> names = new ArrayList<>();
+        Matcher a = Pattern.compile("(?is)<a[^>]+href=\"(?:https?://www\\.ligainsider\\.de)?/[a-z0-9-]+_\\d+/?\"[^>]*>(.*?)</a>").matcher(sec);
+        while (a.find()) {
+            String n = unxml(a.group(1).replaceAll("<[^>]+>", " ")).replaceAll("\\s+", " ").trim();
+            if (n.length() > 2 && !names.contains(n)) names.add(n);
+        }
+        SharedPreferences.Editor ed = p.edit().putLong("injAt", now).putString("injHtml", "<html><body>" + sec + "</body></html>");
+        String prevRaw = p.getString("injNames", null);
+        ed.putString("injNames", new JSONArray(names).toString()).apply();
+        if (prevRaw == null || !s.optBoolean("inj", true)) return 0;
+        List<String> prev = new ArrayList<>();
+        try { JSONArray o = new JSONArray(prevRaw); for (int k = 0; k < o.length(); k++) prev.add(o.getString(k)); } catch (Exception ignored) { }
+        List<String> neu = new ArrayList<>(), back = new ArrayList<>();
+        for (String n : names) if (!prev.contains(n)) neu.add(n);
+        for (String n : prev) if (!names.contains(n)) back.add(n);
+        if (names.isEmpty() && !prev.isEmpty()) return 0; // vermutlich Ladefehler
+        if (neu.isEmpty() && back.isEmpty()) return 0;
+        StringBuilder t = new StringBuilder();
+        if (!neu.isEmpty()) t.append("Fällt aus: ").append(android.text.TextUtils.join(", ", neu));
+        if (!back.isEmpty()) { if (t.length() > 0) t.append(" · "); t.append("Wieder dabei: ").append(android.text.TextUtils.join(", ", back)); }
+        showTab(c, 4040, CH_NEWS, "Werks11 · Ausfälle aktualisiert", t.toString(), "squad");
+        return 1;
+    }
+
+    static void showTab(Context c, int id, String channel, String title, String text, String tab) {
+        if (!permitted(c)) return;
+        createChannels(c);
+        Intent open = new Intent(c, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("open_tab", tab);
+        PendingIntent pi = PendingIntent.getActivity(c, id, open, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        android.app.Notification.Builder b = Build.VERSION.SDK_INT >= 26 ? new android.app.Notification.Builder(c, channel) : new android.app.Notification.Builder(c);
+        b.setSmallIcon(R.drawable.ic_stat).setContentTitle(title).setContentText(text)
+                .setStyle(new android.app.Notification.BigTextStyle().bigText(text)).setColor(0xFFD6001C).setAutoCancel(true).setContentIntent(pi);
+        NotificationManager nm = (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (nm != null) nm.notify(id, b.build());
     }
 
     static long parseUtc(String iso) {

@@ -546,16 +546,196 @@ tr.me td{background:var(--soft);font-weight:700}
 /* Reiterleiste */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
-nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
-.tabs button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 10px;cursor:pointer;position:relative;font:700 11.5px/1 var(--body);letter-spacing:0;min-width:0}
+nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr)}
+.tabs button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 10px;cursor:pointer;position:relative;font:700 11px/1 var(--body);letter-spacing:0;min-width:0}
 .tabs svg{width:24px;height:24px}
 .tabs button[aria-selected="true"]{color:var(--red)}
 .tabs button[aria-selected="true"] .ic{background:var(--soft)}
-.tabs .ic{width:46px;height:30px;border-radius:15px;display:grid;place-items:center;position:relative}
+.tabs .ic{width:44px;height:30px;border-radius:15px;display:grid;place-items:center;position:relative}
 .badge.dot{min-width:10px;width:10px;height:10px;padding:0;top:0;right:8px}
 .badge{position:absolute;top:-3px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font:700 11px/17px var(--body);text-align:center}
 [data-view]{animation:fade .25s ease}
 @keyframes fade{from{opacity:.4;transform:translateY(4px)}}
+
+/* ===== 2.3: Maskottchen ===== */
+.mascot{position:relative;display:grid;grid-template-columns:1fr 100px;align-items:end;gap:4px;min-height:150px}
+.mascot .bubble{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:20px 20px 6px 20px;padding:14px 14px 10px;box-shadow:var(--shadow);animation:bubbleIn .45s cubic-bezier(.2,1.3,.4,1) both;align-self:center}
+.mascot .bubble::after{content:"";position:absolute;right:-9px;bottom:18px;width:18px;height:18px;background:var(--surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(-45deg);border-radius:0 0 4px 0}
+.mascot .chipc{white-space:nowrap}
+.mascot .k{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mascot .who{font:700 11px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.mascot p{margin:0;font:600 16.5px/1.32 var(--display);text-wrap:pretty;cursor:pointer}
+.mascot p .intro{color:var(--red);font-weight:800}
+.mascot .acts{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+.mascot .acts button{border:0;background:none;color:var(--red);font:700 13px/1 var(--body);cursor:pointer;padding:6px 0}
+.mascot .acts button:first-child{color:var(--muted)}
+.mascot .lion{width:100px;height:auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));animation:lionHop .7s cubic-bezier(.3,1.4,.5,1) both;transform-origin:50% 100%;cursor:pointer}
+.mascot.hello{grid-template-columns:1fr 104px}
+.mascot.hello .lion{width:104px;animation:lionHop .7s cubic-bezier(.3,1.4,.5,1) both,lionIdle 2.6s ease-in-out .7s infinite}
+@keyframes lionHop{0%{transform:translateY(30px) scale(.8);opacity:0}60%{transform:translateY(-8px) scale(1.03,.97);opacity:1}100%{transform:none}}
+@keyframes lionIdle{50%{transform:translateY(-3px) rotate(-1.5deg)}}
+@keyframes bubbleIn{from{transform:scale(.85) translateY(8px);opacity:0;transform-origin:100% 100%}}
+.mascot-end{display:grid;grid-template-columns:96px 1fr;align-items:end;gap:10px;margin-top:4px}
+.mascot-end img{width:96px;height:auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.25));transform-origin:50% 100%}
+.mascot-end img.cheer{animation:lionCheer .6s ease-in-out 3}
+.mascot-end img.nod{animation:lionHop .6s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes lionCheer{30%{transform:translateY(-14px) rotate(-4deg)}60%{transform:translateY(0) rotate(3deg)}}
+.mascot-end .bubble{background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 18px 6px;padding:12px 14px;box-shadow:var(--shadow);animation:bubbleIn .4s cubic-bezier(.2,1.3,.4,1) both}
+.mascot-end .bubble p{margin:6px 0 0;font:600 17px/1.35 var(--display)}
+.mascot-end .bubble p:first-child{margin-top:0}
+
+/* ===== Fanzone ===== */
+.game{animation:rise .45s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i,0) * 45ms);transition:transform .15s}
+.game:active{transform:scale(.96)}
+.game.p{background:linear-gradient(150deg,#0b7a75,#04403d)}
+.game.m{background:linear-gradient(150deg,#b3261e,#3b0d0a)}
+.game.j{background:linear-gradient(150deg,#2b6cb0,#112f57)}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.98)}}
+
+/* ===== Elfer-König ===== */
+.pk{position:relative;aspect-ratio:3/4;border-radius:18px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;background:#1d5e33;cursor:crosshair}
+.pk-crowd{position:absolute;left:0;right:0;top:0;height:22%;background:
+  radial-gradient(circle,#d6001c 0 1.6px,transparent 2px) 0 0/9px 8px,
+  radial-gradient(circle,#f5f5f5 0 1.4px,transparent 1.8px) 4px 3px/11px 9px,
+  radial-gradient(circle,#111 0 1.6px,transparent 2px) 2px 5px/7px 7px,
+  linear-gradient(#1a1418,#3a2228)}
+.pk-lights{position:absolute;left:0;right:0;top:0;height:24%;background:radial-gradient(ellipse 60% 70% at 20% 0,rgba(255,255,230,.35),transparent 70%),radial-gradient(ellipse 60% 70% at 80% 0,rgba(255,255,230,.35),transparent 70%)}
+.pk-ads{position:absolute;left:0;right:0;top:18%;height:5.5%;display:flex;background:#111;border-top:2px solid #d6001c;border-bottom:2px solid #d6001c;overflow:hidden}
+.pk-ads span{flex:1;display:grid;place-items:center;color:#fff;font:italic 800 clamp(9px,2.6vw,14px)/1 var(--display);letter-spacing:.08em}
+.pk-ads span:nth-child(even){background:#d6001c}
+.pk-grass{position:absolute;left:0;right:0;top:23.5%;bottom:0;background:repeating-linear-gradient(180deg,#2f8d4c 0 9%,#287f43 9% 18%)}
+.pk-box{position:absolute;left:2%;right:2%;top:39%;height:30%;border:3px solid rgba(255,255,255,.85);border-top:0;border-radius:0 0 4px 4px}
+.pk-box2{position:absolute;left:22%;right:22%;top:39%;height:10%;border:3px solid rgba(255,255,255,.85);border-top:0}
+.pk-spot{position:absolute;left:50%;top:80%;width:2.4%;aspect-ratio:1;border-radius:50%;background:#fff;transform:translate(-50%,-50%)}
+.pk-goal{position:absolute;left:6%;width:88%;top:10.5%;height:28.5%}
+.pk-net{position:absolute;inset:0 2% 0 2%;background:
+  repeating-linear-gradient(60deg,rgba(255,255,255,.35) 0 1px,transparent 1px 9px),
+  repeating-linear-gradient(-60deg,rgba(255,255,255,.35) 0 1px,transparent 1px 9px),
+  linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.15));transform-origin:50% 0;transition:transform .2s}
+.pk-net.bulge{animation:bulge .6s ease-out}
+@keyframes bulge{30%{transform:scale(1.04,1.06)}60%{transform:scale(.99,.98)}}
+.pk-post{position:absolute;top:0;bottom:0;width:2.2%;background:linear-gradient(90deg,#ddd,#fff 40%,#cfcfcf);box-shadow:0 2px 6px rgba(0,0,0,.4);z-index:3}
+.pk-post.l{left:0}.pk-post.r{right:0}
+.pk-bar{position:absolute;left:0;right:0;top:0;height:5%;min-height:4px;background:linear-gradient(#fff,#d5d5d5);box-shadow:0 2px 6px rgba(0,0,0,.4);z-index:3}
+.pk-gk{position:absolute;left:50%;bottom:0;height:88%;aspect-ratio:369/450;transform:translateX(-50%);transform-origin:50% 100%;z-index:2;will-change:transform}
+.pk-gk img{display:block;width:100%;height:100%;transform-origin:50% 100%;animation:gkIdle 1.5s ease-in-out infinite;pointer-events:none}
+.pk-gk.act img{animation:none}
+@keyframes gkIdle{0%,100%{transform:translateX(-3%) rotate(-1.2deg) scaleY(1)}25%{transform:translateX(0) scaleY(.975)}50%{transform:translateX(3%) rotate(1.2deg) scaleY(1)}75%{transform:translateX(0) scaleY(.975)}}
+.pk-gshadow{position:absolute;left:50%;bottom:-3%;width:30%;height:7%;border-radius:50%;background:rgba(0,0,0,.35);transform:translateX(-50%);filter:blur(2px);z-index:1}
+.pk-ball{position:absolute;left:50%;top:80%;width:10%;aspect-ratio:1;transform:translate(-50%,-50%);z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4));pointer-events:none}
+.pk-ball svg{width:100%;height:100%;display:block}
+.pk-bshadow{position:absolute;left:50%;top:82.5%;width:9%;height:2.2%;border-radius:50%;background:rgba(0,0,0,.4);transform:translate(-50%,-50%);filter:blur(1.5px);z-index:4;pointer-events:none}
+.pk-aim{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border:3px solid #fff;border-radius:50%;opacity:0;z-index:6;pointer-events:none;box-shadow:0 0 0 2px rgba(214,0,28,.8)}
+.pk-aim.on{animation:aim .7s ease-out forwards}
+@keyframes aim{0%{transform:scale(1.8);opacity:0}25%{transform:scale(1);opacity:1}100%{transform:scale(.7);opacity:0}}
+.pk-msg{position:absolute;left:0;right:0;top:44%;text-align:center;font:italic 800 clamp(34px,11vw,56px)/1 var(--display);color:#fff;text-shadow:0 3px 14px rgba(0,0,0,.6);text-transform:uppercase;opacity:0;z-index:7;pointer-events:none}
+.pk-msg.show{animation:msgPop .9s cubic-bezier(.2,1.4,.4,1) forwards}
+.pk-msg.good{color:#fff;-webkit-text-stroke:1.5px #d6001c}
+.pk-msg.bad{color:#ffd9de}
+@keyframes msgPop{0%{transform:scale(.3) rotate(-6deg);opacity:0}40%{transform:scale(1.15) rotate(2deg);opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
+.pk-hud{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:center;color:#fff;font:700 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;z-index:7;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.pk-hud b{font-size:20px;vertical-align:-2px}
+.pk-hud #pkTip{opacity:.75;font-size:11px}
+.pk-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:8}
+
+/* ===== Foto-Puzzle ===== */
+.picgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pic{border:0;padding:0;background:var(--surface);border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow);text-align:left;animation:rise .4s both}
+.pic .ph{display:grid;place-items:center;aspect-ratio:1;background:var(--surface-2) center/cover no-repeat;color:var(--muted);font-size:12px;transition:transform .3s}
+.pic:active .ph{transform:scale(1.05)}
+.pic b{display:block;padding:7px 8px 8px;font:700 12.5px/1.15 var(--body)}
+.pic:disabled{opacity:.45}
+.puz{position:relative;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;background:var(--surface-2);box-shadow:var(--shadow)}
+.puzdone{position:absolute;inset:0;background-repeat:no-repeat;opacity:0;transition:opacity .4s;z-index:3;pointer-events:none}
+.puzdone.peek{opacity:1}
+.puzdone.won{animation:won 1s ease}
+@keyframes won{0%{transform:scale(.96)}50%{transform:scale(1.02)}}
+.tile{position:absolute;left:0;top:0;border:0;padding:0;background-repeat:no-repeat;cursor:pointer;transition:transform .16s cubic-bezier(.3,.8,.3,1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.55),inset 0 0 0 2px rgba(0,0,0,.15)}
+.tile i{position:absolute;left:4px;top:3px;font:700 10px/1 var(--body);font-style:normal;color:#fff;text-shadow:0 1px 2px #000;opacity:.7}
+.tile.nope{animation:nope .3s}
+@keyframes nope{25%{margin-left:-3px}75%{margin-left:3px}}
+
+/* ===== Memory ===== */
+.mem{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;perspective:800px}
+.mc{border:0;padding:0;background:none;aspect-ratio:3/4;cursor:pointer;animation:rise .35s both}
+.mc .in{position:relative;display:block;width:100%;height:100%;transition:transform .45s cubic-bezier(.3,.8,.3,1);transform-style:preserve-3d}
+.mc.up .in{transform:rotateY(180deg)}
+.mc .back,.mc .front{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:grid;place-items:center;box-shadow:var(--shadow)}
+.mc .back{background:repeating-linear-gradient(115deg,#d6001c 0 10px,#b80018 10px 20px);color:#fff}
+.mc .back b{font:italic 800 26px/1 var(--display);opacity:.9}
+.mc .front{background:var(--surface);border:1px solid var(--line);transform:rotateY(180deg)}
+.mc .front img{width:70%;height:70%;object-fit:contain}
+.mc .front em{font-style:normal;font-size:34px}
+.mc.ok .front{border-color:var(--win);box-shadow:0 0 0 2px var(--win)}
+.mc.ok .in{animation:pairPop .4s ease}
+@keyframes pairPop{50%{transform:rotateY(180deg) scale(1.08)}}
+
+/* ===== Jonglieren ===== */
+.kp{position:relative;aspect-ratio:3/4;border-radius:18px;overflow:hidden;background:linear-gradient(#173f8a 0 30%,#2f8d4c 30%) ;touch-action:none;user-select:none}
+.kp::before{content:"";position:absolute;left:0;right:0;top:30%;bottom:0;background:repeating-linear-gradient(180deg,rgba(255,255,255,.05) 0 10%,transparent 10% 20%)}
+.kp canvas{position:absolute;inset:0;width:100%;height:100%}
+.kp-n{position:absolute;left:0;right:0;top:9%;text-align:center;font:italic 800 64px/1 var(--display);color:rgba(255,255,255,.9);text-shadow:0 3px 12px rgba(0,0,0,.4);pointer-events:none}
+.kp-n.pop{animation:msgPop .35s ease}
+.kp-hint{position:absolute;left:0;right:0;bottom:16%;text-align:center;color:#fff;font:700 15px/1 var(--body);opacity:.9;pointer-events:none;animation:pulse 1.4s infinite}
+.kp-hint.off{display:none}
+.kp-lion{position:absolute;right:4%;bottom:3%;width:22%;pointer-events:none;transform-origin:50% 100%;z-index:1}
+.kp canvas{z-index:2}
+.kp-lion.hop{animation:lionCheer .5s ease}
+
+/* ===== Social Media ===== */
+.soc{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:12px;box-shadow:var(--shadow);cursor:pointer;color:inherit;animation:rise .4s both}
+.soc:active{transform:scale(.99)}
+.soch{display:flex;align-items:center;gap:10px}
+.soch .av{width:36px;height:36px;border-radius:50%;flex:none;object-fit:cover;display:grid;place-items:center;color:#fff;font:800 13px/1 var(--display)}
+.socn{flex:1;min-width:0;display:flex;flex-direction:column}
+.socn b{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.socn small{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.plat{font:700 11px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--pc);padding:5px 7px;border-radius:999px;flex:none}
+.soc p{margin:9px 0 0;font-size:15px;line-height:1.42;white-space:pre-line;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden}
+.soc p.sub{color:var(--muted);font-size:13.5px;-webkit-line-clamp:3}
+.socimg{position:relative;display:block;margin-top:10px;border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.socimg img{display:block;width:100%;max-height:300px;object-fit:cover}
+.socimg.vid i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52px;height:52px;border-radius:50%;background:rgba(214,0,28,.9);color:#fff;display:grid;place-items:center;font-style:normal;font-size:20px}
+.pdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.nmode{margin:0 0 12px}
+
+/* ===== Vereinsporträt ===== */
+.backlink{border:0;background:none;color:var(--red);font:700 14px/1 var(--body);padding:4px 0;cursor:pointer;align-self:flex-start}
+.clubhead{display:flex;align-items:center;gap:14px}
+.clublogo{width:64px;height:64px;border-radius:18px;background:#fff;display:grid;place-items:center;box-shadow:var(--shadow);flex:none;animation:lionHop .5s both}
+.clublogo img{width:48px;height:48px;object-fit:contain}
+.clubhead small{color:var(--muted);font-size:13px}
+.clubstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.clubstats b{display:block;font:800 26px/1 var(--display)}
+.clubstats small{color:var(--muted);font-size:12px}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+dl.kv dt{color:var(--muted);font-size:13.5px}
+dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
+.duel .side[data-team],tr[data-team]{cursor:pointer}
+.duel .side[data-team] .logo{transition:transform .15s}
+.duel .side[data-team]:active .logo{transform:scale(.92)}
+.side .tapme{display:block;font:600 10.5px/1 var(--body);opacity:.75;margin-top:3px}
+
+/* ===== Allgemeine Animationen ===== */
+.feed>*{animation:rise .4s cubic-bezier(.2,.9,.3,1) both}
+.feed>*:nth-child(2){animation-delay:.04s}.feed>*:nth-child(3){animation-delay:.08s}.feed>*:nth-child(4){animation-delay:.12s}.feed>*:nth-child(5){animation-delay:.16s}.feed>*:nth-child(6){animation-delay:.2s}
+.mlist>*{animation:rise .35s both}
+.mlist>*:nth-child(2){animation-delay:.03s}.mlist>*:nth-child(3){animation-delay:.06s}.mlist>*:nth-child(4){animation-delay:.09s}.mlist>*:nth-child(5){animation-delay:.12s}
+[data-view].from-right{animation:slideL .28s cubic-bezier(.2,.9,.3,1)}
+[data-view].from-left{animation:slideR .28s cubic-bezier(.2,.9,.3,1)}
+@keyframes slideL{from{opacity:0;transform:translateX(18px)}}
+@keyframes slideR{from{opacity:0;transform:translateX(-18px)}}
+#sheet .panel{animation:sheetUp .38s cubic-bezier(.2,1.15,.35,1)}
+@keyframes sheetUp{from{transform:translateY(60%);opacity:.4}}
+@media (min-width:700px){#sheet .panel{animation:none}}
+.tabs button .ic{transition:background .2s,transform .2s}
+.tabs button[aria-selected="true"] .ic{animation:tabPop .35s cubic-bezier(.2,1.5,.4,1)}
+@keyframes tabPop{40%{transform:scale(1.15)}}
+.bigbtn,.reveal,.match,.inj,.outchip,.seg button,.filters button{transition:transform .12s}
+.bigbtn:active,.reveal:active,.match:active,.inj:active,.outchip:active,.filters button:active{transform:scale(.97)}
+.crest{transition:transform .5s}
+.newrec{animation:msgPop .7s cubic-bezier(.2,1.4,.4,1) both}
+.stale{color:var(--loss);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -590,11 +770,15 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       </div>
       <div style="margin-top:22px">
         <div class="sec-h"><h2>Neueste Meldungen</h2></div>
+        <div class="seg nmode" role="group" aria-label="Ansicht wählen"><button type="button" data-nmode="news" aria-pressed="true">Meldungen</button><button type="button" data-nmode="social" aria-pressed="false">Social Media</button></div>
+        <div id="newsPane">
         <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Meldungen durchsuchen, z. B. Schick" autocomplete="off" aria-label="Meldungen durchsuchen"><button type="button" id="qClear" hidden aria-label="Suche löschen">✕</button></div>
         <div class="filters" id="filters" role="group" aria-label="Nach Quelle filtern"></div>
         <div class="feed" id="newsList">
           <div class="sk" style="height:220px;border-radius:18px"></div><div class="sk" style="height:96px"></div><div class="sk" style="height:96px"></div>
         </div>
+        </div>
+        <div id="socialBox" hidden></div>
       </div>
     </section>
 
@@ -642,7 +826,9 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       <div id="clubTransfers" hidden></div>
     </section>
 
-    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabellen von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>, Ausfälle von <a href="https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/" target="_blank" rel="noopener">LigaInsider</a>, Kader von Wikipedia. Werks11 ist eine inoffizielle Fan-App.</p>
+    <section data-view="fun" hidden><div id="funBox"></div></section>
+
+    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabellen von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>, Social Media von Reddit, Bluesky und Mastodon, Ausfälle von <a href="https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/" target="_blank" rel="noopener">LigaInsider</a>, Kader von Wikipedia. Werks11 ist eine inoffizielle Fan-App.</p>
   </div>
 </main>
 
@@ -662,6 +848,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
     <button role="tab" data-tab="games" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>Spiele</button>
     <button role="tab" data-tab="table" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4"/></svg></span>Tabellen</button>
     <button role="tab" data-tab="squad" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z"/></svg><span class="badge" id="injBadge" hidden></span></span>Verein</button>
+    <button role="tab" data-tab="fun" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="12" rx="6"/><path d="M7 11v4M5 13h4M15 12h.01M18 14h.01"/></svg></span>Fanzone</button>
   </div>
 </nav>
 
@@ -682,7 +869,6 @@ const FEEDS = [
   {name:"kicker", url:"https://newsfeed.kicker.de/team/bayer-04-leverkusen", team:true},
   {name:"RP Online", url:"https://rp-online.de/sport/fussball/bayer-04/feed.rss", team:true},
   {name:"Bulinews (engl.)", url:"https://bulinews.com/rss.xml?team=leverkusen", team:true},
-  {name:"Reddit-Fans", url:"https://www.reddit.com/r/bayerleverkusen/new/.rss", team:true},
   {name:"Bing News", url:"https://www.bing.com/news/search?q=%22Bayer+Leverkusen%22&format=rss&setlang=de&cc=DE"},
   {name:"Bing News", url:"https://www.bing.com/news/search?q=Leverkusen+Transfer&format=rss&setlang=de&cc=DE"},
   {name:"Google News (engl.)", url:"https://news.google.com/rss/search?q=%22Bayer+Leverkusen%22+when:3d&hl=en-GB&gl=GB&ceid=GB:en"}
@@ -757,7 +943,27 @@ const B04_FACTS = [
   ["Derby","Das Duell gegen den 1. FC Köln ist das Rheinderby – eines der emotionalsten Spiele der Saison."],
   ["Spieler","Granit Xhaka kam 2023 vom FC Arsenal und war im Meisterjahr einer der Taktgeber im Mittelfeld."],
   ["Spieler","Rudi Völlers Spitzname lautet „Tante Käthe“ – wegen seiner Lockenpracht."],
-  ["Rekord","Leverkusen ist der erste Bundesliga-Meister, der in einer Saison kein einziges Ligaspiel verlor."]
+  ["Rekord","Leverkusen ist der erste Bundesliga-Meister, der in einer Saison kein einziges Ligaspiel verlor."],
+  ["Anekdote", "Torwart Hans-Jörg Butt verwandelte auf Schalke einen Elfmeter für Bayer 04 – und während er noch gemütlich zu seinem Tor zurücklief, schoss Mike Hanke direkt nach dem Anstoß aus großer Entfernung ins leere Tor."],
+  ["Anekdote", "Englische Medien verspotteten Leverkusen lange als „Neverkusen“. In der Meistersaison 2023/24 wurde daraus „Neverlusen“ – weil die Werkself einfach nicht mehr verlor."],
+  ["Spieler", "Florian Wirtz traf im Juni 2020 gegen den FC Bayern mit 17 Jahren und 34 Tagen – damals war er der jüngste Torschütze der Bundesliga-Geschichte."],
+  ["Anekdote", "Ausgerechnet Josip Stanišić, vom FC Bayern ausgeliehen, erzielte im Februar 2024 das 1:0 beim 3:0-Sieg der Werkself gegen die Münchner."],
+  ["Titel", "Auch den Supercup holte Leverkusen 2024: Nach einem 2:2 gegen den VfB Stuttgart gewann die Werkself das Elfmeterschießen mit 4:3."],
+  ["Spieler", "Arturo Vidal spielte von 2007 bis 2011 für Bayer 04 – bevor er bei Juventus Turin, dem FC Bayern und dem FC Barcelona zum Weltstar wurde."],
+  ["Spieler", "Dimitar Berbatov stürmte von 2001 bis 2006 für Leverkusen. Später wurde er bei Tottenham und Manchester United zum Star."],
+  ["Spieler", "Vater und Sohn bei Bayer 04: Bum-kun Cha stürmte in den 80ern für die Werkself, sein Sohn Cha Du-ri unterschrieb 2002 ebenfalls in Leverkusen."],
+  ["Spieler", "Die Zwillinge Lars und Sven Bender verabschiedeten sich 2021 gemeinsam vom Profifußball – beide im Trikot von Bayer 04."],
+  ["Titel", "Auf dem Weg ins Champions-League-Finale 2002 warf Leverkusen den FC Liverpool und Manchester United aus dem Wettbewerb."],
+  ["Titel", "Im DFB-Pokalfinale 2009 unterlag Bayer 04 dem SV Werder Bremen mit 0:1 – das Tor schoss Mesut Özil."],
+  ["Titel", "Das Pokalfinale 2020 gegen den FC Bayern (2:4) fand wegen der Corona-Pandemie vor leeren Rängen im Berliner Olympiastadion statt."],
+  ["Anekdote", "Beim 5:0 gegen Werder Bremen, mit dem 2024 die Meisterschaft feststand, stürmten die ersten Fans schon vor dem Abpfiff jubelnd auf den Rasen."],
+  ["Trainer", "Xabi Alonso spielte als Profi für Real Sociedad, den FC Liverpool, Real Madrid und den FC Bayern – mit Liverpool und Real gewann er die Champions League."],
+  ["Anekdote", "Rudi Völler schrieb 2003 als Teamchef Fernsehgeschichte: Nach einem 0:0 in Island platzte ihm im ARD-Interview mit Waldemar Hartmann der Kragen – inklusive der berühmten „drei Weizenbier“."],
+  ["Spieler", "Ulf Kirsten wurde wegen seiner dunklen Haare von allen nur „der Schwatte“ genannt."],
+  ["Trainer", "UEFA-Pokal-Trainer Erich Ribbeck trug wegen seines feinen Auftretens den Spitznamen „Sir Erich“."],
+  ["Spieler", "Abwehrchef Jonathan Tah spielte zehn Jahre lang für Bayer 04, bevor er 2025 zum FC Bayern wechselte."],
+  ["Spieler", "Jeremie Frimpong folgte Florian Wirtz 2025 zum FC Liverpool – gleich zwei Meisterhelden zog es an die Anfield Road."],
+  ["Anekdote", "Michael Ballack köpfte im Mai 2000 in Unterhaching ins eigene Tor – ausgerechnet an dem Tag, an dem Leverkusen ein Punkt zur Meisterschaft gereicht hätte."]
 ];
 /* Hintergrund zu jedem Fakt (gleiche Reihenfolge wie B04_FACTS) */
 const FACT_MORE = [
@@ -790,7 +996,27 @@ const FACT_MORE = [
   ["Leverkusen und Köln liegen direkt nebeneinander am Rhein. Dass Florian Wirtz einst aus der Kölner Jugend nach Leverkusen wechselte, sorgt bis heute für zusätzliche Brisanz.","Bayer 04 Leverkusen"],
   ["Xhaka hatte zuvor schon für Borussia Mönchengladbach in der Bundesliga gespielt. Nach zwei Jahren und dem Double in Leverkusen wechselte er 2025 in die Premier League zum AFC Sunderland.","Granit Xhaka"],
   ["Den Spitznamen bekam Völler zu seiner Zeit bei Werder Bremen – seine früh ergrauten Locken erinnerten Mitspieler an die Frisur einer älteren Dame. Völler nahm es mit Humor.","Rudi Völler"],
-  ["Vor Leverkusen hatte das in der Bundesliga niemand geschafft, auch der FC Bayern nicht. In Europas großen Ligen gelang es zuvor zum Beispiel dem FC Arsenal in der Premier League 2003/04.","Fußball-Bundesliga 2023/24"]
+  ["Vor Leverkusen hatte das in der Bundesliga niemand geschafft, auch der FC Bayern nicht. In Europas großen Ligen gelang es zuvor zum Beispiel dem FC Arsenal in der Premier League 2003/04.","Fußball-Bundesliga 2023/24"],
+  ["Butt war einer der torgefährlichsten Torhüter der Bundesliga-Geschichte und trat für Hamburg, Leverkusen und den FC Bayern zum Elfmeter an. Hankes Treffer gegen den heraneilenden Butt gehört bis heute zu den kuriosesten Toren der Liga.", "Hans-Jörg Butt"],
+  ["", ""],
+  ["", "Florian Wirtz"],
+  ["", ""],
+  ["", ""],
+  ["", "Arturo Vidal"],
+  ["", "Dimitar Berbatov"],
+  ["", "Cha Bum-kun"],
+  ["", "Lars Bender"],
+  ["", "Champions League 2001/02"],
+  ["", ""],
+  ["", ""],
+  ["", ""],
+  ["", "Xabi Alonso"],
+  ["", "Rudi Völler"],
+  ["", "Ulf Kirsten"],
+  ["", "Erich Ribbeck"],
+  ["", "Jonathan Tah"],
+  ["", "Jeremie Frimpong"],
+  ["", "Michael Ballack"]
 ];
 /* Ereignisse für „Heute vor … Jahren“ */
 const ON_THIS_DAY = [
@@ -1349,7 +1575,7 @@ const ZONES={bl1:[["z-cl","Champions League"],["z-el","Europa League"],["z-ecl",
 function tableHTML(c){
   if(!c.table.length) return `<div class="empty">Tabelle gerade nicht verfügbar.</div>`;
   return `<div class="tbl"><div class="tbl-scroll"><table><thead><tr><th style="text-align:center">#</th><th class="team">Verein</th><th>Sp</th><th>S</th><th>U</th><th>N</th><th class="c-tore">Tore</th><th>Diff</th><th>Pkt</th></tr></thead><tbody>${
-    c.table.map((r,i)=>`<tr class="${r.id===TEAM_ID?"me":""}"><td class="pos ${zoneFor(c.ck,i,c.table.length)}">${i+1}</td><td class="team">${r.icon?`<img src="${esc(r.icon)}" alt="" loading="lazy" onerror="this.remove()">`:""}${esc(r.name)}</td><td>${r.sp}</td><td>${r.s}</td><td>${r.u}</td><td>${r.n}</td><td class="c-tore">${esc(r.tore)}</td><td>${r.diff>0?"+":""}${r.diff}</td><td class="pts">${r.pkt}</td></tr>`).join("")
+    c.table.map((r,i)=>`<tr class="${r.id===TEAM_ID?"me":""}" data-team="${r.id}" data-tname="${esc(r.full||r.name)}" data-ticon="${esc(r.icon)}"><td class="pos ${zoneFor(c.ck,i,c.table.length)}">${i+1}</td><td class="team">${r.icon?`<img src="${esc(r.icon)}" alt="" loading="lazy" onerror="this.remove()">`:""}${esc(r.name)}</td><td>${r.sp}</td><td>${r.s}</td><td>${r.u}</td><td>${r.n}</td><td class="c-tore">${esc(r.tore)}</td><td>${r.diff>0?"+":""}${r.diff}</td><td class="pts">${r.pkt}</td></tr>`).join("")
   }</tbody></table></div></div>`;
 }
 function cupHTML(c){
@@ -2043,7 +2269,7 @@ function openMatch(id){
   $("sheetBody").innerHTML=`
     <div class="hero sm"${!m.finished&&!live?` data-t="${m.t}"`:""}>
       <div class="top"><span id="sheetTitle">${esc(m.comp)}${m.round?" · "+esc(m.round):""}</span>${live?`<span class="pill live">Live</span>`:""}</div>
-      <div class="duel"><div class="side">${logo(m.i1,m.t1)}<b>${esc(short(m.t1))}</b></div><div class="mid">${center}</div><div class="side">${logo(m.i2,m.t2)}<b>${esc(short(m.t2))}</b></div></div>
+      <div class="duel"><div class="side"${m.id1!==TEAM_ID?` data-team="${m.id1}" data-tname="${esc(m.t1)}" data-ticon="${esc(m.i1)}" data-from="${m.id}" role="button" tabindex="0"`:""}>${logo(m.i1,m.t1)}<b>${esc(short(m.t1))}</b>${m.id1!==TEAM_ID?'<span class="tapme">Infos ›</span>':""}</div><div class="mid">${center}</div><div class="side"${m.id2!==TEAM_ID?` data-team="${m.id2}" data-tname="${esc(m.t2)}" data-ticon="${esc(m.i2)}" data-from="${m.id}" role="button" tabindex="0"`:""}>${logo(m.i2,m.t2)}<b>${esc(short(m.t2))}</b>${m.id2!==TEAM_ID?'<span class="tapme">Infos ›</span>':""}</div></div>
       ${!m.finished&&!live?`<div class="countdown"></div>`:""}
       <div class="when">${esc(fmtDate(d,{weekday:"long",day:"numeric",month:"long",year:"numeric"}))}, ${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))} Uhr${m.stadium?" · "+esc(m.stadium):m.home?" · BayArena":""}</div>
     </div>
@@ -2055,7 +2281,7 @@ function openMatch(id){
     ${m.finished&&!hide?motmHTML(m):""}
     ${(live||m.finished)&&!hide?`<div class="box" id="tickerBox"><h4>${live?'<span class="pill live" style="font-size:11px;padding:4px 7px">Live</span> Ticker':"Spielverlauf &amp; Statistik"}</h4><div class="sk" style="height:110px"></div></div>`:""}
     ${!m.finished&&m.t-Date.now()<16*86400e3?`<div class="box" id="dayInfo"><h4>☁️ Spieltag-Infos</h4><div class="sk" style="height:60px"></div></div>`:""}
-    ${!m.finished&&!live?`<div class="box" id="oppBox"><h4>${ICON.vs}Gegner-Check: ${esc(short(opp))}</h4><div class="sk" style="height:110px"></div></div>`:""}
+    ${!m.finished&&!live?`<div class="box" id="oppBox"><h4>${ICON.vs}Gegner-Check: ${esc(short(opp))}</h4><div class="sk" style="height:110px"></div></div><button type="button" class="bigbtn sec" data-team="${oppId}" data-tname="${esc(opp)}" data-ticon="${esc(m.home?m.i2:m.i1)}" data-from="${m.id}">Alles über ${esc(short(opp))} ›</button>`:""}
     ${!hide&&(m.finished||m.goals.length)?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
     ${fact||check.items.length?`<div class="box fact"><h4>${ICON.bulb}Wusstest du?</h4>${fact?`<p class="big">${esc(fact)}</p>`:""}${check.items.length||check.form?`<ul class="facts">${check.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${check.form?`<p style="margin-top:10px">Form von ${esc(short(opp))}:</p>${check.form}`:""}`:""}</div>`:""}
     <div class="box"><h4>${ICON.vs}Bilanz gegen ${esc(short(opp))}</h4><div id="h2hBox"><div class="sk" style="height:110px"></div></div></div>
@@ -2072,7 +2298,7 @@ function openMatch(id){
 }
 function closeSheet(fromPop){
   if($("sheet").hidden) return;
-  clearInterval(qTimer); clearInterval(tickerTimer); quiz=null; pen=null; who=null;
+  clearInterval(qTimer); clearInterval(tickerTimer); quiz=null; who=null; window.__stopGames&&window.__stopGames();
   $("sheet").hidden=true; document.body.style.overflow="";
   if(sheetOpen){ sheetOpen=false; if(!fromPop){ try{ history.back(); }catch(e){} } }
 }
@@ -2084,7 +2310,7 @@ function renderStamp(){
   const src = state.feedsAll ? " · "+state.feedsOk+" von "+state.feedsAll+" Quellen" : "";
   $("stamp").textContent = t ? "Stand "+fmtDate(new Date(t),{hour:"2-digit",minute:"2-digit"})+" Uhr"+src : "Lade …";
 }
-function renderAll(){ renderFan(); renderGames(); renderVideos(); if(clubSel==="transfers") renderTransfers(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
+function renderAll(){ renderFan(); if(newsMode==="social") renderSocial(); renderGames(); renderVideos(); if(clubSel==="transfers") renderTransfers(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
 
 
 /* ---------- Text-Abruf (HTML-Seiten) ---------- */
@@ -2179,7 +2405,8 @@ function enrichFromNews(list){
   const news=state.news||[];
   list.forEach(p=>{
     const sn=norm(surname(p.name));
-    const hits=news.filter(n=>norm(n.title+" "+(n.desc||"")).includes(sn) && INJ_WORDS.test(n.title+" "+(n.desc||""))).sort((a,b)=>b.t-a.t);
+    const from=Math.max((p.sinceT||0)-2*86400e3, Date.now()-21*86400e3);
+    const hits=news.filter(n=>n.t>=from && norm(n.title+" "+(n.desc||"")).includes(sn) && INJ_WORDS.test(n.title+" "+(n.desc||""))).sort((a,b)=>b.t-a.t);
     const withEta=hits.find(n=>ETA_RE.test(n.title+" "+(n.desc||"")));
     if(withEta){ p.eta=(withEta.title+" "+(withEta.desc||"")).match(ETA_RE)[1]; p.etaSrc=withEta.source; p.etaT=withEta.t; p.etaLink=withEta.link; }
     if(hits[0]){ p.news=hits[0]; }
@@ -2197,29 +2424,19 @@ function injuriesFromNews(){
   return out;
 }
 async function loadInjuries(){
-  let list=null;
-  try{ list=parseLigaInsider(await getText("https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/")); }catch(e){}
-  if(list){ state.injSrc="LigaInsider"; }
-  else { list=injuriesFromNews(); state.injSrc="Nachrichten"; }
-  state.injuries=enrichFromNews(list);
-  state.injAt=Date.now();
+  let list=null, at=Date.now(), src="LigaInsider";
+  try{ list=parseLigaInsider(await getText("https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/?_="+Math.floor(Date.now()/36e5))); }catch(e){}
+  if(!list && NATIVE && window.AndroidNet.injCache){ // im Hintergrund geladener Stand
+    try{ const c=JSON.parse(window.AndroidNet.injCache()||"{}"); if(c.html && c.at>(state.injAt||0)){ list=parseLigaInsider(c.html); at=c.at; } }catch(e){}
+  }
+  if(!list && state.injuries && state.injSrc==="LigaInsider" && Date.now()-(state.injAt||0)<36*3600e3) return; // letzten guten Stand behalten
+  if(!list){ list=injuriesFromNews(); src="Nachrichten"; }
+  list.forEach(p=>{ const d=sinceDate(p.since,at); if(d) p.sinceT=d; });
+  state.injSrc=src; state.injuries=enrichFromNews(list); state.injAt=at;
 }
 
 /* ---------- Anzeige: Fakt, Ausfälle, Fanzone, Kader ---------- */
 let factIdx=(()=>{ let last=load("factLast"); let i; do{ i=Math.floor(Math.random()*B04_FACTS.length); }while(B04_FACTS.length>1 && i===last); store("factLast",i); return i; })();
-function renderFact(){
-  const [cat,txt]=B04_FACTS[factIdx];
-  $("factBox").innerHTML=`<div class="factcard"><div class="k"><span class="chipc">${esc(cat)}</span><button type="button" id="nextFact">Nächster Fakt →</button></div><p data-fact="${factIdx}" role="button" tabindex="0">${esc(txt)}<span class="factmore">Antippen für mehr ›</span></p></div>`;
-}
-function openFact(i){ bump("fact");
-  const [cat,txt]=B04_FACTS[i], [more,wiki]=FACT_MORE[i]||["",""];
-  openSheetRaw(`<div class="factcard" style="box-shadow:none"><div class="k"><span class="chipc" id="sheetTitle">${esc(cat)}</span></div><p style="cursor:default">${esc(txt)}</p></div>
-    ${more?`<div class="box"><h4>${ICON.bulb}Die Geschichte dahinter</h4><p style="margin:0;color:var(--fg);font-size:15.5px;line-height:1.55">${esc(more)}</p>
-      </div>`:""}
-    ${wiki?`<div class="box reader" id="readerBox"><h4>Die ganze Geschichte</h4><div class="sk" style="height:160px"></div></div>`:""}
-    <button type="button" class="bigbtn sec" data-factnext="${i}">Nächster Fakt</button>`);
-  if(wiki) renderArticle(wiki, txt+" "+more, $("readerBox"));
-}
 
 /* ---------- Wikipedia-Artikel direkt in der App lesen ---------- */
 const articleCache={};
@@ -2300,24 +2517,14 @@ function renderOut(){
     <div class="outrow">${l.map(p=>`<button type="button" class="outchip" data-go="squad"><span class="ic2 ${p.kind}">${KIND[p.kind][0]}</span><span><b>${esc(surname(p.name))}</b><small>${esc(p.eta||p.reason||KIND[p.kind][1])}</small></span></button>`).join("")}</div>`;
 }
 function hs(k){ return load(k)||0; }
-function renderFan(){
-  $("fanBox").innerHTML=`<div class="sec-h" style="margin:4px 0 8px"><h2>Fanzone</h2></div><div class="fan">
-    <button type="button" class="game q" data-game="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg><span class="hs">Rekord ${hs("hsQuiz")}</span><span><b>Werkself-Quiz</b><br><small>10 Fragen, schnell sein lohnt sich</small></span></button>
-    <button type="button" class="game t" data-game="tipp"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="hs">${tipTotal().p} Punkte</span><span><b>Tippspiel</b><br><small>Tippe die Ergebnisse der Werkself</small></span></button>
-    <button type="button" class="game w" data-game="who"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><span class="hs">Rekord ${hs("hsWho")}</span><span><b>Wer ist das?</b><br><small>Erkenne Spieler an Hinweisen</small></span></button>
-    <button type="button" class="game k" data-game="week"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><span class="hs">Diese Woche ${hs("hsWeek_"+weekKey())}</span><span><b>Wochenquiz</b><br><small>Fragen zum aktuellen Geschehen</small></span></button>
-    <button type="button" class="game b" data-game="badges"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="M8.5 14l-2 7 5.5-3 5.5 3-2-7"/></svg><span class="hs">${Object.keys(load("badgesGot")||{}).length}/${BADGES.length} Abzeichen</span><span><b>Meine Saison</b><br><small>Abzeichen und Spieler des Spiels</small></span></button>
-    <button type="button" class="game e" data-game="pen"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg><span class="hs">Rekord ${hs("hsPen")}</span><span><b>Elfer-König</b><br><small>Wie viele verwandelst du in Folge?</small></span></button>
-  </div>`;
-}
 function renderSquad(){
   // Ausfälle
   const l=state.injuries;
-  $("outStamp").textContent=state.injAt?"Quelle: "+(state.injSrc||"")+" · "+fmtDate(new Date(state.injAt),{hour:"2-digit",minute:"2-digit"})+" Uhr":"";
+  $("outStamp").innerHTML=state.injAt?`Stand: ${esc(fmtDate(new Date(state.injAt),{weekday:"short",day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}))} Uhr · ${esc(state.injSrc||"")}${Date.now()-state.injAt>30*3600e3?' · <span class="stale">veraltet – bitte aktualisieren</span>':""}`:"";
   if(l){
     $("injBox").innerHTML=l.length?`<div class="mlist">${l.map(p=>`<div class="inj" data-pname="${esc(p.name)}" role="button" tabindex="0"><span class="ic2 ${p.kind}">${KIND[p.kind][0]}</span><div style="min-width:0">
       <b>${esc(p.name)}</b><div class="why">${esc(p.reason||KIND[p.kind][1])}</div>
-      <div class="meta"><span>${esc(KIND[p.kind][1])}</span>${p.since?`<span class="sep"></span><span>fehlt seit ${esc(p.since)}</span>`:""}</div>
+      <div class="meta"><span>${esc(KIND[p.kind][1])}</span>${p.since?`<span class="sep"></span><span>fehlt seit ${p.sinceT?esc(fmtDate(new Date(p.sinceT),{day:"numeric",month:"short"})):esc(p.since)}${p.sinceT?` (${esc(p.since)})`:""}</span>`:""}</div>
       ${p.eta?`<span class="eta">Prognose: ${esc(p.eta)}</span><div class="meta" style="margin-top:4px">laut ${esc(p.etaSrc||"Medien")}, ${esc(ago(p.etaT))}</div>`:""}
       ${p.etaLink||p.link?`<a href="${esc(p.etaLink||p.link)}" target="_blank" rel="noopener">Zur Meldung →</a>`:""}
     </div></div>`).join("")}</div>`:`<div class="empty">Aktuell keine gemeldeten Ausfälle. 💪</div>`;
@@ -2489,7 +2696,11 @@ const BADGES=[
   ["legend","Historiker","5 Legenden angeschaut","🏛️",()=>stats().legend||0,5],
   ["fact","Fakten-Fan","10 Fakten gelesen","💡",()=>stats().fact||0,10],
   ["save","Sammler","5 Meldungen gemerkt","★",()=>savedList().length,5],
-  ["spoil","Spoiler-frei","„Ich schaue das Spiel“ genutzt","🙈",()=>stats().watch||0,1]
+  ["spoil","Spoiler-frei","„Ich schaue das Spiel“ genutzt","🙈",()=>stats().watch||0,1],
+  ["puzzle","Puzzle-Profi","Ein Foto-Puzzle gelöst","🧩",()=>stats().puzzle||0,1],
+  ["memory","Gedächtnis-Ass","Wappen-Memory geschafft","🃏",()=>stats().memory||0,1],
+  ["keep","Ballzauberer","20 Ballkontakte beim Jonglieren","🤹",()=>hs("hsKeep"),20],
+  ["club","Gegner-Experte","5 Vereinsporträts angeschaut","🔎",()=>stats().club||0,5]
 ];
 function badge(){
   const got=load("badgesGot")||{}; let fresh=null;
@@ -2585,45 +2796,513 @@ function endQuiz(){
 }
 document.addEventListener("click",e=>{ const a=e.target.closest("[data-ans]"); if(a&&!a.disabled&&quiz) answer(a.dataset.ans); });
 
-/* ---------- Elfer-König ---------- */
-let pen=null;
-function startPen(){
-  pen={streak:0,busy:false};
-  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elfer-König</span><span>Rekord ${hs("hsPen")}</span></div>
-    <p style="font-size:14px;color:var(--muted);margin:8px 0 12px">Tippe in eine Ecke des Tores. Der Keeper springt in eine Richtung – triffst du dieselbe Seite, hält er.</p>
-    <div class="pitch" id="pitch"><div class="stripes"></div><div class="goalf"><div class="zones3">${[0,1,2,3,4,5].map(z=>`<button type="button" data-shot="${z}" aria-label="Schuss ${["oben links","oben Mitte","oben rechts","unten links","unten Mitte","unten rechts"][z]}"></button>`).join("")}</div></div>
-      <div class="keeper" id="keeper"><i></i></div><div class="spot"></div><div class="ball" id="ball"></div><div class="pmsg" id="pmsg"></div>
-      <div class="pscore"><span>Serie: <b id="pstreak">0</b></span><span>Rekord: ${hs("hsPen")}</span></div></div>`);
+/* ---------- Maskottchen Brian ---------- */
+const MASCOT="Brian";
+const MASCOT_INTRO=["Wusstest du schon?","Pass auf, das ist spannend:","Kleiner Fakt von mir:","Hör mal zu:","Brüll! Das musst du wissen:"];
+const MASCOT_FUNNY=["Das ist echt passiert:","Ich lach mich immer noch schlapp:","Kurios, aber wahr:"];
+function isFunny(cat){ return /anekdote|kurios/i.test(cat||""); }
+function renderFact(){
+  const [cat,txt]=B04_FACTS[factIdx]; const fun=isFunny(cat);
+  const pool=fun?MASCOT_FUNNY:MASCOT_INTRO; const intro=pool[(factIdx+new Date().getDate())%pool.length];
+  $("factBox").innerHTML=`<div class="mascot">
+    <div class="bubble"><div class="k"><span class="chipc">${fun?"😂 ":""}${esc(cat)}</span><span class="who">${MASCOT} erzählt</span></div>
+      <p data-fact="${factIdx}" role="button" tabindex="0"><span class="intro">${esc(intro)}</span> ${esc(txt)}</p>
+      <div class="acts"><button type="button" data-fact="${factIdx}">Mehr dazu</button><button type="button" id="nextFact">Nächster Fakt →</button></div></div>
+    <img class="lion" src="lion_run.webp" alt="Maskottchen Brian, der Löwe" width="543" height="629" data-fact="${factIdx}">
+  </div>`;
 }
-function shoot(z){
-  if(!pen||pen.busy) return; pen.busy=true;
-  const col=z%3, row=Math.floor(z/3);
-  const kc=Math.floor(Math.random()*3); // Keeper wählt eine Seite
-  const lefts=["22%","50%","78%"], tops=["18%","36%"];
-  const k=$("keeper"), b=$("ball");
-  k.style.left=lefts[kc]; k.style.transform=`translateX(-50%) rotate(${kc===0?-25:kc===2?25:0}deg)`;
-  b.style.left=lefts[col]; b.style.top=tops[row]; b.style.width="6%";
-  const saved = kc===col && !(col===1 && row===0 && Math.random()<0.5); // Mitte oben: halbe Chance
-  setTimeout(()=>{
-    const m=$("pmsg");
-    if(saved){
-      m.textContent="Gehalten!"; const best=hs("hsPen"); const rec=pen.streak>best; if(rec) store("hsPen",pen.streak); setTimeout(badge,1200);
-      setTimeout(()=>{ openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${pen.streak} ${pen.streak===1?"Treffer":"Treffer"} in Folge</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
-        <div class="qscore"><div><b>${pen.streak}</b><small>Serie</small></div><div><b>${Math.max(best,pen.streak)}</b><small>Rekord</small></div></div>
-        <button type="button" class="bigbtn" data-game="pen">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`); pen=null; renderFan(); },1100);
-    } else {
-      pen.streak++; m.textContent="Tor!"; $("pstreak").textContent=pen.streak;
-      setTimeout(()=>{ m.textContent=""; k.style.left="50%"; k.style.transform="translateX(-50%)"; b.style.left="50%"; b.style.top="80%"; b.style.width="9%"; pen.busy=false; },850);
-    }
-  },380);
+function openFact(i){ bump("fact");
+  const [cat,txt]=B04_FACTS[i], [more,wiki]=FACT_MORE[i]||["",""];
+  openSheetRaw(`<div class="mascot-end"><img src="lion_run.webp" alt="" class="nod"><div class="bubble"><span class="chipc" id="sheetTitle">${isFunny(cat)?"😂 ":""}${esc(cat)}</span><p>${esc(txt)}</p></div></div>
+    ${more?`<div class="box"><h4>${ICON.bulb}Die Geschichte dahinter</h4><p style="margin:0;color:var(--fg);font-size:15.5px;line-height:1.55">${esc(more)}</p></div>`:""}
+    ${wiki?`<div class="box reader" id="readerBox"><h4>Die ganze Geschichte</h4><div class="sk" style="height:160px"></div></div>`:""}
+    <button type="button" class="bigbtn sec" data-factnext="${i}">Nächster Fakt</button>`);
+  if(wiki) renderArticle(wiki, txt+" "+more, $("readerBox"));
+}
+// Antippen der 19:04-Benachrichtigung
+window.openDailyFact=(i,text)=>{ i=+i; if(i>=0 && B04_FACTS[i]){ factIdx=i; store("factLast",i); renderFact(); openFact(i); }
+  else if(text) openSheetRaw(`<div class="mascot-end"><img src="lion_run.webp" alt="" class="nod"><div class="bubble"><span class="chipc" id="sheetTitle">Heute vor … Jahren</span><p>${esc(text)}</p></div></div><button type="button" class="bigbtn sec" data-close>Schließen</button>`); };
+window.openTabNative=(t)=>{ if(document.querySelector(`[data-tab="${t}"]`)){ closeSheet(); showTab(t); } };
+
+/* ---------- Fanzone (eigener Reiter) ---------- */
+const GAMES=[
+  ["pen","e","Elfer-König","Schieß gegen Torwart Brian",()=>`Rekord ${hs("hsPen")}`,'<circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>'],
+  ["puzzle","p","Foto-Puzzle","Schieb die Teile zurecht",()=>`Bestzeit ${puzBest(3)}`,'<path d="M4 4h6v3a2 2 0 1 0 4 0V4h6v6h-3a2 2 0 1 0 0 4h3v6h-6v-3a2 2 0 1 0-4 0v3H4z"/>'],
+  ["memory","m","Wappen-Memory","Finde alle Vereinspaare",()=>`Rekord ${hs("hsMem")||"–"} Züge`,'<rect x="3" y="4" width="8" height="11" rx="2"/><rect x="13" y="9" width="8" height="11" rx="2"/>'],
+  ["keep","j","Jonglieren","Halte den Ball in der Luft",()=>`Rekord ${hs("hsKeep")}`,'<circle cx="12" cy="7" r="4"/><path d="M6 21c1-3 3-5 6-5s5 2 6 5"/>'],
+  ["quiz","q","Werkself-Quiz","10 Fragen, schnell sein lohnt sich",()=>`Rekord ${hs("hsQuiz")}`,'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>'],
+  ["week","k","Wochenquiz","Fragen zum aktuellen Geschehen",()=>`Diese Woche ${hs("hsWeek_"+weekKey())}`,'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  ["who","w","Wer ist das?","Erkenne Spieler an Hinweisen",()=>`Rekord ${hs("hsWho")}`,'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'],
+  ["tipp","t","Tippspiel","Tippe die Ergebnisse der Werkself",()=>`${tipTotal().p} Punkte`,'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'],
+  ["badges","b","Meine Saison","Abzeichen und Spieler des Spiels",()=>`${Object.keys(load("badgesGot")||{}).length}/${BADGES.length} Abzeichen`,'<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-2 7 5.5-3 5.5 3-2-7"/>']
+];
+function renderFan(){
+  if($("fanBox")) $("fanBox").innerHTML="";
+  const box=$("funBox"); if(!box) return;
+  const h=new Date().getHours(); const hi=h<11?"Guten Morgen":h<18?"Servus":"N'Abend";
+  const pen=hs("hsPen"), tips=tipTotal().p;
+  const line=pen?`Dein Elfer-Rekord gegen mich: ${pen} in Folge. Schaffst du mehr?`:"Traust du dich gegen mich ins Elfmeterschießen?";
+  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(line)}${tips?` Im Tippspiel hast du schon ${tips} Punkte.`:""}</p></div><img class="lion" src="lion_keeper.webp" alt="Brian im Torwarttrikot" width="369" height="450" data-game="pen"></div>
+    <div class="sec-h" style="margin:18px 0 8px"><h2>Minispiele</h2></div>
+    <div class="fan">${GAMES.map(([k,c,t,d,hsF,ic],i)=>`<button type="button" class="game ${c}" data-game="${k}" style="--i:${i}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg><span class="hs">${esc(hsF())}</span><span><b>${esc(t)}</b><br><small>${esc(d)}</small></span></button>`).join("")}</div>`;
+}
+
+/* ---------- Social Media ---------- */
+const SOCIAL_PLAT={reddit:["Reddit","#ff4500"],bluesky:["Bluesky","#1185fe"],mastodon:["Mastodon","#6364ff"],youtube:["YouTube","#e00000"],web:["Im Netz","#6e6164"]};
+const SOCIAL_REL=/leverkusen|werkself|bayer ?04|#b04\b|\bb04\b|bayarena|xabi|schick|hjulmand|rolfes|tapsoba|grimaldo|andrich/i;
+const SOCIAL_BAD=/pharma|monsanto|glyphosat|aktie|stock|shares|dividend|dax\b|börse|basketball|giants|handball|volleyball|eishockey/i;
+const SOCIAL_NEWS=/instagram|tiktok|social media|im netz|netz reagiert|internet|postet|posting|\bpost\b|tweet|x-post|auf x\b|viral|video|fans (feiern|reagieren|toben)|reaktionen|influencer|youtube|kabinenvideo|story/i;
+let socialSel="Alle";
+function htmlText(h){ const d=document.createElement("div"); d.innerHTML=String(h||"").replace(/<br\s*\/?>/gi,"\n").replace(/<\/p>/gi,"\n"); return (d.textContent||"").trim(); }
+async function loadSocial(){
+  const out=[];
+  const jobs=[
+    async()=>{ const items=await getFeed("https://www.reddit.com/r/bayerleverkusen/new/.rss"); items.forEach(i=>{ const c=cleanItem(i,{name:"Reddit"}); out.push({plat:"reddit",author:"r/bayerleverkusen",text:c.title,sub:htmlText(i.desc).slice(0,260),link:c.link,t:c.t,img:c.img}); }); },
+    ...["bayer04","werkself","bayerleverkusen","b04"].map(tag=>async()=>{ const j=await getJson("https://mastodon.social/api/v1/timelines/tag/"+tag+"?limit=30");
+      (j||[]).forEach(s=>{ const m=(s.media_attachments||[]).find(x=>x.type==="image"); out.push({plat:"mastodon",author:"@"+(s.account?.acct||""),name:s.account?.display_name||"",avatar:safeImg(s.account?.avatar_static),text:htmlText(s.content),link:s.url||s.uri,t:Date.parse(s.created_at)||0,img:m?safeImg(m.preview_url):""}); }); }),
+    ...["Bayer Leverkusen","Werkself","Bayer 04"].map(q=>async()=>{ const j=await getJson("https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?limit=30&sort=latest&q="+encodeURIComponent(q));
+      (j.posts||[]).forEach(p=>{ const rk=String(p.uri||"").split("/").pop(); const e=p.embed||{}; const img=(e.images&&e.images[0]&&e.images[0].thumb)||(e.media&&e.media.images&&e.media.images[0]&&e.media.images[0].thumb)||(e.external&&e.external.thumb)||"";
+        out.push({plat:"bluesky",author:"@"+(p.author?.handle||""),name:p.author?.displayName||"",avatar:safeImg(p.author?.avatar),text:p.record?.text||"",link:"https://bsky.app/profile/"+(p.author?.handle||"")+"/post/"+rk,t:Date.parse(p.record?.createdAt||p.indexedAt)||0,img:safeImg(img)}); }); })
+  ];
+  const res=await Promise.allSettled(jobs.map(f=>f()));
+  (state.videos||[]).slice(0,12).forEach(v=>out.push({plat:"youtube",author:v.ch,text:v.title,link:"https://m.youtube.com/watch?v="+v.id,t:v.t,img:"https://i.ytimg.com/vi/"+v.id+"/mqdefault.jpg",vid:v.id}));
+  visibleNews(state.news||[]).filter(n=>SOCIAL_NEWS.test(n.title)).slice(0,20).forEach(n=>out.push({plat:"web",author:n.source,text:n.title,sub:n.desc||"",link:n.link,t:n.t,img:n.img,key:artKey(n)}));
+  const seen=new Set(), now=Date.now();
+  const list=out.filter(x=>{
+    if(!x.text||!x.t||now-x.t>21*86400e3) return false;
+    if((x.plat==="mastodon"||x.plat==="bluesky") && (!SOCIAL_REL.test(x.text) || SOCIAL_BAD.test(x.text) || OTHER_SPORT.test(x.text) || NOT_CLUB.test(x.text))) return false;
+    if(x.plat==="mastodon"||x.plat==="bluesky"){ if(/\bnsfw\b|porn|onlyfans|crypto|bitcoin|casino|wett/i.test(x.text)) return false; }
+    const k=norm(x.text).replace(/[^a-z0-9]/g,"").slice(0,70); if(seen.has(k)) return false; seen.add(k); return true;
+  }).sort((a,b)=>b.t-a.t).slice(0,80);
+  if(!list.length && !res.some(r=>r.status==="fulfilled")) throw new Error("social");
+  state.social=list;
+}
+function socialCard(x){
+  const [pn,pc]=SOCIAL_PLAT[x.plat]||SOCIAL_PLAT.web;
+  const av=x.avatar?`<img class="av" src="${esc(x.avatar)}" alt="" loading="lazy" onerror="this.remove()">`:`<span class="av" style="background:${pc}">${esc(initials(x.name||x.author||pn))}</span>`;
+  const body=esc(x.text.length>420?x.text.slice(0,400)+" …":x.text);
+  return `<button type="button" class="soc" data-soc="${esc(x.link)}"${x.key?` data-socnews="${esc(x.key)}"`:""}${x.vid?` data-video="${esc(x.vid)}"`:""}>
+    <div class="soch">${av}<div class="socn"><b>${esc(x.name||x.author)}</b><small>${x.name&&x.author!==x.name?esc(x.author)+" · ":""}${esc(ago(x.t))}</small></div><span class="plat" style="--pc:${pc}">${esc(pn)}</span></div>
+    <p>${body}</p>${x.sub&&x.plat!=="web"&&x.sub!==x.text?`<p class="sub">${esc(x.sub.slice(0,220))}</p>`:""}
+    ${x.img?`<span class="socimg${x.vid?" vid":""}"><img src="${esc(x.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()">${x.vid?"<i>▶</i>":""}</span>`:""}</button>`;
+}
+function renderSocial(){
+  const box=$("socialBox"); if(!box) return;
+  const all=state.social||[];
+  if(!all.length){ box.innerHTML=state.ts.social?`<div class="empty">Gerade nichts Neues aus den sozialen Netzwerken.</div>`:`<div class="sk" style="height:140px;border-radius:16px"></div><div class="sk" style="height:140px;border-radius:16px;margin-top:10px"></div>`; return; }
+  const counts={}; all.forEach(x=>counts[x.plat]=(counts[x.plat]||0)+1);
+  if(socialSel!=="Alle"&&!counts[socialSel]) socialSel="Alle";
+  const list=socialSel==="Alle"?all:all.filter(x=>x.plat===socialSel);
+  box.innerHTML=`<div class="filters"><button type="button" data-socf="Alle" aria-pressed="${socialSel==="Alle"}">Alle<span>${all.length}</span></button>${Object.keys(SOCIAL_PLAT).filter(k=>counts[k]).map(k=>`<button type="button" data-socf="${k}" aria-pressed="${socialSel===k}"><i class="pdot" style="background:${SOCIAL_PLAT[k][1]}"></i>${SOCIAL_PLAT[k][0]}<span>${counts[k]}</span></button>`).join("")}</div>
+    <div class="feed">${list.slice(0,50).map(socialCard).join("")}</div>
+    <p class="legend" style="margin-top:12px">Instagram, X und TikTok lassen sich ohne Anmeldung leider nicht auslesen. Deshalb siehst du hier Beiträge von Reddit, Bluesky und Mastodon, Videos von YouTube und Meldungen darüber, was im Netz rund um Bayer 04 los ist.</p>`;
+}
+let newsMode="news";
+function setNewsMode(m){ newsMode=m; document.querySelectorAll("[data-nmode]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.nmode===m))); $("newsPane").hidden=m!=="news"; $("socialBox").hidden=m!=="social"; if(m==="social") renderSocial(); }
+document.addEventListener("click",e=>{
+  const nm=e.target.closest("[data-nmode]"); if(nm){ setNewsMode(nm.dataset.nmode); return; }
+  const f=e.target.closest("[data-socf]"); if(f){ socialSel=f.dataset.socf; renderSocial(); return; }
+  const s=e.target.closest("[data-soc]"); if(s){ if(s.dataset.video) return; const n=s.dataset.socnews&&(state.news||[]).find(x=>artKey(x)===s.dataset.socnews); if(n) openArticle(n); else openInAppBrowser(s.dataset.soc); }
+});
+
+/* ---------- Vereinsporträt (Gegner antippen) ---------- */
+const CLUB_WIKI={"TSG Hoffenheim":"TSG 1899 Hoffenheim","TSG 1899 Hoffenheim":"TSG 1899 Hoffenheim","1. FC Heidenheim 1846":"1. FC Heidenheim 1846","Bor. Mönchengladbach":"Borussia Mönchengladbach","Borussia M'gladbach":"Borussia Mönchengladbach","FC St. Pauli":"FC St. Pauli","Werder Bremen":"SV Werder Bremen","FC Bayern":"FC Bayern München","Bayern München":"FC Bayern München","1. FC Union Berlin":"1. FC Union Berlin","RB Leipzig":"RB Leipzig"};
+const clubCache={};
+function clubIsFootball(j){ const t=((j.description||"")+" "+(j.extract||"")).toLowerCase(); return /fußball|fussball|football/.test(t) && !/eishockey|basketball|handball/.test((j.description||"").toLowerCase()); }
+async function wikiSummary(title){ return getJson("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title.replace(/ /g,"_"))); }
+async function clubWiki(name){
+  const tries=[CLUB_WIKI[name], name, name.replace(/^(FC|SC|SV|VfL|VfB)\s+/,""), name+" (Fußballverein)"].filter(Boolean);
+  for(const t of [...new Set(tries)]){ try{ const j=await wikiSummary(t); if(j && j.type!=="disambiguation" && clubIsFootball(j)) return j; }catch(e){} }
+  const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(name+" Fußballverein")+"&srlimit=4&format=json&origin=*"));
+  for(const r of (sj.query?.search||[])){ try{ const j=await wikiSummary(r.title); if(clubIsFootball(j)) return j; }catch(e){} }
+  return null;
+}
+function wdCurrent(claims,p){ const arr=(claims&&claims[p])||[]; const live=arr.filter(c=>c.rank!=="deprecated" && !(c.qualifiers&&c.qualifiers.P582)); const pref=live.filter(c=>c.rank==="preferred"); const pick=(pref.length?pref:live.length?live:arr);
+  return pick.slice().sort((a,b)=>String(b.qualifiers?.P580?.[0]?.datavalue?.value?.time||"").localeCompare(String(a.qualifiers?.P580?.[0]?.datavalue?.value?.time||"")))[0]; }
+function wdVal(c){ return c&&c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value; }
+async function clubFacts(qid){
+  const j=await getJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+qid+"&props=claims&format=json&origin=*");
+  const cl=j.entities?.[qid]?.claims||{}; const f={};
+  const inc=wdVal(wdCurrent(cl,"P571")); if(inc&&inc.time){ const m=inc.time.match(/^\+?(\d{4})-(\d\d)-(\d\d)/); if(m) f.founded=inc.precision>=11&&m[2]!=="00"?`${+m[3]}. ${Object.keys(MON)[+m[2]-1].replace(/^./,c=>c.toUpperCase())} ${m[1]}`:m[1]; }
+  const ids={venue:wdVal(wdCurrent(cl,"P115"))?.id, coach:wdVal(wdCurrent(cl,"P286"))?.id, city:(wdVal(wdCurrent(cl,"P159"))||wdVal(wdCurrent(cl,"P131")))?.id, league:wdVal(wdCurrent(cl,"P118"))?.id};
+  const nick=(cl.P1449||[]).map(wdVal).filter(v=>v&&v.text).sort((a,b)=>(b.language==="de")-(a.language==="de")).slice(0,2).map(v=>v.text); if(nick.length) f.nick=nick.join(", ");
+  const web=wdVal(wdCurrent(cl,"P856")); if(web) f.web=web;
+  const want=Object.values(ids).filter(Boolean);
+  if(want.length){ try{
+    const L=await getJson("https://www.wikidata.org/w/api.php?action=wbgetentities&ids="+want.join("|")+"&props=labels|claims&languages=de|en&format=json&origin=*");
+    const lab=id=>{ const e=L.entities?.[id]; return e?(e.labels?.de?.value||e.labels?.en?.value||""):""; };
+    if(ids.venue){ f.venue=lab(ids.venue); const cap=wdVal(wdCurrent(L.entities?.[ids.venue]?.claims,"P1083")); if(cap&&cap.amount) f.cap=Math.round(+cap.amount).toLocaleString("de-DE"); }
+    if(ids.coach) f.coach=lab(ids.coach); if(ids.city) f.city=lab(ids.city); if(ids.league) f.league=lab(ids.league);
+  }catch(e){} }
+  return f;
+}
+function clubTableInfo(id){
+  for(const c of (state.comps||[])){ const i=(c.table||[]).findIndex(r=>r.id===id); if(i>=0){ const r=c.table[i]; return {ck:c.ck,comp:c.name,pos:i+1,r,form:(c.form||{})[id]||[],top:(c.scorers||[]).find(x=>x.team===id)}; } }
+  return null;
+}
+function openClub(id,name,icon,fromMatch){
+  if(id===TEAM_ID){ closeSheet(); showTab("squad"); return; }
+  bump("club");
+  const ti=clubTableInfo(id), fact=factFor(name), nm=state.matches.find(m=>!m.finished&&(m.id1===id||m.id2===id)), L={w:"S",d:"U",l:"N"};
+  openSheetRaw(`${fromMatch?`<button type="button" class="backlink" data-backmatch="${fromMatch}">‹ Zurück zum Spiel</button>`:""}
+    <div class="clubhead"><div class="clublogo">${icon?`<img src="${esc(icon)}" alt="">`:`<span class="mono">${esc(initials(name))}</span>`}</div><div><p class="qq" id="sheetTitle" style="margin:0">${esc(name)}</p><small id="clubDesc"></small></div></div>
+    ${ti?`<div class="box"><h4>Aktuell</h4><div class="clubstats"><div><b>${ti.pos}.</b><small>Platz · ${esc(COMP_SHORT[ti.ck]||ti.comp)}</small></div><div><b>${ti.r.pkt}</b><small>Punkte</small></div><div><b>${esc(ti.r.tore)}</b><small>Tore</small></div></div>
+      ${ti.form.length?`<p style="margin:10px 0 6px">Form (letzte Spiele):</p><div class="oppform">${ti.form.map(o=>`<i class="f-${o}">${L[o]}</i>`).join("")}</div>`:""}
+      ${ti.top?`<p>Bester Torschütze: <b style="color:var(--fg)">${esc(ti.top.name)}</b> mit ${ti.top.goals} ${ti.top.goals===1?"Tor":"Toren"}</p>`:""}</div>`:""}
+    <div class="box" id="clubFacts"><h4>Steckbrief</h4><div class="sk" style="height:90px"></div></div>
+    <div class="box" id="clubLast"><h4>Letzte Spiele</h4><div class="sk" style="height:100px"></div></div>
+    <div class="box"><h4>${ICON.vs}Bilanz gegen Bayer 04</h4>${nm?`<p style="margin:0 0 10px">Nächstes Duell: <b style="color:var(--fg)">${esc(fmtDate(new Date(nm.t),{weekday:"short",day:"numeric",month:"long"}))}, ${esc(fmtDate(new Date(nm.t),{hour:"2-digit",minute:"2-digit"}))} Uhr</b> · ${esc(nm.comp)}</p>`:""}<div id="clubH2h"><div class="sk" style="height:90px"></div></div></div>
+    ${fact?`<div class="box fact"><h4>${ICON.bulb}Wusstest du?</h4><p class="big">${esc(fact)}</p></div>`:""}
+    <div class="box" id="clubAbout"><h4>Über den Verein</h4><div class="sk" style="height:120px"></div></div>`);
+  loadH2H(id).then(list=>{ const b=$("clubH2h"); if(b) b.innerHTML=h2hHTML(list,short(name)); }).catch(()=>{ const b=$("clubH2h"); if(b) b.innerHTML=`<p style="margin:0">Die Bilanz konnte gerade nicht geladen werden.</p>`; });
+  getJson(`https://api.openligadb.de/getmatchesbyteamid/${id}/8/0`).then(j=>{
+    const last=j.map(mapMatch).filter(x=>x.finished&&x.g1!=null).sort((a,b)=>b.t-a.t).slice(0,5); const b=$("clubLast"); if(!b) return;
+    const res=x=>{ const home=x.id1===id, us=home?x.g1:x.g2, th=home?x.g2:x.g1; return us>th?"w":us<th?"l":"d"; };
+    b.innerHTML=`<h4>Letzte Spiele</h4>`+(last.length?`<div class="olist">${last.map(x=>`<div><span>${esc(fmtDate(new Date(x.t),{day:"2-digit",month:"2-digit"}))}</span><span>${esc(short(x.t1))} – ${esc(short(x.t2))}</span><b class="f-${res(x)}">${x.g1}:${x.g2}</b></div>`).join("")}</div>`:`<p style="margin:0">Keine aktuellen Spiele gefunden.</p>`);
+  }).catch(()=>{ const b=$("clubLast"); if(b) b.innerHTML=`<h4>Letzte Spiele</h4><p style="margin:0">Gerade nicht verfügbar.</p>`; });
+  (async()=>{
+    let w=clubCache[name]; if(!w){ try{ w=await clubWiki(name); }catch(e){ w=null; } clubCache[name]=w; }
+    const about=$("clubAbout"), fb=$("clubFacts");
+    if(!w){ if(about) about.innerHTML=`<h4>Über den Verein</h4><p style="margin:0">Dazu gibt es gerade keinen Artikel.</p>`; if(fb) fb.remove(); return; }
+    if($("clubDesc")) $("clubDesc").textContent=w.description||"";
+    if(about) about.innerHTML=`<h4>Über den Verein</h4><div class="art">${paras(w.extract||"")}</div><div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" data-read="${esc(w.title)}" data-title="${esc(w.title)}">Ganzen Artikel lesen</button></div><p class="legend" style="margin-top:10px">Text: Wikipedia, Lizenz CC BY-SA 4.0</p>`;
+    if(!w.wikibase_item){ if(fb) fb.remove(); return; }
+    let f=null; try{ f=clubCache["wd_"+w.wikibase_item]||await clubFacts(w.wikibase_item); clubCache["wd_"+w.wikibase_item]=f; }catch(e){}
+    const fb2=$("clubFacts"); if(!fb2) return;
+    const rows=f?[["Gegründet",f.founded],["Stadt",f.city],["Stadion",f.venue?(f.venue+(f.cap?` · ${f.cap} Plätze`:"")):""],["Trainer",f.coach],["Liga",f.league],["Spitzname",f.nick]].filter(r=>r[1]):[];
+    fb2.innerHTML=rows.length?`<h4>Steckbrief</h4><dl class="kv">${rows.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${f.web?`<div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" data-inapp="${esc(f.web)}">Offizielle Website</button></div>`:""}<p class="legend" style="margin-top:8px">Daten: Wikidata – Angaben wie der Trainer können manchmal etwas hinterherhinken.</p>`:"";
+    if(!rows.length) fb2.remove();
+  })();
 }
 document.addEventListener("click",e=>{
-  const g=e.target.closest("[data-game]"); if(g){ ({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges})[g.dataset.game](); return; }
-  const s=e.target.closest("[data-shot]"); if(s) shoot(+s.dataset.shot);
+  const t=e.target.closest("[data-team]"); if(t){ e.stopPropagation(); openClub(+t.dataset.team,t.dataset.tname||"",t.dataset.ticon||"",t.dataset.from?+t.dataset.from:0); return; }
+  const b=e.target.closest("[data-backmatch]"); if(b){ openMatch(+b.dataset.backmatch); }
+},true);
+
+/* ---------- Ausfälle: Datum statt „seit X Tagen“ ---------- */
+function sinceDate(since, at){
+  const m=String(since||"").match(/(\d+)\s+(Tag|Tagen|Woche|Wochen|Monat|Monaten|Jahr|Jahren)(?:\s+und\s+(\d+)\s+(Tag|Tagen|Woche|Wochen|Monat|Monaten))?/); if(!m) return 0;
+  const u={Tag:1,Tagen:1,Woche:7,Wochen:7,Monat:30.44,Monaten:30.44,Jahr:365,Jahren:365};
+  return Math.round((at||Date.now())-((+m[1])*u[m[2]]+(m[3]?(+m[3])*u[m[4]]:0))*86400e3);
+}
+
+/* ---------- Gemeinsame Spiel-Helfer: Ton, Konfetti ---------- */
+let sfxCtx=null;
+function sfxOn(){ return notiSettings().sound!==false; }
+function sfx(kind){
+  if(!sfxOn()) return;
+  try{
+    sfxCtx=sfxCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const a=sfxCtx, t0=a.currentTime;
+    const noise=(dur,f1,f2,peak,att)=>{ const n=a.createBufferSource(), len=Math.floor(a.sampleRate*dur), buf=a.createBuffer(1,len,a.sampleRate), d=buf.getChannelData(0);
+      for(let i=0;i<len;i++) d[i]=Math.random()*2-1; n.buffer=buf;
+      const bp=a.createBiquadFilter(); bp.type="bandpass"; bp.frequency.setValueAtTime(f1,t0); bp.frequency.linearRampToValueAtTime(f2,t0+dur); bp.Q.value=.7;
+      const g=a.createGain(); g.gain.setValueAtTime(.0001,t0); g.gain.linearRampToValueAtTime(peak,t0+att); g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+      n.connect(bp).connect(g).connect(a.destination); n.start(t0); n.stop(t0+dur); };
+    const tone=(f,dur,type,peak,delay)=>{ const o=a.createOscillator(), g=a.createGain(); o.type=type||"sine"; o.frequency.setValueAtTime(f,t0+(delay||0));
+      g.gain.setValueAtTime(.0001,t0+(delay||0)); g.gain.exponentialRampToValueAtTime(peak||.2,t0+(delay||0)+.01); g.gain.exponentialRampToValueAtTime(.0001,t0+(delay||0)+dur);
+      o.connect(g).connect(a.destination); o.start(t0+(delay||0)); o.stop(t0+(delay||0)+dur+.05); return o; };
+    if(kind==="kick"){ const o=tone(150,.16,"sine",.5); o.frequency.exponentialRampToValueAtTime(50,t0+.15); noise(.06,1800,900,.25,.004); }
+    if(kind==="goal"){ noise(1.8,700,1300,.32,.25); tone(523,.18,"triangle",.12,.05); tone(659,.18,"triangle",.12,.2); tone(784,.4,"triangle",.14,.35); }
+    if(kind==="save"){ noise(.9,500,300,.2,.08); tone(220,.25,"sine",.15); }
+    if(kind==="post"){ tone(1240,.7,"sine",.18); tone(1870,.5,"sine",.08); noise(.8,450,280,.12,.1); }
+    if(kind==="miss"){ noise(1,400,250,.18,.15); }
+    if(kind==="flip"){ tone(660,.06,"triangle",.08); }
+    if(kind==="pair"){ tone(784,.1,"triangle",.12); tone(1047,.16,"triangle",.12,.09); }
+    if(kind==="tap"){ tone(520+Math.random()*80,.07,"sine",.18); }
+    if(kind==="win"){ [523,659,784,1047].forEach((f,i)=>tone(f,.22,"triangle",.13,i*.12)); }
+    if(kind==="slide"){ tone(300,.04,"sine",.06); }
+  }catch(e){}
+}
+function confetti(cv, n){
+  if(!cv) return; const r=cv.getBoundingClientRect(); const dpr=Math.min(2,devicePixelRatio||1);
+  cv.width=r.width*dpr; cv.height=r.height*dpr; const c=cv.getContext("2d"); c.scale(dpr,dpr);
+  const cols=["#d6001c","#111","#fff","#f2c200","#d6001c"]; const P=[];
+  for(let i=0;i<(n||90);i++) P.push({x:r.width/2+(Math.random()-.5)*r.width*.4,y:r.height*.3,vx:(Math.random()-.5)*520,vy:-Math.random()*520-120,s:4+Math.random()*6,a:Math.random()*6,va:(Math.random()-.5)*12,c:cols[i%cols.length]});
+  let last=performance.now(), t=0; cv._run=(cv._run||0)+1; const id=cv._run;
+  (function step(now){ if(cv._run!==id||!cv.isConnected) return; const dt=Math.min(.033,(now-last)/1000); last=now; t+=dt;
+    c.clearRect(0,0,r.width,r.height);
+    P.forEach(p=>{ p.vy+=900*dt; p.vx*=.99; p.x+=p.vx*dt; p.y+=p.vy*dt; p.a+=p.va*dt; c.save(); c.translate(p.x,p.y); c.rotate(p.a); c.globalAlpha=Math.max(0,1-t/1.8); c.fillStyle=p.c; c.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); c.restore(); });
+    if(t<1.8) requestAnimationFrame(step); else c.clearRect(0,0,r.width,r.height); })(last);
+}
+function gauss(){ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+const BALL_SVG=`<svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="bg1" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#e9e9e9"/><stop offset="1" stop-color="#b9b9b9"/></radialGradient></defs><circle cx="50" cy="50" r="48" fill="url(#bg1)" stroke="#222" stroke-width="3"/><path d="M50 30l15 11-6 18H41l-6-18z" fill="#1a1a1a"/><path d="M50 30V8M65 41l20-8M59 59l13 17M41 59L28 76M35 41l-20-8" stroke="#1a1a1a" stroke-width="3"/><path d="M50 2l9 6-9 6-9-6zM92 30l-2 11-10-3 1-10zM80 86l-11 2-2-10 10-3zM20 86l-8-6 6-9 9 6zM8 30l10-2 2 10-10 4z" fill="#1a1a1a"/></svg>`;
+
+/* ---------- Elfer-König gegen Torwart Brian ---------- */
+let pen=null;
+function startPen(){
+  pen={streak:0,busy:false,shots:0};
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elfer-König</span><span>Rekord ${hs("hsPen")}</span></div>
+    <p class="legend" style="margin:6px 0 10px">Tippe ins Tor, wohin du schießen willst. Je näher am Pfosten, desto schwerer hat es Brian – aber desto leichter geht der Ball daneben. Brian wird mit jedem Treffer besser.</p>
+    <div class="pk" id="pk">
+      <div class="pk-crowd"></div><div class="pk-lights"></div><div class="pk-ads"><span>WERKS11</span><span>BAYER 04</span><span>WERKSELF</span><span>WERKS11</span></div>
+      <div class="pk-grass"></div><div class="pk-box"></div><div class="pk-box2"></div><div class="pk-spot"></div>
+      <div class="pk-goal" id="pkGoal"><div class="pk-net" id="pkNet"></div>
+        <div class="pk-gshadow" id="pkGs"></div>
+        <div class="pk-gk" id="pkGk"><img src="lion_keeper.webp" alt="Torwart Brian" draggable="false"></div>
+        <div class="pk-post l"></div><div class="pk-post r"></div><div class="pk-bar"></div></div>
+      <div class="pk-aim" id="pkAim"></div>
+      <div class="pk-bshadow" id="pkBs"></div><div class="pk-ball" id="pkBall">${BALL_SVG}</div>
+      <div class="pk-msg" id="pkMsg"></div>
+      <div class="pk-hud"><span>Serie <b id="pkStreak">0</b></span><span id="pkTip">Tippe ins Tor</span><span>Rekord <b>${hs("hsPen")}</b></span></div>
+      <canvas class="pk-fx" id="pkFx"></canvas>
+    </div>`);
+  $("pk").addEventListener("pointerdown",penAim);
+}
+function penAim(e){
+  if(!pen||pen.busy) return;
+  const G=$("pkGoal").getBoundingClientRect(), P=$("pk").getBoundingClientRect();
+  const u=(e.clientX-G.left)/G.width, v=(e.clientY-G.top)/G.height;
+  if(u<-.3||u>1.3||v<-.6||v>1.25) return; // nur in Tornähe
+  const aim=$("pkAim"); aim.style.left=(e.clientX-P.left)+"px"; aim.style.top=(e.clientY-P.top)+"px"; aim.classList.remove("on"); void aim.offsetWidth; aim.classList.add("on");
+  penShoot(u,Math.min(.97,v));
+}
+function penPose(ku,kv){
+  // Wohin muss sich der Löwe strecken, damit seine Handschuhe bei (ku,kv) sind?
+  const G=$("pkGoal"), gk=$("pkGk"); const W=G.clientWidth, H=G.clientHeight, L=gk.offsetHeight*0.93, w=gk.offsetWidth;
+  const dx=(ku-.5)*W, up=(1-kv)*H;
+  if(Math.abs(dx)<W*.13){ // Mitte: hochspringen oder abtauchen
+    if(up>L*.9) return {kind:"jump",X:dx,Y:-(up-L*.9),rot:dx/W*0.5};
+    return {kind:"block",X:dx*.8,Y:0,rot:0};
+  }
+  let th=Math.atan2(dx,Math.max(up,H*.05)); th=Math.max(-1.75,Math.min(1.75,th));
+  let X=dx-L*Math.sin(th), Y=-(up-L*Math.cos(th));
+  X=Math.max(-W*.42,Math.min(W*.42,X)); Y=Math.min(0,Math.max(-H*.9,Y));
+  return {kind:"dive",X,Y,rot:th,side:Math.sign(dx),w};
+}
+function penKeeperAnim(p, dur){
+  const gk=$("pkGk"), gs=$("pkGs"); gk.classList.add("act");
+  const T=(x,y,r,sx,sy)=>`translate(calc(-50% + ${x.toFixed(1)}px),${y.toFixed(1)}px) rotate(${r.toFixed(3)}rad) scale(${sx||1},${sy||1})`;
+  let kf;
+  if(p.kind==="jump") kf=[{transform:T(0,0,0)},{transform:T(p.X*.1,6,0,1.04,.88),offset:.2},{transform:T(p.X,p.Y,p.rot,.97,1.06),offset:.6},{transform:T(p.X,p.Y*.85,p.rot),offset:.75},{transform:T(p.X,0,0,1.03,.95),offset:1}];
+  else if(p.kind==="block") kf=[{transform:T(0,0,0)},{transform:T(p.X*.3,5,0,1.05,.9),offset:.25},{transform:T(p.X,8,0,1.12,.84),offset:.6},{transform:T(p.X,4,0,1.06,.93),offset:1}];
+  else { const land=-p.w*.40, r90=p.side*1.66;
+    kf=[{transform:T(0,0,0)},{transform:T(p.X*.05,7,p.side*-.06,1.04,.88),offset:.18},{transform:T(p.X*.75,p.Y*1.1-6,p.rot*.8),offset:.55},{transform:T(p.X,p.Y,p.rot),offset:.72},{transform:T(p.X+p.side*8,Math.min(land,p.Y*0.25+land),r90*.98),offset:.9},{transform:T(p.X+p.side*10,land,r90),offset:1}]; }
+  gk.getAnimations().forEach(a=>a.cancel());
+  gk.animate(kf,{duration:dur,easing:"cubic-bezier(.25,.7,.35,1)",fill:"forwards"});
+  gs.getAnimations().forEach(a=>a.cancel());
+  gs.animate([{transform:"translateX(-50%) scale(1)",opacity:.35},{transform:`translateX(calc(-50% + ${p.X}px)) scale(${p.kind==="jump"?.6:1.3},1)`,opacity:p.kind==="jump"?.15:.35}],{duration:dur*.8,easing:"ease-out",fill:"forwards"});
+}
+function penReset(){
+  const gk=$("pkGk"), b=$("pkBall"), bs=$("pkBs"), gs=$("pkGs"); if(!gk) return;
+  const cur=getComputedStyle(gk).transform;
+  gk.getAnimations().forEach(a=>a.cancel());
+  gk.animate([{transform:cur==="none"?"translateX(-50%)":cur},{transform:"translate(-50%,0) scale(1.02,.94)",offset:.7},{transform:"translateX(-50%)"}],{duration:520,easing:"ease-in-out"}).onfinish=()=>gk.classList.remove("act");
+  gs.getAnimations().forEach(a=>a.cancel());
+  [b,bs].forEach(x=>{ x.getAnimations().forEach(a=>a.cancel()); x.animate([{opacity:0,transform:"translate(-50%,-50%) scale(.6)"},{opacity:1,transform:"translate(-50%,-50%) scale(1)"}],{duration:300,easing:"ease-out"}); });
+  $("pkMsg").className="pk-msg"; $("pkNet").classList.remove("bulge");
+}
+function penMsg(t,cls){ const m=$("pkMsg"); m.textContent=t; m.className="pk-msg show "+(cls||""); }
+function penShoot(u,v){
+  pen.busy=true; pen.shots++;
+  // Schuss streut etwas – je weiter außen, desto riskanter
+  const su=u+gauss()*.035, sv=v+gauss()*.045;
+  const post=(su>=-.035&&su<0)||(su>1&&su<=1.035)||(sv>=-.05&&sv<0&&su>-.035&&su<1.035);
+  const miss=!post&&(su<-.035||su>1.035||sv<-.05);
+  // Torwart liest den Schuss – mit jedem Treffer öfter
+  const read=Math.random()<Math.min(.62,.24+pen.streak*.035);
+  let ku,kv;
+  if(read){ ku=Math.max(.08,Math.min(.92,su+gauss()*.05)); kv=Math.max(.2,Math.min(.95,sv+gauss()*.05)); }
+  else { const opts=[[.12,.82],[.15,.35],[.5,.25],[.5,.85],[.88,.82],[.85,.35]]; [ku,kv]=opts[Math.floor(Math.random()*opts.length)]; ku+=gauss()*.04; kv+=gauss()*.04; }
+  const G=$("pkGoal"), W=G.clientWidth, H=G.clientHeight, ratio=W/H;
+  const near=Math.hypot((su-ku)*ratio, sv-kv)<.36 || (Math.abs(ku-.5)<.13 && Math.abs(su-ku)<.17 && sv>.22);
+  const cornerTop=(su<.1||su>.9)&&sv<.22;
+  const saved=!post&&!miss&&near&&!(cornerTop&&Math.random()<.75);
+  const pose=penPose(saved?su:ku, saved?sv:kv);
+  // Ball fliegen lassen
+  const Pk=$("pk").getBoundingClientRect(), Gr=G.getBoundingClientRect(), b=$("pkBall"), bs=$("pkBs");
+  const sx=Pk.width*.5, sy=Pk.height*.8;
+  const tx=Gr.left-Pk.left+su*Gr.width, ty=Gr.top-Pk.top+sv*Gr.height;
+  const dx=tx-sx, dy=ty-sy, lift=Math.abs(dy)*.12+10;
+  const BT=(x,y,s,r)=>`translate(calc(-50% + ${x.toFixed(1)}px),calc(-50% + ${y.toFixed(1)}px)) scale(${s}) rotate(${r}deg)`;
+  sfx("kick"); if(navigator.vibrate) navigator.vibrate(18);
+  const flight=440;
+  b.animate([{transform:BT(0,0,1,0)},{transform:BT(dx*.5,dy*.5-lift,.72,300),offset:.5},{transform:BT(dx,dy,.5,620)}],{duration:flight,easing:"cubic-bezier(.3,.6,.55,1)",fill:"forwards"});
+  bs.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:.45},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${(Gr.bottom-Pk.top)-sy}px)) scale(.45)`,opacity:.15}],{duration:flight,easing:"ease-out",fill:"forwards"});
+  setTimeout(()=>penKeeperAnim(pose,620),40);
+  const end=(ok,text,cls)=>{
+    if(ok){ pen.streak++; $("pkStreak").textContent=pen.streak; setTimeout(()=>{ penReset(); pen&&(pen.busy=false); },1300); }
+    else setTimeout(()=>penOver(text),1500);
+  };
+  setTimeout(()=>{
+    if(!pen) return;
+    if(post){
+      sfx("post"); penMsg(sv<0?"Latte!":"Pfosten!","bad");
+      b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*.6,dy*.25,.75,800)},{transform:BT(dx*.4+(su<.5?-40:40),dy*.1,.85,900),opacity:0}],{duration:700,easing:"ease-out",fill:"forwards"});
+      end(false,"An den "+(sv<0?"Querbalken":"Pfosten")+"!");
+    } else if(miss){
+      sfx("miss"); penMsg(sv<-.05?"Drüber!":"Vorbei!","bad");
+      b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*1.15,dy*1.08-20,.38,760),opacity:0}],{duration:420,easing:"ease-out",fill:"forwards"});
+      end(false,sv<-.05?"Der Ball flog übers Tor.":"Der Ball ging am Tor vorbei.");
+    } else if(saved){
+      const catchIt=pose.kind!=="dive"&&Math.random()<.6;
+      sfx("save"); penMsg(catchIt?"Gefangen!":"Pariert!","bad");
+      if(navigator.vibrate) navigator.vibrate([40,40,40]);
+      if(catchIt) b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx,dy+6,.46,640),opacity:0}],{duration:500,delay:120,fill:"forwards"});
+      else { const side=su<.5?-1:1; b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx+side*Gr.width*.35,dy-Gr.height*.5,.55,900),offset:.5},{transform:BT(dx+side*Gr.width*.55,dy+Gr.height*.1,.6,1100),opacity:0}],{duration:800,easing:"ease-out",fill:"forwards"}); }
+      end(false,catchIt?"Brian hat den Ball sicher gefangen.":"Brian hat den Schuss pariert.");
+    } else {
+      sfx("goal"); penMsg(pen.streak>=4&&Math.random()<.5?"Traumtor!":"Tor!","good"); $("pkNet").classList.add("bulge");
+      b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*1.02,dy-8,.44,700),offset:.3},{transform:BT(dx*1.02,(Gr.bottom-Pk.top)-sy-10,.46,760)}],{duration:600,easing:"ease-in",fill:"forwards"});
+      if(navigator.vibrate) navigator.vibrate([60,40,120]);
+      confetti($("pkFx"),70); end(true);
+    }
+  },flight);
+}
+function penOver(why){
+  if(!pen) return; const best=hs("hsPen"), rec=pen.streak>best; if(rec) store("hsPen",pen.streak); setTimeout(badge,1200);
+  const n=pen.streak;
+  const say=n===0?"Kopf hoch – nächstes Mal knallt's!":n<3?"Nicht schlecht, aber da geht noch mehr.":n<6?"Starke Serie! Brian hat ganz schön geschwitzt.":n<10?"Wahnsinn – du bist ein echter Elfer-König!":"Unglaublich! Brian sucht sich einen neuen Job.";
+  openSheetRaw(`<div class="mascot-end"><img src="lion_keeper.webp" alt="" class="${rec?"cheer":"nod"}"><div class="bubble"><p>${esc(why)} ${esc(say)}</p></div></div>
+    <p class="qq" id="sheetTitle" style="text-align:center;margin-top:4px">${n} ${n===1?"Treffer":"Treffer"} in Folge</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
+    <div class="qscore"><div><b>${n}</b><small>Serie</small></div><div><b>${Math.max(best,n)}</b><small>Rekord</small></div></div>
+    <button type="button" class="bigbtn" data-game="pen">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
+  pen=null; renderFan();
+}
+
+/* ---------- Foto-Puzzle ---------- */
+const PUZZLE_PICS=[{t:"Brian im Stadion",src:"puzzle_lion.jpg"},{t:"BayArena",wiki:"BayArena"},{t:"Ulf Kirsten",wiki:"Ulf Kirsten"},{t:"Stefan Kießling",wiki:"Stefan Kießling"},{t:"Rudi Völler",wiki:"Rudi Völler"},{t:"Xabi Alonso",wiki:"Xabi Alonso"},{t:"Florian Wirtz",wiki:"Florian Wirtz"},{t:"Patrik Schick",wiki:"Patrik Schick"},{t:"Michael Ballack",wiki:"Michael Ballack"}];
+const picCache={};
+async function puzzlePic(p){
+  if(p.src) return p.src; if(picCache[p.wiki]) return picCache[p.wiki];
+  const j=await getJson("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(p.wiki.replace(/ /g,"_")));
+  let u=(j.thumbnail&&j.thumbnail.source)||(j.originalimage&&j.originalimage.source)||""; if(!u) throw new Error("bild");
+  u=u.replace(/\/(\d+)px-/,"/640px-"); picCache[p.wiki]=u; return u;
+}
+let puz=null;
+function startPuzzle(){
+  if(puz&&puz.timer) clearInterval(puz.timer);
+  puz={n:load("puzN")||3};
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Foto-Puzzle</span><span>3×3 ${puzBest(3)} · 4×4 ${puzBest(4)}</span></div>
+    <div class="seg" style="margin:6px 0 10px" id="puzSize"><button type="button" data-puzn="3" aria-pressed="${puz.n===3}">Leicht · 3×3</button><button type="button" data-puzn="4" aria-pressed="${puz.n===4}">Profi · 4×4</button></div>
+    <p class="legend" style="margin:0 0 10px">Wähle ein Foto. Schiebe die Teile, bis das Bild wieder stimmt.</p>
+    <div class="picgrid">${PUZZLE_PICS.map((p,i)=>`<button type="button" class="pic" data-pic="${i}"><span class="ph" id="ph${i}"></span><b>${esc(p.t)}</b></button>`).join("")}</div>`);
+  PUZZLE_PICS.forEach((p,i)=>puzzlePic(p).then(u=>{ const e=$("ph"+i); if(e) e.style.backgroundImage=`url("${u}")`; }).catch(()=>{ const e=$("ph"+i); if(e){ e.closest(".pic").disabled=true; e.textContent="offline"; } }));
+}
+function puzBest(n){ const b=load("hsPuz"+n); return b?fmtSec(b):"–"; }
+function fmtSec(s){ return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+async function puzzleGo(i){
+  const p=PUZZLE_PICS[i]; let url; try{ url=await puzzlePic(p); }catch(e){ return; }
+  const img=new Image(); img.src=url;
+  try{ await img.decode(); }catch(e){ await new Promise(r=>{ img.onload=r; img.onerror=r; }); }
+  const n=puz?puz.n:3;
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">${esc(p.t)}</span><span><span id="puzMoves">0</span> Züge · <span id="puzTime">0:00</span></span></div>
+    <div class="puz" id="puz" style="--n:${n}"><div class="puzdone" id="puzDone"></div></div>
+    <div class="btnrow" style="margin-top:12px"><button type="button" class="reveal" id="puzPeek" style="background:var(--surface-2);color:var(--fg)">👁 Vorschau halten</button><button type="button" class="reveal" data-game="puzzle" style="background:var(--surface-2);color:var(--fg)">Anderes Foto</button></div>
+    <canvas class="pk-fx" id="puzFx" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:60"></canvas>`);
+  const box=$("puz"), S=box.clientWidth, ts=S/n;
+  const w=img.naturalWidth||640, h=img.naturalHeight||640, sc=Math.max(S/w,S/h), bw=w*sc, bh=h*sc, ox=(S-bw)/2, oy=(S-bh)*(h>w?.18:.5);
+  const bgs=`background-image:url('${url.replace(/['"()\s]/g,c=>"%"+c.charCodeAt(0).toString(16).padStart(2,"0"))}');background-size:${bw}px ${bh}px`;
+  $("puzDone").setAttribute("style",bgs+`;background-position:${ox}px ${oy}px`);
+  const order=[...Array(n*n).keys()]; // order[pos]=tile, letzter = Lücke
+  let empty=n*n-1, last=-1;
+  for(let k=0;k<n*n*30;k++){ const nb=puzNb(empty,n).filter(x=>x!==last); const m=nb[Math.floor(Math.random()*nb.length)]; [order[empty],order[m]]=[order[m],order[empty]]; last=empty; empty=m; }
+  puz={n,order,empty,moves:0,t0:0,timer:null,ts,done:false};
+  box.insertAdjacentHTML("beforeend",order.map((t,pos)=>t===n*n-1?"":`<button type="button" class="tile" data-tile="${t}" style="${bgs};background-position:${ox-(t%n)*ts}px ${oy-Math.floor(t/n)*ts}px;width:${ts}px;height:${ts}px;transform:translate(${(pos%n)*ts}px,${Math.floor(pos/n)*ts}px)"><i>${t+1}</i></button>`).join(""));
+  const peek=$("puzPeek"); const on=()=>$("puzDone").classList.add("peek"), off=()=>{ if(!puz.done) $("puzDone").classList.remove("peek"); };
+  peek.addEventListener("pointerdown",on); ["pointerup","pointerleave","pointercancel"].forEach(ev=>peek.addEventListener(ev,off));
+}
+function puzNb(pos,n){ const r=Math.floor(pos/n), c=pos%n, o=[]; if(r>0)o.push(pos-n); if(r<n-1)o.push(pos+n); if(c>0)o.push(pos-1); if(c<n-1)o.push(pos+1); return o; }
+function puzzleMove(tile){
+  if(!puz||puz.done) return; const {n,order}=puz; const pos=order.indexOf(tile);
+  if(!puzNb(pos,n).includes(puz.empty)) { const el=document.querySelector(`[data-tile="${tile}"]`); if(el){ el.classList.remove("nope"); void el.offsetWidth; el.classList.add("nope"); } return; }
+  if(!puz.t0){ puz.t0=Date.now(); puz.timer=setInterval(()=>{ if(!puz||!$("puzTime")){ return; } $("puzTime").textContent=fmtSec(Math.floor((Date.now()-puz.t0)/1000)); },500); }
+  [order[pos],order[puz.empty]]=[order[puz.empty],order[pos]]; const to=puz.empty; puz.empty=pos; puz.moves++;
+  const el=document.querySelector(`[data-tile="${tile}"]`); el.style.transform=`translate(${(to%n)*puz.ts}px,${Math.floor(to/n)*puz.ts}px)`;
+  $("puzMoves").textContent=puz.moves; sfx("slide");
+  if(order.every((t,i)=>t===i)){
+    puz.done=true; clearInterval(puz.timer); const sec=Math.max(1,Math.round((Date.now()-puz.t0)/1000));
+    const k="hsPuz"+n, best=load(k), rec=!best||sec<best; if(rec) store(k,sec); bump("puzzle");
+    setTimeout(()=>{ $("puzDone").classList.add("peek","won"); sfx("win"); confetti($("puzFx"),120); },250);
+    setTimeout(()=>{ if(!$("puz")) return; $("puz").insertAdjacentHTML("afterend",`<div class="box" style="margin-top:12px;text-align:center"><p class="qq" style="margin:0">Geschafft in ${fmtSec(sec)} mit ${puz.moves} Zügen!</p>${rec?'<div class="newrec" style="margin-top:8px">Neue Bestzeit!</div>':""}</div>`); renderFan(); },900);
+  }
+}
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tile]"); if(t){ puzzleMove(+t.dataset.tile); return; }
+  const p=e.target.closest("[data-pic]"); if(p&&!p.disabled){ puzzleGo(+p.dataset.pic); return; }
+  const z=e.target.closest("[data-puzn]"); if(z){ puz=puz||{}; puz.n=+z.dataset.puzn; store("puzN",puz.n); document.querySelectorAll("[data-puzn]").forEach(b=>b.setAttribute("aria-pressed",String(b===z))); }
+});
+
+/* ---------- Wappen-Memory ---------- */
+let mem=null;
+function startMemory(){
+  const bl=(state.comps||[]).find(c=>c.ck==="bl1"); const teams=(bl&&bl.table||[]).filter(r=>r.icon);
+  let faces;
+  if(teams.length>=8){ const us=teams.find(r=>r.id===TEAM_ID); faces=[us].concat(shuffle(teams.filter(r=>r!==us)).slice(0,7)).filter(Boolean).slice(0,8).map(r=>({k:String(r.id),img:r.icon,name:r.name})); }
+  else faces=["⚽","🦁","🏆","🧤","👟","📣","🎟️","🥅"].map(x=>({k:x,emo:x,name:x}));
+  const cards=shuffle(faces.concat(faces)).map((f,i)=>({...f,i}));
+  mem={cards,open:[],found:0,moves:0,lock:false,t0:0};
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Wappen-Memory</span><span><span id="memMoves">0</span> Züge · Rekord ${hs("hsMem")||"–"}</span></div>
+    <p class="legend" style="margin:6px 0 10px">Decke zwei Karten auf und finde alle ${faces.length} Paare${teams.length>=8?" – lauter Bundesliga-Wappen":""}. Je weniger Züge, desto besser.</p>
+    <div class="mem" id="mem">${cards.map(c=>`<button type="button" class="mc" data-mc="${c.i}" aria-label="Karte"><span class="in"><span class="back"><b>04</b></span><span class="front">${c.img?`<img src="${esc(c.img)}" alt="${esc(c.name)}" loading="eager">`:`<em>${c.emo}</em>`}</span></span></button>`).join("")}</div>
+    <canvas class="pk-fx" id="memFx" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:60"></canvas>`);
+}
+function memFlip(i){
+  if(!mem||mem.lock) return; const el=document.querySelector(`[data-mc="${i}"]`); if(!el||el.classList.contains("up")) return;
+  el.classList.add("up"); sfx("flip"); mem.open.push(i);
+  if(mem.open.length<2) return;
+  mem.moves++; $("memMoves").textContent=mem.moves;
+  const [a,b]=mem.open.map(k=>mem.cards.find(c=>c.i===k)); const ea=document.querySelector(`[data-mc="${a.i}"]`), eb=el;
+  if(a.k===b.k){ mem.open=[]; mem.found++; setTimeout(()=>{ ea.classList.add("ok"); eb.classList.add("ok"); sfx("pair"); },250);
+    if(mem.found===mem.cards.length/2){ const best=hs("hsMem"), rec=!best||mem.moves<best; if(rec) store("hsMem",mem.moves); bump("memory");
+      setTimeout(()=>{ sfx("win"); confetti($("memFx"),120); $("mem").insertAdjacentHTML("afterend",`<div class="box" style="margin-top:12px;text-align:center"><p class="qq" style="margin:0">Alle Paare in ${mem.moves} Zügen!</p>${rec?'<div class="newrec" style="margin-top:8px">Neuer Rekord!</div>':""}<button type="button" class="bigbtn" data-game="memory" style="margin-top:12px">Nochmal</button></div>`); renderFan(); },600); }
+  } else { mem.lock=true; setTimeout(()=>{ ea.classList.remove("up"); eb.classList.remove("up"); mem.open=[]; mem.lock=false; },850); }
+}
+document.addEventListener("click",e=>{ const c=e.target.closest("[data-mc]"); if(c) memFlip(+c.dataset.mc); });
+
+/* ---------- Jonglieren ---------- */
+let keep=null;
+function startKeep(){
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Jonglieren</span><span>Rekord ${hs("hsKeep")}</span></div>
+    <p class="legend" style="margin:6px 0 10px">Tippe den Ball an, damit er nicht auf den Boden fällt. Wo du ihn triffst, bestimmt die Richtung. Es wird immer schneller!</p>
+    <div class="kp"><div class="kp-n" id="kpN">0</div><img class="kp-lion" id="kpLion" src="lion_head.webp" alt=""><canvas id="kpCv"></canvas><div class="kp-hint" id="kpHint">Tippe den Ball an</div></div>`);
+  const cv=$("kpCv"), r=cv.getBoundingClientRect(), dpr=Math.min(2,devicePixelRatio||1); cv.width=r.width*dpr; cv.height=r.height*dpr;
+  const W=r.width, H=r.height, R=Math.max(22,W*.075);
+  keep={W,H,R,x:W/2,y:H*.45,vx:0,vy:0,rot:0,n:0,run:false,over:false,g:H*2.1,dpr,last:performance.now(),ballImg:new Image()};
+  keep.ballImg.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(BALL_SVG.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '));
+  cv.addEventListener("pointerdown",keepTap);
+  requestAnimationFrame(keepLoop);
+}
+function keepTap(e){
+  if(!keep||keep.over) return; const r=e.currentTarget.getBoundingClientRect(); const x=e.clientX-r.left, y=e.clientY-r.top;
+  const d=Math.hypot(x-keep.x,y-keep.y); if(d>keep.R*1.9) return;
+  if(!keep.run){ keep.run=true; $("kpHint").classList.add("off"); }
+  keep.vy=-keep.H*(1.15+Math.random()*.15); keep.vx=((keep.x-x)/keep.R)*keep.W*.55+(Math.random()-.5)*keep.W*.15; keep.n++; keep.g*=1.025;
+  const n=$("kpN"); n.textContent=keep.n; n.classList.remove("pop"); void n.offsetWidth; n.classList.add("pop");
+  sfx("tap"); if(navigator.vibrate) navigator.vibrate(12);
+  const l=$("kpLion"); if(l&&keep.n%5===0){ l.classList.remove("hop"); void l.offsetWidth; l.classList.add("hop"); }
+}
+function keepLoop(now){
+  const k=keep; const cv=$("kpCv"); if(!k||!cv) return; const c=cv.getContext("2d");
+  const dt=Math.min(.033,(now-k.last)/1000); k.last=now;
+  if(k.run&&!k.over){ k.vy+=k.g*dt; k.x+=k.vx*dt; k.y+=k.vy*dt; k.rot+=k.vx*dt/k.R;
+    if(k.x<k.R){ k.x=k.R; k.vx=Math.abs(k.vx)*.8; } if(k.x>k.W-k.R){ k.x=k.W-k.R; k.vx=-Math.abs(k.vx)*.8; }
+    if(k.y<k.R){ k.y=k.R; k.vy=Math.abs(k.vy)*.5; }
+    if(k.y>k.H+k.R){ k.over=true; keepOver(); } }
+  else if(!k.run){ k.y=k.H*.45+Math.sin(now/300)*6; }
+  c.setTransform(k.dpr,0,0,k.dpr,0,0); c.clearRect(0,0,k.W,k.H);
+  // Schatten
+  const sh=Math.max(.15,1-(k.H-k.y)/k.H); c.fillStyle=`rgba(0,0,0,${.25*sh})`; c.beginPath(); c.ellipse(k.x,k.H-10,k.R*sh,k.R*.25*sh,0,0,7); c.fill();
+  c.save(); c.translate(k.x,k.y); c.rotate(k.rot); if(k.ballImg.complete) c.drawImage(k.ballImg,-k.R,-k.R,k.R*2,k.R*2); else { c.fillStyle="#fff"; c.beginPath(); c.arc(0,0,k.R,0,7); c.fill(); } c.restore();
+  if(!k.over) requestAnimationFrame(keepLoop);
+}
+function keepOver(){
+  const n=keep.n, best=hs("hsKeep"), rec=n>best; if(rec) store("hsKeep",n); bump("keep"); sfx(n>=10?"win":"miss");
+  setTimeout(()=>{ if(!keep) return; keep=null;
+    const say=n<5?"Der Ball ist rund – probier's gleich nochmal!":n<15?"Gute Ballkontrolle!":n<30?"Wow, du jonglierst wie ein Profi!":"Weltklasse! Das schafft nicht mal Brian.";
+    openSheetRaw(`<div class="mascot-end"><img src="lion_run.webp" alt="" class="${rec?"cheer":"nod"}"><div class="bubble"><p>${esc(say)}</p></div></div>
+      <p class="qq" id="sheetTitle" style="text-align:center;margin-top:4px">${n} Ballkontakte</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
+      <div class="qscore"><div><b>${n}</b><small>Kontakte</small></div><div><b>${Math.max(best,n)}</b><small>Rekord</small></div></div>
+      <button type="button" class="bigbtn" data-game="keep">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`); renderFan(); },700);
+}
+window.__stopGames=()=>{ pen=null; keep=null; mem=null; if(puz&&puz.timer) clearInterval(puz.timer); puz=null; };
+
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-game]"); if(g){ window.__stopGames(); ({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges,puzzle:startPuzzle,memory:startMemory,keep:startKeep})[g.dataset.game](); return; }
 });
 
 /* ---------- Benachrichtigungen (nur Android-App) ---------- */
-const NOTI_DEF={news:false, rumors:true, kickoff:true, goals:true, sound:true};
+const NOTI_DEF={news:false, rumors:true, kickoff:true, goals:true, sound:true, daily:true, inj:true};
 function notiSettings(){ return Object.assign({},NOTI_DEF,load("noti")||{}); }
 function openNoti(){
   const s=notiSettings(); const native=NATIVE && typeof window.AndroidNet.setNotify==="function";
@@ -2639,7 +3318,9 @@ function openNoti(){
     <div class="mgroup">Benachrichtigungen</div>
     ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
     ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
-    <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}</div>
+    <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}${row("inj","Ausfälle","Wenn ein Spieler neu ausfällt oder zurückkehrt")}</div>
+    <div class="box"><div class="set"><div><b>🦁 Brians Fakt des Tages</b><small>Jeden Tag um 19:04 Uhr ein spannender oder lustiger Fakt – mit eigenem Stadion-Jingle</small></div><label class="sw"><input type="checkbox" data-noti="daily" ${s.daily?"checked":""} ${native?"":"disabled"}><span></span></label></div>
+      ${native?`<div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" id="playJingle" style="background:var(--surface-2);color:var(--fg)">🔊 Jingle anhören</button><button type="button" class="reveal" id="testDaily" style="background:var(--surface-2);color:var(--fg)">Fakt jetzt senden</button></div>`:""}</div>
     <div class="box"><div class="set"><div><b>Torjubel-Ton</b><small>Kurzer Jubel, wenn Bayer 04 trifft und die App offen ist</small></div><label class="sw"><input type="checkbox" data-noti="sound" ${s.sound!==false?"checked":""}><span></span></label></div></div>
     ${native?`<button type="button" class="bigbtn sec" id="checkUpd">Nach Updates suchen</button>`:""}
     <p class="legend">Die App schaut etwa alle 15 Minuten im Hintergrund nach. Tore können deshalb mit kurzer Verzögerung kommen.</p>
@@ -2649,22 +3330,26 @@ function openNoti(){
 }
 function notiStatusHTML(){
   let st={}; try{ st=JSON.parse(window.AndroidNet.notifyStatus()||"{}"); }catch(e){}
-  const s=notiSettings(); const on=s.news||s.rumors||s.kickoff||s.goals;
+  const s=notiSettings(); const on=s.news||s.rumors||s.kickoff||s.goals||s.inj;
   const when=st.lastCheck?fmtDate(new Date(st.lastCheck),{weekday:"short",hour:"2-digit",minute:"2-digit"})+" Uhr":"noch nie";
   const warn=[];
   if(st.permitted===false) warn.push(`<li><b>Benachrichtigungen sind in Android ausgeschaltet.</b> Schalte sie in den Android-Einstellungen für Werks11 ein.</li>`);
   if(on && st.scheduled===false) warn.push(`<li>Die Hintergrund-Prüfung war nicht geplant – ist jetzt neu gestartet.</li>`);
   if(st.battery===false) warn.push(`<li>Die <b>Akku-Optimierung</b> kann Benachrichtigungen stark verzögern oder verhindern. Erlaube Werks11 eine Ausnahme.</li>`);
+  if(s.daily && st.exact===false) warn.push(`<li>Damit der Fakt pünktlich um 19:04 Uhr kommt, erlaube Werks11 <b>Wecker und Erinnerungen</b>.</li>`);
   if(st.lastErr) warn.push(`<li>Letzter Fehler: ${esc(st.lastErr)}</li>`);
   return `<h4>Status</h4><p style="margin:0;color:var(--fg)">Zuletzt geprüft: <b>${esc(when)}</b>${st.lastCheck?` · ${st.lastSent||0} ${st.lastSent===1?"Benachrichtigung":"Benachrichtigungen"} gesendet`:""}</p>
     ${warn.length?`<ul class="facts">${warn.join("")}</ul>`:`<p>Alles eingerichtet.</p>`}
-    <div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" id="checkNow">Jetzt prüfen</button>${st.battery===false?`<button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" id="openBattery">Akku-Ausnahme erlauben</button>`:""}</div>`;
+    <div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" id="checkNow">Jetzt prüfen</button>${st.battery===false?`<button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" id="openBattery">Akku-Ausnahme erlauben</button>`:""}${s.daily&&st.exact===false?`<button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" id="openAlarm">Wecker erlauben</button>`:""}</div>`;
 }
 function renderNotiStatus(){ const b=$("notiStatus"); if(b) b.innerHTML=notiStatusHTML(); }
 window.__notiChecked=()=>{ renderNotiStatus(); const b=$("checkNow"); if(b){ b.textContent="Geprüft ✓"; setTimeout(()=>{ if($("checkNow")) $("checkNow").textContent="Jetzt prüfen"; },2500); } };
 document.addEventListener("click",e=>{
   if(e.target.closest("#checkNow")){ const b=$("checkNow"); b.textContent="Prüft …"; pushNoti(); window.AndroidNet.checkNow(); }
   if(e.target.closest("#openBattery")) window.AndroidNet.openBattery();
+  if(e.target.closest("#openAlarm")&&window.AndroidNet.openAlarm) window.AndroidNet.openAlarm();
+  if(e.target.closest("#playJingle")&&window.AndroidNet.playJingle) window.AndroidNet.playJingle();
+  if(e.target.closest("#testDaily")&&window.AndroidNet.testDaily){ pushNoti(); window.AndroidNet.testDaily(); }
 });
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden) renderNotiStatus(); });
 function pushNoti(){
@@ -2679,9 +3364,11 @@ document.addEventListener("click",e=>{
 
 /* ---------- Reiter ---------- */
 let current="news";
+const TAB_ORDER=["news","rumors","games","table","squad","fun"];
 function showTab(name){
+  const dir=TAB_ORDER.indexOf(name)>=TAB_ORDER.indexOf(current)?"from-right":"from-left";
   current=name;
-  document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.dataset.view!==name);
+  document.querySelectorAll("[data-view]").forEach(s=>{ s.hidden=s.dataset.view!==name; s.classList.remove("from-right","from-left"); if(!s.hidden){ void s.offsetWidth; s.classList.add(dir); } });
   document.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===name)));
   if(name==="rumors"){ store("rumorsSeen",Date.now()); $("rumorBadge").hidden=true; }
   window.scrollTo(0,0);
@@ -2697,10 +3384,11 @@ async function refresh(){
   const failed=[];
   const run=async(k,fn)=>{ try{ await fn(); state.ts[k]=Date.now(); }catch(e){ failed.push(k); } renderAll(); };
   await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)).then(()=>run("transfers",loadTransfers)), run("stats",loadStats), run("videos",loadVideos) ]);
+  await run("social",loadSocial);
   store("cache",state);
   if(navigator.onLine){
-    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle",stats:"Statistik",transfers:"Transfers",videos:"Videos"};
-    const fl=failed.filter(k=>!["transfers","videos"].includes(k));
+    const names={social:"Social Media",news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle",stats:"Statistik",transfers:"Transfers",videos:"Videos"};
+    const fl=failed.filter(k=>!["transfers","videos","social"].includes(k));
     notice(fl.length? fl.map(k=>names[k]).join(" und ")+" konnten gerade nicht geladen werden. Angezeigt wird der letzte Stand." : "");
   }
   btn.disabled=false; btn.classList.remove("busy"); busy=false;

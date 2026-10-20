@@ -62,10 +62,11 @@ public class MainActivity extends Activity {
             web.loadUrl("file:///android_asset/index.html");
         }
         takeArticle(getIntent());
+        try { Notifier.createChannels(this); DailyFact.schedule(getApplicationContext()); } catch (Exception ignored) { }
     }
 
     private boolean pageReady = false;
-    private String pendingUrl = null, pendingTitle = null;
+    private String pendingUrl = null, pendingTitle = null, pendingJs = null;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -77,6 +78,16 @@ public class MainActivity extends Activity {
     /** Benachrichtigung angetippt: Artikel in der App öffnen. */
     private void takeArticle(Intent i) {
         if (i == null) return;
+        if (i.hasExtra("daily_fact")) {
+            pendingJs = "window.openDailyFact && window.openDailyFact(" + i.getIntExtra("daily_fact", -1) + "," + org.json.JSONObject.quote(String.valueOf(i.getStringExtra("daily_text"))) + ")";
+            i.removeExtra("daily_fact");
+            deliverPending();
+        }
+        if (i.hasExtra("open_tab")) {
+            pendingJs = "window.openTabNative && window.openTabNative(" + org.json.JSONObject.quote(String.valueOf(i.getStringExtra("open_tab"))) + ")";
+            i.removeExtra("open_tab");
+            deliverPending();
+        }
         String u = i.getStringExtra("article_url");
         if (u == null) return;
         pendingUrl = u;
@@ -86,6 +97,10 @@ public class MainActivity extends Activity {
     }
 
     private void deliverPending() {
+        if (pageReady && pendingJs != null) {
+            final String pj = pendingJs; pendingJs = null;
+            web.postDelayed(() -> web.evaluateJavascript(pj, null), 700);
+        }
         if (!pageReady || pendingUrl == null) return;
         String js = "window.openArticleUrl && window.openArticleUrl(" + org.json.JSONObject.quote(pendingUrl) + "," + org.json.JSONObject.quote(pendingTitle == null ? "" : pendingTitle) + ")";
         pendingUrl = null;
@@ -130,6 +145,7 @@ public class MainActivity extends Activity {
                 boolean battery = pm == null || pm.isIgnoringBatteryOptimizations(getPackageName());
                 org.json.JSONObject o = new org.json.JSONObject();
                 o.put("lastCheck", p.getLong("lastCheck", 0)); o.put("lastSent", p.getInt("lastSent", 0)); o.put("lastErr", p.getString("lastErr", ""));
+                o.put("exact", DailyFact.canExact(getApplicationContext()));
                 o.put("scheduled", scheduled); o.put("battery", battery); o.put("permitted", Notifier.permitted(getApplicationContext()));
                 return o.toString();
             } catch (Exception e) { return "{}"; }
@@ -153,6 +169,46 @@ public class MainActivity extends Activity {
                     try { startActivity(new Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)); } catch (Exception ignored) { }
                 }
             });
+        }
+
+        @JavascriptInterface
+        public void openAlarm() {
+            runOnUiThread(() -> {
+                try {
+                    if (android.os.Build.VERSION.SDK_INT >= 31)
+                        startActivity(new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())));
+                } catch (Exception ignored) { }
+            });
+        }
+
+        @JavascriptInterface
+        public void playJingle() {
+            runOnUiThread(() -> {
+                try {
+                    android.media.MediaPlayer mp = android.media.MediaPlayer.create(MainActivity.this, R.raw.fakt_jingle);
+                    if (mp != null) { mp.setOnCompletionListener(android.media.MediaPlayer::release); mp.start(); }
+                } catch (Exception ignored) { }
+            });
+        }
+
+        @JavascriptInterface
+        public void testDaily() {
+            if (!Notifier.permitted(getApplicationContext()) && android.os.Build.VERSION.SDK_INT >= 33) {
+                runOnUiThread(() -> requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 11));
+                return;
+            }
+            pool.execute(() -> { try { DailyFact.show(getApplicationContext()); } catch (Exception ignored) { } });
+        }
+
+        @JavascriptInterface
+        public String injCache() {
+            try {
+                android.content.SharedPreferences p = Notifier.prefs(getApplicationContext());
+                org.json.JSONObject o = new org.json.JSONObject();
+                o.put("at", p.getLong("injAt", 0));
+                o.put("html", p.getString("injHtml", ""));
+                return o.toString();
+            } catch (Exception e) { return "{}"; }
         }
 
         @JavascriptInterface
@@ -190,7 +246,8 @@ public class MainActivity extends Activity {
             Notifier.apply(getApplicationContext(), json);
             if (firstTime) pool.execute(() -> { try { Notifier.check(getApplicationContext()); } catch (Exception ignored) { } });
             try {
-                if (Notifier.anyOn(new org.json.JSONObject(json)) && android.os.Build.VERSION.SDK_INT >= 33
+                org.json.JSONObject sj = new org.json.JSONObject(json);
+                if ((Notifier.anyOn(sj) || sj.optBoolean("daily")) && android.os.Build.VERSION.SDK_INT >= 33
                         && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED) {
                     runOnUiThread(() -> requestPermissions(new String[]{"android.permission.POST_NOTIFICATIONS"}, 11));
                 }
