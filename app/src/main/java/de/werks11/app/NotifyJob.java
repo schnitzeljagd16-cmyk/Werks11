@@ -9,6 +9,7 @@ public class NotifyJob extends JobService {
     public boolean onStartJob(final JobParameters params) {
         new Thread(() -> {
             try { Notifier.check(getApplicationContext()); } catch (Exception ignored) { }
+            try { NextMatchWidget.refreshAll(getApplicationContext()); } catch (Exception ignored) { }
             jobFinished(params, false);
         }).start();
         return true;

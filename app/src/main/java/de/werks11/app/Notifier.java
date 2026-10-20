@@ -263,6 +263,9 @@ public class Notifier {
             if (n1.isEmpty()) n1 = t1.optString("teamName");
             if (n2.isEmpty()) n2 = t2.optString("teamName");
             boolean fin = m.optBoolean("matchIsFinished");
+            boolean watching = false;
+            JSONArray w = s.optJSONArray("watch");
+            if (w != null) for (int k = 0; k < w.length(); k++) if (w.optInt(k) == id) watching = true;
 
             // Anpfiff-Erinnerung (ca. 1 Std. vorher)
             if (s.optBoolean("kickoff") && !fin && t - now > 0 && t - now <= 80 * 60 * 1000L && !p.getBoolean("ko_" + id, false)) {
@@ -281,7 +284,7 @@ public class Notifier {
             if (known < 0) { // erste Prüfung während des Spiels: nichts nachmelden außer laufendem Stand
                 known = 0;
             }
-            for (int g = known; g < count; g++) {
+            for (int g = known; g < count && !watching; g++) {
                 JSONObject go = goals.getJSONObject(g);
                 int s1 = go.optInt("scoreTeam1"), s2 = go.optInt("scoreTeam2");
                 boolean us = go.optInt("scoringTeamId", 0) == TEAM_ID;
@@ -297,6 +300,7 @@ public class Notifier {
             }
             ed.putInt("g_" + id, count);
 
+            if (fin && watching) ed.putBoolean("ft_" + id, true);
             if (fin && !p.getBoolean("ft_" + id, false)) {
                 JSONArray rs = m.optJSONArray("matchResults");
                 int r1 = 0, r2 = 0;

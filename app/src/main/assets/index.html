@@ -292,6 +292,54 @@ tr.me td{background:var(--soft);font-weight:700}
 .pl .chev{color:var(--muted);font-size:18px;margin-left:2px}
 .card-y,.card-r{display:inline-block;width:12px;height:16px;border-radius:2px;vertical-align:-3px;margin-right:4px}
 .card-y{background:#f2c200}.card-r{background:#d6001c}
+/* Live & Spoiler */
+.livebox{display:flex;flex-direction:column;gap:2px;margin-top:10px;font-size:13px;color:rgba(255,255,255,.88);text-align:center}
+.mid .min{font:700 13px/1 var(--display);letter-spacing:.1em;color:#ffd0d6;margin-top:6px}
+.watchbtn{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px auto 0;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:9px 14px;font:700 13px/1 var(--body);cursor:pointer}
+.watchbtn.on{background:#fff;color:var(--night);border-color:#fff}
+.watchbox{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.watchbox p{margin:0}
+.hidden-score{font:800 34px/1 var(--display);letter-spacing:.1em}
+.spoiler{filter:blur(6px);user-select:none}
+.reveal{border:0;background:var(--red);color:#fff;border-radius:12px;padding:10px 14px;font:700 14px/1 var(--body);cursor:pointer}
+/* Fakt-Details & Kalenderblatt */
+.factcard p{cursor:pointer}
+.factcard .factmore{display:block;font:600 12px/1 var(--body);color:var(--muted);margin-top:8px}
+.daycard{display:grid;grid-template-columns:62px 1fr;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 14px;box-shadow:var(--shadow)}
+.daycard .cal{border-radius:12px;overflow:hidden;text-align:center;border:1px solid var(--line);background:var(--surface)}
+.daycard .cal small{display:block;background:var(--red);color:#fff;font:700 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:5px 0}
+.daycard .cal b{display:block;font:800 28px/1 var(--display);padding:6px 0 4px}
+.daycard .k{font:700 12px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+.daycard p{margin:0;font-size:15px;line-height:1.35}
+/* Tippspiel */
+.tipbox .row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;text-align:center}
+.tipbox .team{font:700 15px/1.1 var(--display)}
+.step{display:flex;align-items:center;gap:6px;justify-content:center}
+.step button{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);font:800 18px/1 var(--display);cursor:pointer;color:var(--fg)}
+.step b{font:800 32px/1 var(--display);min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
+.tipbox .colon{font:800 28px/1 var(--display);color:var(--muted)}
+.tipres{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pts{font:800 22px/1 var(--display);padding:6px 10px;border-radius:10px;background:var(--surface-2)}
+.pts.p4{background:var(--win);color:#fff}.pts.p3{background:#4a9d6a;color:#fff}.pts.p2{background:var(--draw);color:#fff}
+.game.t{background:linear-gradient(150deg,#1f3f8f,#0e1f4d)}
+.game.w{background:linear-gradient(150deg,#3a3a3a,#111)}
+/* Wer ist das */
+.hints{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.hint{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px}
+.hint i{font-style:normal;font:800 13px/1 var(--display);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--red);color:#fff;flex:none}
+.hint.lock{color:var(--muted);border-style:dashed}
+.hint.lock i{background:var(--line);color:var(--muted)}
+/* Aufstellung */
+.lineup{position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(#2e8a4a,#1f6a37);padding:14px 6px;display:flex;flex-direction:column-reverse;gap:14px;min-height:300px}
+.lineup::before{content:"";position:absolute;left:8px;right:8px;top:50%;border-top:2px solid rgba(255,255,255,.35)}
+.lineup::after{content:"";position:absolute;left:50%;top:50%;width:70px;height:70px;border:2px solid rgba(255,255,255,.35);border-radius:50%;transform:translate(-50%,-50%)}
+.lrow{display:flex;justify-content:space-around;position:relative;z-index:1}
+.lp{display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;cursor:pointer;color:#fff;text-align:center}
+.lp i{width:34px;height:34px;border-radius:50%;background:#d6001c;border:2px solid #fff;display:grid;place-items:center;font:800 14px/1 var(--display);font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.lp.gk i{background:#111}
+.lp span{font:700 11.5px/1.1 var(--body);text-shadow:0 1px 3px rgba(0,0,0,.6);overflow-wrap:anywhere}
+.bench{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.bench span{font-size:13px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 9px;cursor:pointer}
 /* Spielerprofil */
 .phero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;
   background:radial-gradient(90% 80% at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(150deg,#d6001c,#5e000d)}
@@ -415,6 +463,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
         <div id="heroBox"></div>
         <div id="formBox"></div>
         <div id="factBox"></div>
+        <div id="dayBox"></div>
         <div id="outBox"></div>
         <div id="fanBox"></div>
       </div>
@@ -575,6 +624,58 @@ const B04_FACTS = [
   ["Spieler","Granit Xhaka kam 2023 vom FC Arsenal und war im Meisterjahr einer der Taktgeber im Mittelfeld."],
   ["Spieler","Rudi Völlers Spitzname lautet „Tante Käthe“ – wegen seiner Lockenpracht."],
   ["Rekord","Leverkusen ist der erste Bundesliga-Meister, der in einer Saison kein einziges Ligaspiel verlor."]
+];
+/* Hintergrund zu jedem Fakt (gleiche Reihenfolge wie B04_FACTS) */
+const FACT_MORE = [
+  ["Am 27. November 1903 schrieben 170 Arbeiter der Farbenfabriken an die Firmenleitung und baten um Hilfe bei der Gründung eines Sportvereins. Am 1. Juli 1904 war es so weit. Fußball wurde im Verein erst einige Jahre später gespielt – die Turner waren zuerst da.","Bayer 04 Leverkusen"],
+  ["Die Profiabteilung ist heute die Bayer 04 Leverkusen Fußball GmbH, eine Tochter der Bayer AG. Weil das Unternehmen den Verein seit über 20 Jahren ununterbrochen fördert, gilt für Leverkusen eine Ausnahme von der 50+1-Regel – genau wie für den VfL Wolfsburg.","Bayer 04 Leverkusen"],
+  ["Den Aufstieg schaffte Bayer 04 1979 als Meister der 2. Bundesliga Nord. Seitdem ist der Klub ohne Unterbrechung erstklassig und gehört damit zu den Vereinen mit der längsten Bundesliga-Zugehörigkeit am Stück.","Bayer 04 Leverkusen"],
+  ["Das Rückspiel fand am 18. Mai 1988 im damaligen Ulrich-Haberland-Stadion statt. Tita, Falko Götz und Bum-kun Cha schossen die Tore zum 3:0, im Elfmeterschießen gewann Bayer mit 3:2. Es ist bis heute der einzige Europapokalsieg des Vereins.","UEFA-Pokal 1987/88"],
+  ["Erich Ribbeck trainierte Bayer 04 von 1985 bis 1988 und verabschiedete sich mit dem Europapokal. Von 1998 bis 2000 war er Bundestrainer und führte die Nationalmannschaft zur EM 2000.","Erich Ribbeck"],
+  ["Das Finale wurde am 12. Juni 1993 im Berliner Olympiastadion gespielt. Dass die Amateure von Hertha BSC als unterklassiges Team überhaupt bis ins Endspiel kamen, gilt als eine der größten Überraschungen der Pokalgeschichte. Trainer der Werkself war Dragoslav Stepanović.","DFB-Pokal 1992/93"],
+  ["Die Meisterschaft stand am 14. April 2024 fest – nach einem 5:0 gegen Werder Bremen, fünf Spieltage vor Schluss. Florian Wirtz traf dabei dreimal. Es war der erste deutsche Meistertitel in der Vereinsgeschichte.","Fußball-Bundesliga 2023/24"],
+  ["Immer wieder rettete die Werkself in dieser Saison Punkte mit Toren in der Nachspielzeit. Gerissen ist die Serie am 22. Mai 2024 in Dublin mit dem 0:3 gegen Atalanta Bergamo – Ademola Lookman traf dreimal.","UEFA Europa League 2023/24"],
+  ["Das Finale fand am 25. Mai 2024 in Berlin statt. Xhaka traf in der 16. Minute mit einem Distanzschuss, kurz vor der Pause sah Odilon Kossounou Gelb-Rot. Es war der erste Pokalsieg seit 1993 und machte das Double perfekt.","DFB-Pokal 2023/24"],
+  ["Innerhalb weniger Wochen verspielte Bayer im Frühjahr 2002 einen Vorsprung in der Bundesliga, verlor das Pokalfinale 2:4 gegen Schalke 04 und unterlag im Champions-League-Finale Real Madrid. Trainer war Klaus Toppmöller. Der Spott von damals ist seit dem Double 2024 Geschichte.","Bayer 04 Leverkusen"],
+  ["Gespielt wurde am 15. Mai 2002 im Hampden Park. Raúl brachte Real früh in Führung, Lúcio glich aus, kurz vor der Pause traf Zidane per Volley zum 2:1. Auf dem Weg ins Finale hatte Leverkusen unter anderem den FC Liverpool und Manchester United ausgeschaltet.","UEFA Champions League 2001/02"],
+  ["Am 20. Mai 2000 hätte Bayer ein Unentschieden beim Aufsteiger SpVgg Unterhaching zur Meisterschaft gereicht. Nach dem 0:2 zog der FC Bayern dank eines 3:1 gegen Werder Bremen noch vorbei.","Fußball-Bundesliga 1999/2000"],
+  ["Am 18. Oktober 2013 flog Kießlings Kopfball am Pfosten vorbei und durch ein Loch im Seitennetz ins Tor. Schiedsrichter Felix Brych gab den Treffer, Leverkusen gewann 2:1. Das DFB-Sportgericht lehnte eine Wiederholung des Spiels ab.","Phantomtor"],
+  ["Kießling spielte von 2006 bis zu seinem Karriereende 2018 für Leverkusen und erzielte in dieser Zeit weit über 100 Bundesligatore für den Verein. Heute arbeitet er weiter für Bayer 04.","Stefan Kießling"],
+  ["Kirsten kam 1990 von Dynamo Dresden und blieb bis 2003. Mit 181 Bundesligatoren ist er bis heute Leverkusens Rekordtorschütze.","Ulf Kirsten"],
+  ["Schneider kam 1999 von Eintracht Frankfurt, wurde 2002 mit Deutschland Vize-Weltmeister und bestritt 81 Länderspiele. Seine gesamte Zeit in Leverkusen war er eine feste Größe im Mittelfeld.","Bernd Schneider (Fußballspieler)"],
+  ["Nach seiner ersten Zeit in Leverkusen ging Ballack zum FC Bayern und später zum FC Chelsea. 2010 kehrte er zurück und beendete hier 2012 seine Vereinskarriere.","Michael Ballack"],
+  ["Völler wurde 1990 Weltmeister. Nach seiner Spielerkarriere arbeitete er ab 1996 als Sportdirektor in Leverkusen, war von 2000 bis 2004 Teamchef der Nationalmannschaft und kehrte danach zu Bayer 04 zurück.","Rudi Völler"],
+  ["Für Leverkusen spielte Son zwei Jahre lang, bevor er für eine hohe Ablöse zu Tottenham Hotspur wechselte. Dort wurde er einer der besten Stürmer der Premier League.","Son Heung-min"],
+  ["Havertz kam aus der eigenen Jugend und debütierte 2016 mit 17 Jahren in der Bundesliga. Im Champions-League-Finale 2021 in Porto traf er gegen Manchester City zum 1:0-Sieg für Chelsea.","Kai Havertz"],
+  ["Wirtz kam Anfang 2020 aus der Jugend des 1. FC Köln nach Leverkusen und wurde mit 17 Jahren Bundesliga-Profi. In der Meistersaison 2023/24 wurde er zum Spieler der Saison gewählt.","Florian Wirtz"],
+  ["Das Tor fiel am 14. Juni 2021 in Glasgow beim 2:0-Sieg Tschechiens. Schick sah den schottischen Torwart weit vor dem Tor und schoss von kurz hinter der Mittellinie. Es wurde zum Tor des Turniers gewählt.","Patrik Schick"],
+  ["Alonso kam am 5. Oktober 2022 für Gerardo Seoane, Bayer stand auf Platz 17. Am Saisonende wurde Leverkusen Sechster, in der Saison darauf folgten Meisterschaft und Pokalsieg. 2025 wechselte er zu Real Madrid.","Xabi Alonso"],
+  ["Das Stadion wurde 1958 eröffnet und nach dem früheren Bayer-Generaldirektor Ulrich Haberland benannt. Bis 2009 wurde es grundlegend modernisiert und vergrößert.","BayArena"],
+  ["Brian begleitet die Mannschaft bei den Heimspielen in der BayArena und ist bei vielen Aktionen für junge Fans im Einsatz.","Bayer 04 Leverkusen"],
+  ["Im Vereinswappen steht das Bayer-Kreuz, das Logo des Unternehmens. Rot und Schwarz prägen auch die Heimtrikots.","Bayer 04 Leverkusen"],
+  ["Leverkusen und Köln liegen direkt nebeneinander am Rhein. Dass Florian Wirtz einst aus der Kölner Jugend nach Leverkusen wechselte, sorgt bis heute für zusätzliche Brisanz.","Rheinderby"],
+  ["Xhaka hatte zuvor schon für Borussia Mönchengladbach in der Bundesliga gespielt. Nach zwei Jahren und dem Double in Leverkusen wechselte er 2025 in die Premier League zum AFC Sunderland.","Granit Xhaka"],
+  ["Den Spitznamen bekam Völler zu seiner Zeit bei Werder Bremen – seine früh ergrauten Locken erinnerten Mitspieler an die Frisur einer älteren Dame. Völler nahm es mit Humor.","Rudi Völler"],
+  ["Vor Leverkusen hatte das in der Bundesliga niemand geschafft, auch der FC Bayern nicht. In Europas großen Ligen gelang es zuvor zum Beispiel dem FC Arsenal in der Premier League 2003/04.","Fußball-Bundesliga 2023/24"]
+];
+/* Ereignisse für „Heute vor … Jahren“ */
+const ON_THIS_DAY = [
+  ["1904-07-01","Gründung von Bayer 04: Aus einer Initiative von 170 Werksarbeitern entsteht der Verein."],
+  ["1988-05-18","UEFA-Pokal-Sieg! Nach dem 0:3 in Barcelona dreht Bayer das Finale gegen Espanyol mit 3:0 und gewinnt im Elfmeterschießen."],
+  ["1993-06-12","Erster DFB-Pokalsieg: 1:0 im Finale gegen die Amateure von Hertha BSC, Torschütze Ulf Kirsten."],
+  ["2000-05-20","Das Drama von Unterhaching: Ein Punkt hätte zur Meisterschaft gereicht – Bayer verliert 0:2."],
+  ["2002-04-30","Leverkusen zieht nach einem 1:1 gegen Manchester United ins Champions-League-Finale ein."],
+  ["2002-05-11","Pokalfinale 2002: 2:4-Niederlage gegen Schalke 04 in Berlin."],
+  ["2002-05-15","Champions-League-Finale in Glasgow: 1:2 gegen Real Madrid, Zidane trifft per Volley."],
+  ["2009-05-30","DFB-Pokalfinale in Berlin: 0:1 gegen Werder Bremen."],
+  ["2013-10-18","Das Phantomtor: Stefan Kießlings Kopfball geht durchs Seitennetz – und zählt beim 2:1 in Hoffenheim."],
+  ["2020-06-06","Florian Wirtz trifft gegen den FC Bayern und wird mit 17 Jahren zum damals jüngsten Torschützen der Bundesliga-Geschichte."],
+  ["2022-10-05","Xabi Alonso wird neuer Trainer von Bayer 04 – die Mannschaft steht auf Platz 17."],
+  ["2024-02-10","3:0 gegen den FC Bayern: Leverkusen baut die Tabellenführung aus."],
+  ["2024-04-14","Deutscher Meister! Mit einem 5:0 gegen Werder Bremen ist der erste Titel perfekt."],
+  ["2024-05-18","Die Saison ist geschafft: Mit einem 2:1 gegen Augsburg bleibt Leverkusen als erste Mannschaft eine ganze Bundesliga-Saison ungeschlagen."],
+  ["2024-05-22","Europa-League-Finale in Dublin: Nach 51 Spielen ohne Niederlage verliert Bayer 0:3 gegen Atalanta."],
+  ["2024-05-25","Das Double: 1:0 im Pokalfinale gegen den 1. FC Kaiserslautern, Torschütze Granit Xhaka."]
 ];
 const QUIZ = [
   ["In welchem Jahr wurde Bayer 04 Leverkusen gegründet?",["1904","1900","1912","1919"]],
@@ -857,12 +958,15 @@ const SRC_COLORS=["#c8102e","#1d4ed8","#0f766e","#7c3aed","#b45309","#be185d","#
 function srcBadge(src){ const c=SRC_COLORS[hue(src)%SRC_COLORS.length]; return `<span class="src"><i style="background:${c}">${esc(initials(src))}</i>${esc(src||"Quelle")}</span>`; }
 function imgTag(u,cls){ return u?`<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('${cls}').classList.add('noimg');this.parentNode.remove()">`:""; }
 function storyCard(i){
+  if(spoilerHidden(i)) return spoilerCard();
   return `<a class="story" href="${esc(i.link)}" target="_blank" rel="noopener">
     ${i.img?`<div class="pic"><img src="${esc(i.img)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>`:""}
     <div class="body"><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div>
     <h3>${esc(i.title)}</h3>${i.desc&&!i.img?`<div class="meta" style="font-size:14px">${esc(i.desc.slice(0,160))}</div>`:""}</div></a>`;
 }
+function spoilerCard(){ return `<div class="card noimg"><div><h3 class="spoiler">Diese Meldung könnte das Ergebnis verraten</h3><div class="meta">🙈 Ausgeblendet, solange du das Spiel schaust</div></div></div>`; }
 function newsCard(i){
+  if(spoilerHidden(i)) return spoilerCard();
   return `<a class="card${i.img?"":" noimg"}" href="${esc(i.link)}" target="_blank" rel="noopener">
     <div style="min-width:0"><h3>${esc(i.title)}</h3><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div></div>
     ${i.img?`<div class="thumb">${imgTag(i.img,".card")}</div>`:""}</a>`;
@@ -911,16 +1015,22 @@ function nextMatch(){ const now=Date.now(); return state.matches.find(m=>!m.fini
 function heroHTML(){
   const n=nextMatch();
   if(!n) return state.ts.matches?"":`<div class="sk" style="height:250px;border-radius:20px"></div>`;
-  const d=new Date(n.t), live=Date.now()>=n.t;
+  const d=new Date(n.t), live=Date.now()>=n.t, watching=isWatching(n);
   const today=fmtDate(new Date(),{day:"2-digit",month:"2-digit"})===fmtDate(d,{day:"2-digit",month:"2-digit"});
+  const [s1,s2]=scoreNow(n);
+  const midHTML = live ? (watching?`<div class="hidden-score">? : ?</div><div class="min">Spoiler-Schutz</div>`:`<div class="clock">${s1}:${s2}</div><div class="min">${esc(liveMinute(n))}</div>`)
+    : `<div class="clock">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</div><div class="vs">VS</div>`;
+  const soon=n.t-Date.now()<36*3600e3;
   return `<div class="hero" data-t="${n.t}" data-mid="${n.id}">
     <div class="top"><span>${esc(n.comp)}${n.round?" · "+esc(n.round):""}</span>${live?`<span class="pill live">Live</span>`:`<span class="pill">${today?"Heute":esc(fmtDate(d,{weekday:"short"}))}</span>`}</div>
     <div class="duel">
       <div class="side">${logo(n.i1,n.t1)}<b>${esc(short(n.t1))}</b></div>
-      <div class="mid"><div class="clock">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</div><div class="vs">VS</div></div>
+      <div class="mid">${midHTML}</div>
       <div class="side">${logo(n.i2,n.t2)}<b>${esc(short(n.t2))}</b></div>
     </div>
     ${live?"":`<div class="countdown"></div>`}
+    ${live&&!watching&&n.goals.length?`<div class="livebox">${n.goals.map(g=>`<span>${g.min!=null?g.min+"'":""} ${esc(g.name||"Tor")} · ${g.s1}:${g.s2}</span>`).join("")}</div>`:""}
+    ${live||soon?`<button type="button" class="watchbtn${watching?" on":""}" data-watch="${n.id}">${watching?"🙈 Spoiler-Schutz an – tippen zum Beenden":"🙈 Ich schaue das Spiel"}</button>`:""}
     <div class="when">${esc(fmtDate(d,{weekday:"long",day:"numeric",month:"long"}))}${n.stadium?" · "+esc(n.stadium):n.home?" · BayArena":""}</div>
     <div class="tap">${esc(tvInfo(n).main.join(" · "))} &nbsp;·&nbsp; Antippen für Details</div>
   </div>`;
@@ -941,14 +1051,17 @@ function formHTML(){
   if(!past.length && me<0) return "";
   const L={w:"S",d:"U",l:"N"};
   return `<div class="formrow">
-    ${past.length?`<div><span class="lbl">Form</span><div class="form">${past.map(m=>{const o=outcome(m); return `<i class="f-${o}" title="${esc((m.home?m.t2:m.t1)+" "+m.g1+":"+m.g2)}">${L[o]}</i>`;}).join("")}</div></div>`:""}
+    ${past.length?`<div><span class="lbl">Form</span><div class="form">${past.map(m=>{const o=outcome(m); return isWatching(m)?`<i style="background:var(--muted)">?</i>`:`<i class="f-${o}" title="${esc((m.home?m.t2:m.t1)+" "+m.g1+":"+m.g2)}">${L[o]}</i>`;}).join("")}</div></div>`:""}
     ${me>=0?`<button type="button" data-go="table" class="place" style="border:0;background:none;cursor:pointer;padding:0"><span class="lbl" style="text-align:right">Bundesliga</span><b>${me+1}.</b><small>${state.table[me].pkt} Punkte · ${state.table[me].diff>0?"+":""}${state.table[me].diff} Tore</small></button>`:""}
   </div>`;
 }
 function matchRow(m){
   const d=new Date(m.t), opp=m.home?m.t2:m.t1, icon=m.home?m.i2:m.i1, o=outcome(m);
   const us=m.home?m.g1:m.g2, them=m.home?m.g2:m.g1;
-  const right = o ? `<span class="res ${o}">${us}:${them}</span>` : `<span class="kick">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</span>`;
+  const right = (o||liveOf(m)) && isWatching(m) ? `<span class="res" style="background:var(--surface-2);color:var(--muted)">🙈</span>`
+    : o ? `<span class="res ${o}">${us}:${them}</span>`
+    : liveOf(m) ? `<span class="res" style="background:var(--red)">${m.home?scoreNow(m)[0]:scoreNow(m)[1]}:${m.home?scoreNow(m)[1]:scoreNow(m)[0]}</span>`
+    : `<span class="kick">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</span>`;
   return `<div class="match" data-mid="${m.id}" role="button" tabindex="0"><div class="date"><small>${esc(fmtDate(d,{weekday:"short"}))}</small><b>${esc(fmtDate(d,{day:"2-digit"}))}</b><small>${esc(fmtDate(d,{month:"short"}))}</small></div>
     <div class="opp"><div class="lg">${icon?`<img src="${esc(icon)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>
     <div style="min-width:0"><b>${esc(opp)}</b><small><span class="ha">${m.home?"Heim":"Ausw."}</span>${esc(m.comp)}${m.round?" · "+esc(m.round):""}</small></div></div>${right}</div>`;
@@ -1048,11 +1161,11 @@ function parseSummary(j){
 async function loadStats(){
   const start=Date.UTC(season(),6,1);
   const cache=load("espnCache")||{};
-  const evs=[];
+  const evs=[], allEv=[];
   await Promise.all(ESPN_LEAGUES.map(async([lg,ck])=>{
     try{
       const j=await getJson(`https://site.api.espn.com/apis/site/v2/sports/soccer/${lg}/teams/${ESPN_TEAM}/schedule?season=${season()}`);
-      (j.events||[]).forEach(e=>{ const done=e.competitions?.[0]?.status?.type?.completed; if(done && Date.parse(e.date)>=start) evs.push({id:e.id, lg, ck}); });
+      (j.events||[]).forEach(e=>{ const done=e.competitions?.[0]?.status?.type?.completed, t=Date.parse(e.date); if(t>=start) allEv.push({id:e.id,lg,ck,t,done:!!done}); if(done && t>=start) evs.push({id:e.id, lg, ck}); });
     }catch(e){}
   }));
   if(!evs.length && !Object.keys(cache).length) throw new Error("stats");
@@ -1062,6 +1175,7 @@ async function loadStats(){
   }
   store("espnCache",cache);
   state.stats={games:evs.filter(e=>cache[e.id]).map(e=>cache[e.id]), at:Date.now()};
+  state.espnEvents=allEv;
 }
 let statSel="g", statCompSel="all";
 const STATS=[["g","Tore"],["a","Vorlagen"],["s","Scorer"],["app","Einsätze"],["y","Gelb"],["r","Rot"]];
@@ -1113,6 +1227,167 @@ function tvInfo(m){
   if(m.ck==="ucl") return {main:["DAZN"], alt:["Prime Video (Topspiel am Dienstag)"], note:"Die Champions League läuft bei DAZN, das Dienstags-Topspiel bei Prime Video."};
   if(m.ck==="uecl") return {main:["RTL+"], alt:[], note:"Die Conference League läuft bei RTL+."};
   return {main:["–"], alt:[], note:"Für diesen Wettbewerb liegen keine Senderinfos vor."};
+}
+
+
+/* ---------- „Ich schaue das Spiel“ (Spoiler-Schutz) ---------- */
+function watchList(){ const w=load("watch")||{}; const now=Date.now(); Object.keys(w).forEach(k=>{ if(now-w[k]>3*86400e3) delete w[k]; }); return w; }
+function isWatching(m){ return !!(m && watchList()[m.id]); }
+function setWatch(id,on){ const w=watchList(); if(on) w[id]=Date.now(); else delete w[id]; store("watch",w); pushNoti(); renderAll(); }
+function liveOf(m){ return m && !m.finished && Date.now()>=m.t && Date.now()<m.t+3*3600e3; }
+function liveMinute(m){
+  const e=Math.floor((Date.now()-m.t)/60000);
+  if(e<0) return ""; if(e<=46) return (e+1)+"'"; if(e<=62) return "Halbzeit";
+  const x=e-16; return x>=90?"90+":x+"'";
+}
+function scoreNow(m){ const g=m.goals[m.goals.length-1]; return m.finished&&m.g1!=null?[m.g1,m.g2]:g?[g.s1,g.s2]:[0,0]; }
+function spoilerHidden(n){ // Meldungen, die das Ergebnis verraten könnten
+  const w=watchList(); const ms=state.matches.filter(m=>w[m.id]);
+  return ms.some(m=>n.t>m.t-5*60e3 && norm(n.title).includes(norm(short(m.home?m.t2:m.t1)).slice(0,6)));
+}
+document.addEventListener("click",e=>{
+  const w=e.target.closest("[data-watch]"); if(w){ e.stopPropagation(); const id=+w.dataset.watch; setWatch(id,!isWatching({id})); if(!$("sheet").hidden && w.closest("#sheet")) openMatch(id); return; }
+  const r=e.target.closest("[data-reveal]"); if(r){ e.stopPropagation(); setWatch(+r.dataset.reveal,false); if(!$("sheet").hidden) openMatch(+r.dataset.reveal); }
+},true);
+
+/* ---------- Live-Modus: jede Minute aktualisieren, solange die App offen ist ---------- */
+let liveBusy=false;
+async function liveTick(){
+  if(document.hidden||liveBusy) return;
+  const lm=state.matches.filter(liveOf); if(!lm.length) return;
+  liveBusy=true;
+  for(const m of lm){
+    try{
+      const j=await getJson(`https://api.openligadb.de/getmatchdata/${m.id}`);
+      const nm=mapMatch(Array.isArray(j)?j[0]:j); const i=state.matches.findIndex(x=>x.id===m.id);
+      if(i>=0 && nm.id){ const before=state.matches[i].goals.length; state.matches[i]=nm;
+        if(nm.goals.length>before && !isWatching(nm)){ const g=nm.goals[nm.goals.length-1]; notice((g.team===TEAM_ID?"TOOOR! ":"Gegentor: ")+short(nm.t1)+" "+g.s1+":"+g.s2+" "+short(nm.t2)+(g.name?" – "+g.name:"")); setTimeout(()=>notice(""),12000); }
+      }
+    }catch(e){}
+  }
+  liveBusy=false; store("cache",state); renderGames();
+}
+setInterval(liveTick,60000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) liveTick(); });
+
+/* ---------- Tippspiel ---------- */
+function tips(){ return load("tips")||{}; }
+function tipPoints(m,t){
+  if(!t||!m.finished||m.g1==null) return null;
+  if(t.h===m.g1&&t.a===m.g2) return 4;
+  if(t.h-t.a===m.g1-m.g2) return 3;
+  if(Math.sign(t.h-t.a)===Math.sign(m.g1-m.g2)) return 2;
+  return 0;
+}
+function tipTotal(){ const T=tips(); let p=0,n=0; state.matches.forEach(m=>{ const x=tipPoints(m,T[m.id]); if(x!=null){ p+=x; n++; } }); return {p,n}; }
+function tipBoxHTML(m){
+  const T=tips(), t=T[m.id], started=Date.now()>=m.t;
+  if(!started){
+    const h=t?t.h:0, a=t?t.a:0;
+    return `<div class="box tipbox"><h4>Dein Tipp</h4><div class="row">
+      <div><div class="team">${esc(short(m.t1))}</div><div class="step" style="margin-top:8px"><button type="button" data-tip="${m.id}" data-k="h" data-d="-1" aria-label="weniger">−</button><b>${h}</b><button type="button" data-tip="${m.id}" data-k="h" data-d="1" aria-label="mehr">+</button></div></div>
+      <span class="colon">:</span>
+      <div><div class="team">${esc(short(m.t2))}</div><div class="step" style="margin-top:8px"><button type="button" data-tip="${m.id}" data-k="a" data-d="-1" aria-label="weniger">−</button><b>${a}</b><button type="button" data-tip="${m.id}" data-k="a" data-d="1" aria-label="mehr">+</button></div></div></div>
+      <p>${t?"Gespeichert. Du kannst bis zum Anpfiff ändern.":"Tippe auf + und −, dein Tipp wird sofort gespeichert."} 4 Punkte für das genaue Ergebnis, 3 für die richtige Tordifferenz, 2 für die richtige Tendenz.</p></div>`;
+  }
+  if(!t) return `<div class="box"><h4>Dein Tipp</h4><p style="margin:0">Für dieses Spiel hast du nicht getippt.</p></div>`;
+  const pts=tipPoints(m,t);
+  return `<div class="box"><h4>Dein Tipp</h4><div class="tipres"><b style="font:800 26px/1 var(--display)">${t.h}:${t.a}</b>${pts==null?`<span class="legend">Wertung nach Abpfiff</span>`:isWatching(m)?`<span class="legend">Wertung nach „Ergebnis zeigen“</span>`:`<span class="pts p${pts}">+${pts}</span>`}</div></div>`;
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-tip]"); if(!b) return;
+  const id=+b.dataset.tip, m=state.matches.find(x=>x.id===id); if(!m||Date.now()>=m.t) return;
+  const T=tips(); const t=T[id]||{h:0,a:0}; t[b.dataset.k]=Math.max(0,Math.min(15,t[b.dataset.k]+ +b.dataset.d)); t.at=Date.now(); T[id]=t; store("tips",T);
+  const box=b.closest(".tipbox"); if(box) box.outerHTML=tipBoxHTML(m); renderFan();
+});
+function openTipps(){
+  const T=tips(), tot=tipTotal();
+  const up=state.matches.filter(m=>!m.finished && Date.now()<m.t), done=state.matches.filter(m=>T[m.id]&&(m.finished||Date.now()>=m.t)).reverse();
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Tippspiel</p>
+    <div class="qscore"><div><b>${tot.p}</b><small>Punkte</small></div><div><b>${tot.n}</b><small>gewertete Tipps</small></div><div><b>${tot.n?(tot.p/tot.n).toFixed(1):"–"}</b><small>pro Spiel</small></div></div>
+    <div class="mgroup">Jetzt tippen</div>${up.length?`<div class="mlist">${up.map(m=>matchRow(m).replace('<span class="kick">',`<span class="kick">${T[m.id]?`<small style="display:block;font:600 11px/1 var(--body);color:var(--win)">Tipp ${T[m.id].h}:${T[m.id].a}</small>`:`<small style="display:block;font:600 11px/1 var(--body);color:var(--red)">offen</small>`}`)).join("")}</div>`:`<div class="empty">Gerade keine Spiele zum Tippen.</div>`}
+    ${done.length?`<div class="mgroup">Deine Tipps</div><div class="mlist">${done.map(m=>{ const p=tipPoints(m,T[m.id]); return `<div class="match" data-mid="${m.id}"><div class="date"><small>${esc(fmtDate(new Date(m.t),{weekday:"short"}))}</small><b>${esc(fmtDate(new Date(m.t),{day:"2-digit"}))}</b><small>${esc(fmtDate(new Date(m.t),{month:"short"}))}</small></div><div style="min-width:0"><b style="font:700 17px/1.1 var(--display)">${esc(m.home?m.t2:m.t1)}</b><small style="display:block;font-size:12px;color:var(--muted)">Tipp ${T[m.id].h}:${T[m.id].a}${m.finished&&!isWatching(m)?" · Ergebnis "+m.g1+":"+m.g2:""}</small></div>${p==null||isWatching(m)?`<span class="legend">offen</span>`:`<span class="pts p${p}">+${p}</span>`}</div>`; }).join("")}</div>`:""}`);
+  document.querySelectorAll("#sheetBody .match").forEach(el=>el.classList.add("gl"));
+}
+
+/* ---------- Wer ist das? ---------- */
+let who=null;
+function startWho(){
+  const ps=(state.squad?.players||SQUAD_FALLBACK.players).filter(p=>p[0]!=null);
+  const rounds=shuffle(ps).slice(0,8);
+  who={ps, rounds, i:0, score:0, right:0};
+  showWho();
+}
+function whoHints(p){
+  const name=p[3].replace(/\(.*?\)/,"").trim(), sn=norm(surname(name));
+  let es=null; (state.stats?.games||[]).forEach(g=>Object.values(g.players).forEach(x=>{ if(norm(surname(x.name))===sn){ es=es||{app:0,g:0,a:0}; es.app+=x.app||0; es.g+=x.g||0; es.a+=x.a||0; } }));
+  const goals=playerGoals(name).length;
+  return [
+    `Position: ${POS_FULL[p[1]]||p[1]}`,
+    `Nationalität: ${NAT_FULL[p[2]]||p[2]}`,
+    es?`Diese Saison: ${es.app} Einsätze, ${es.g} Tore, ${es.a} Vorlagen`:`Diese Saison: ${goals} ${goals===1?"Tor":"Tore"}`,
+    `Rückennummer: ${p[0]}`,
+    `Der Nachname beginnt mit „${surname(name)[0]}“`
+  ];
+}
+function showWho(){
+  const p=who.rounds[who.i]; who.shown=who.shown||1; who.cur=p;
+  const name=p[3].replace(/\(.*?\)/,"").trim();
+  if(!who.opts||who.optFor!==who.i){ who.opts=shuffle([name].concat(shuffle(who.ps.filter(x=>x!==p)).slice(0,3).map(x=>x[3].replace(/\(.*?\)/,"").trim()))); who.optFor=who.i; }
+  const H=whoHints(p);
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Wer ist das? · ${who.i+1} von ${who.rounds.length}</span><span>${who.score} Punkte</span></div>
+    <div class="hints" style="margin-top:12px">${H.map((h,k)=>k<who.shown?`<div class="hint"><i>${k+1}</i>${esc(h)}</div>`:`<div class="hint lock"><i>${k+1}</i>Hinweis ${k+1}</div>`).join("")}</div>
+    ${who.shown<H.length?`<button type="button" class="bigbtn sec" id="whoMore" style="margin-bottom:12px">Weiteren Hinweis (−20 Punkte)</button>`:""}
+    <div class="qa">${who.opts.map(o=>`<button type="button" data-who="${esc(o)}">${esc(o)}</button>`).join("")}</div>
+    <p class="legend" style="margin-top:10px">Richtig mit einem Hinweis: 100 Punkte. Jeder weitere Hinweis kostet 20.</p>`);
+}
+function answerWho(v){
+  const name=who.cur[3].replace(/\(.*?\)/,"").trim(), ok=v===name;
+  if(ok){ who.score+=Math.max(20,100-(who.shown-1)*20); who.right++; }
+  document.querySelectorAll("[data-who]").forEach(b=>{ b.disabled=true; if(b.dataset.who===name) b.classList.add("ok"); else if(b.dataset.who===v) b.classList.add("no"); });
+  setTimeout(()=>{ who.i++; who.shown=1; if(who.i<who.rounds.length) showWho(); else endWho(); }, ok?900:1700);
+}
+function endWho(){
+  const best=hs("hsWho"), rec=who.score>best; if(rec) store("hsWho",who.score);
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${who.right===who.rounds.length?"Alle erkannt – du kennst deinen Kader!":who.right>=5?"Starke Leistung!":"Da hilft nur: mehr Spiele schauen!"}</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
+    <div class="qscore"><div><b>${who.score}</b><small>Punkte</small></div><div><b>${who.right}/${who.rounds.length}</b><small>erkannt</small></div><div><b>${Math.max(best,who.score)}</b><small>Rekord</small></div></div>
+    <button type="button" class="bigbtn" data-game="who">Nochmal spielen</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
+  who=null; renderFan();
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("#whoMore")&&who){ who.shown++; showWho(); return; }
+  const b=e.target.closest("[data-who]"); if(b&&!b.disabled&&who) answerWho(b.dataset.who);
+});
+
+/* ---------- Aufstellung (ESPN) ---------- */
+function espnFor(m){ return (state.espnEvents||[]).find(e=>Math.abs(e.t-m.t)<4*3600e3); }
+function parseLineup(j){
+  const r=(j.rosters||[]).find(x=>String(x.team?.id)===String(ESPN_TEAM)); if(!r) return null;
+  const all=(r.roster||[]).map(e=>({name:e.athlete?.displayName||"", short:e.athlete?.lastName||surname(e.athlete?.displayName||""), nr:e.jersey||e.athlete?.jersey||"", place:+e.formationPlace||0, pos:(e.position?.abbreviation||"").toUpperCase(), starter:!!e.starter}));
+  const st=all.filter(x=>x.starter).sort((a,b)=>(a.place||99)-(b.place||99));
+  if(st.length<11) return null;
+  return {formation:String(r.formation||"").replace(/[^0-9-]/g,""), starters:st, bench:all.filter(x=>!x.starter)};
+}
+function lineupHTML(L){
+  let lines=(L.formation||"").split("-").map(Number).filter(Boolean);
+  if(lines.reduce((a,b)=>a+b,0)!==10){ // ohne Formation: nach Positionen gruppieren
+    const g=L.starters.filter(p=>p.pos.startsWith("G")), d=L.starters.filter(p=>/^(D|CB|LB|RB|CD|WB)/.test(p.pos)), f=L.starters.filter(p=>/^(F|ST|CF|LW|RW)/.test(p.pos));
+    const mm=L.starters.filter(p=>!g.includes(p)&&!d.includes(p)&&!f.includes(p));
+    lines=[d.length,mm.length,f.length].filter(Boolean); L.starters=[...g,...d,...mm,...f];
+  }
+  const rows=[[L.starters[0]]]; let k=1; lines.forEach(n=>{ rows.push(L.starters.slice(k,k+n)); k+=n; });
+  const pl=(p,gk)=>`<div class="lp${gk?" gk":""}" data-pname="${esc(p.name)}"><i>${esc(p.nr)}</i><span>${esc(p.short)}</span></div>`;
+  return `<p style="margin:0 0 10px">${L.formation?"Formation "+esc(L.formation):"Startelf"}</p><div class="lineup">${rows.map((r,i)=>`<div class="lrow">${r.map(p=>pl(p,i===0)).join("")}</div>`).join("")}</div>
+    ${L.bench.length?`<div class="mgroup" style="margin-top:12px">Bank</div><div class="bench">${L.bench.map(p=>`<span data-pname="${esc(p.name)}">${esc(p.nr)} ${esc(p.short)}</span>`).join("")}</div>`:""}`;
+}
+async function loadLineup(m){
+  const box=$("lineupBox"); if(!box) return;
+  const ev=espnFor(m);
+  if(!ev){ box.innerHTML=`<p style="margin:0">Die Aufstellung wird meist etwa eine Stunde vor Anpfiff bekannt gegeben.</p>`; return; }
+  try{
+    const L=parseLineup(await getJson(`https://site.api.espn.com/apis/site/v2/sports/soccer/${ev.lg}/summary?event=${ev.id}`));
+    box.innerHTML=L?lineupHTML(L):`<p style="margin:0">Die Aufstellung wird meist etwa eine Stunde vor Anpfiff bekannt gegeben.</p>`;
+  }catch(e){ box.innerHTML=`<p style="margin:0">Die Aufstellung konnte gerade nicht geladen werden.</p>`; }
 }
 
 /* ---------- Detailansicht eines Spiels ---------- */
@@ -1173,9 +1448,12 @@ let sheetOpen=false;
 function openMatch(id){
   const m=state.matches.find(x=>x.id===id); if(!m) return;
   const d=new Date(m.t), opp=m.home?m.t2:m.t1, oppId=m.home?m.id2:m.id1, o=outcome(m), tv=tvInfo(m);
-  const live=!m.finished && Date.now()>=m.t;
-  const center = m.finished&&m.g1!=null ? `<div class="score">${m.g1}:${m.g2}</div><div class="vs">${o==="w"?"SIEG":o==="l"?"NIEDERLAGE":"REMIS"}</div>`
-    : `<div class="clock">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</div><div class="vs">${live?"LÄUFT":"VS"}</div>`;
+  const live=liveOf(m), watching=isWatching(m), hide=watching&&(m.finished||live);
+  const [s1,s2]=scoreNow(m);
+  const center = hide ? `<div class="hidden-score">? : ?</div><div class="vs">GEHEIM</div>`
+    : m.finished&&m.g1!=null ? `<div class="score">${m.g1}:${m.g2}</div><div class="vs">${o==="w"?"SIEG":o==="l"?"NIEDERLAGE":"REMIS"}</div>`
+    : live ? `<div class="score">${s1}:${s2}</div><div class="vs">${esc(liveMinute(m))}</div>`
+    : `<div class="clock">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</div><div class="vs">VS</div>`;
   const check=oppCheck(m), fact=factFor(opp);
   $("sheetBody").innerHTML=`
     <div class="hero sm"${!m.finished&&!live?` data-t="${m.t}"`:""}>
@@ -1184,20 +1462,25 @@ function openMatch(id){
       ${!m.finished&&!live?`<div class="countdown"></div>`:""}
       <div class="when">${esc(fmtDate(d,{weekday:"long",day:"numeric",month:"long",year:"numeric"}))}, ${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))} Uhr${m.stadium?" · "+esc(m.stadium):m.home?" · BayArena":""}</div>
     </div>
+    ${hide?`<div class="box watchbox"><p><b>Spoiler-Schutz ist an.</b><br><span class="legend">Ergebnis, Tore und Benachrichtigungen sind ausgeblendet.</span></p><button type="button" class="reveal" data-reveal="${m.id}">Ergebnis zeigen</button></div>`
+      : !m.finished&&(live||m.t-Date.now()<7*86400e3)?`<div class="box watchbox"><p><b>Ich schaue das Spiel</b><br><span class="legend">Keine Tor- und Ergebnis-Benachrichtigungen, Ergebnis bleibt verborgen.</span></p><label class="sw"><input type="checkbox" data-watch="${m.id}" ${watching?"checked":""}><span></span></label></div>`:""}
+    ${tipBoxHTML(m)}
     ${m.finished?"":`<div class="box"><h4>${ICON.tv}Im TV &amp; Stream</h4><div class="tv"><div class="chan">${tv.main.map(c=>`<b>${esc(c)}</b>`).join("")}${tv.alt.map(c=>`<b class="alt">${esc(c)}</b>`).join("")}</div></div><p>${esc(tv.note)} Sender können sich kurzfristig ändern.</p></div>`}
-    ${m.finished||m.goals.length?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
+    ${!m.finished&&m.t-Date.now()<3*86400e3 || live?`<div class="box"><h4>Aufstellung Bayer 04</h4><div id="lineupBox"><div class="sk" style="height:120px"></div></div></div>`:""}
+    ${!hide&&(m.finished||m.goals.length)?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
     ${fact||check.items.length?`<div class="box fact"><h4>${ICON.bulb}Wusstest du?</h4>${fact?`<p class="big">${esc(fact)}</p>`:""}${check.items.length||check.form?`<ul class="facts">${check.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${check.form?`<p style="margin-top:10px">Form von ${esc(short(opp))}:</p>${check.form}`:""}`:""}</div>`:""}
     <div class="box"><h4>${ICON.vs}Bilanz gegen ${esc(short(opp))}</h4><div id="h2hBox"><div class="sk" style="height:110px"></div></div></div>
     <div class="btnrow"><a href="https://news.google.com/search?q=${encodeURIComponent("Leverkusen "+opp)}&hl=de&gl=DE&ceid=DE:de" target="_blank" rel="noopener">Berichte zum Spiel</a></div>`;
   $("sheet").hidden=false; document.body.style.overflow="hidden"; tickCountdown();
   if(!sheetOpen){ sheetOpen=true; try{ history.pushState({sheet:1},""); }catch(e){} }
   $("sheet").querySelector(".panel").scrollTop=0;
+  if($("lineupBox")) loadLineup(m);
   if(oppId) loadH2H(oppId).then(list=>{ const b=$("h2hBox"); if(b) b.innerHTML=h2hHTML(list.filter(x=>x.t<m.t-3600e3 || m.finished), opp); })
     .catch(()=>{ const b=$("h2hBox"); if(b) b.innerHTML=`<p style="margin:0">Die Bilanz konnte gerade nicht geladen werden.</p>`; });
 }
 function closeSheet(fromPop){
   if($("sheet").hidden) return;
-  clearInterval(qTimer); quiz=null; pen=null;
+  clearInterval(qTimer); quiz=null; pen=null; who=null;
   $("sheet").hidden=true; document.body.style.overflow="";
   if(sheetOpen){ sheetOpen=false; if(!fromPop){ try{ history.back(); }catch(e){} } }
 }
@@ -1209,7 +1492,7 @@ function renderStamp(){
   const src = state.feedsAll ? " · "+state.feedsOk+" von "+state.feedsAll+" Quellen" : "";
   $("stamp").textContent = t ? "Stand "+fmtDate(new Date(t),{hour:"2-digit",minute:"2-digit"})+" Uhr"+src : "Lade …";
 }
-function renderAll(){ renderGames(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
+function renderAll(){ renderFan(); renderGames(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
 
 
 /* ---------- Text-Abruf (HTML-Seiten) ---------- */
@@ -1318,7 +1601,29 @@ async function loadInjuries(){
 let factIdx=(()=>{ let last=load("factLast"); let i; do{ i=Math.floor(Math.random()*B04_FACTS.length); }while(B04_FACTS.length>1 && i===last); store("factLast",i); return i; })();
 function renderFact(){
   const [cat,txt]=B04_FACTS[factIdx];
-  $("factBox").innerHTML=`<div class="factcard"><div class="k"><span class="chipc">${esc(cat)}</span><button type="button" id="nextFact">Nächster Fakt →</button></div><p>${esc(txt)}</p></div>`;
+  $("factBox").innerHTML=`<div class="factcard"><div class="k"><span class="chipc">${esc(cat)}</span><button type="button" id="nextFact">Nächster Fakt →</button></div><p data-fact="${factIdx}" role="button" tabindex="0">${esc(txt)}<span class="factmore">Antippen für mehr ›</span></p></div>`;
+}
+function openFact(i){
+  const [cat,txt]=B04_FACTS[i], [more,wiki]=FACT_MORE[i]||["",""];
+  openSheetRaw(`<div class="factcard" style="box-shadow:none"><div class="k"><span class="chipc" id="sheetTitle">${esc(cat)}</span></div><p style="cursor:default">${esc(txt)}</p></div>
+    ${more?`<div class="box"><h4>${ICON.bulb}Die Geschichte dahinter</h4><p style="margin:0;color:var(--fg);font-size:15.5px;line-height:1.55">${esc(more)}</p>
+      ${wiki?`<a href="https://de.wikipedia.org/w/index.php?search=${encodeURIComponent(wiki)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;color:var(--red);font-weight:700;font-size:14px;text-decoration:none">Mehr bei Wikipedia →</a>`:""}</div>`:""}
+    <button type="button" class="bigbtn sec" data-factnext="${i}">Nächster Fakt</button>`);
+}
+document.addEventListener("click",e=>{
+  const f=e.target.closest("[data-fact]"); if(f){ openFact(+f.dataset.fact); return; }
+  const n=e.target.closest("[data-factnext]"); if(n){ factIdx=(+n.dataset.factnext+1)%B04_FACTS.length; store("factLast",factIdx); renderFact(); openFact(factIdx); }
+});
+function renderDay(){
+  const now=new Date(), y=now.getFullYear(); let best=null;
+  ON_THIS_DAY.forEach(([iso,txt])=>{
+    const [Y,M,D]=iso.split("-").map(Number); const d=new Date(y,M-1,D); const delta=Math.round((d-new Date(y,now.getMonth(),now.getDate()))/86400e3);
+    if(Math.abs(delta)<=10 && (!best||Math.abs(delta)<Math.abs(best.delta))) best={Y,M,D,delta,txt};
+  });
+  if(!best){ $("dayBox").innerHTML=""; return; }
+  const yrs=y-best.Y, mon=new Date(y,best.M-1,best.D).toLocaleString("de-DE",{month:"short"});
+  const head=best.delta===0?`Heute vor ${yrs} Jahren`:best.delta<0?`Vor ${yrs} Jahren · vor ${-best.delta} ${best.delta===-1?"Tag":"Tagen"}`:`In ${best.delta} ${best.delta===1?"Tag":"Tagen"}: ${yrs} Jahre`;
+  $("dayBox").innerHTML=`<div class="daycard"><div class="cal"><small>${esc(mon)}</small><b>${best.D}</b></div><div><div class="k">${esc(head)}</div><p>${esc(best.txt)}</p></div></div>`;
 }
 document.addEventListener("click",e=>{ if(e.target.closest("#nextFact")){ factIdx=(factIdx+1+Math.floor(Math.random()*(B04_FACTS.length-1)))%B04_FACTS.length; store("factLast",factIdx); renderFact(); } });
 const KIND={inj:["+","Verletzt"],reh:["↻","Aufbautraining"],ban:["■","Gesperrt"],q:["?","Fraglich"]};
@@ -1333,6 +1638,8 @@ function hs(k){ return load(k)||0; }
 function renderFan(){
   $("fanBox").innerHTML=`<div class="sec-h" style="margin:4px 0 8px"><h2>Fanzone</h2></div><div class="fan">
     <button type="button" class="game q" data-game="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg><span class="hs">Rekord ${hs("hsQuiz")}</span><span><b>Werkself-Quiz</b><br><small>10 Fragen, schnell sein lohnt sich</small></span></button>
+    <button type="button" class="game t" data-game="tipp"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="hs">${tipTotal().p} Punkte</span><span><b>Tippspiel</b><br><small>Tippe die Ergebnisse der Werkself</small></span></button>
+    <button type="button" class="game w" data-game="who"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg><span class="hs">Rekord ${hs("hsWho")}</span><span><b>Wer ist das?</b><br><small>Erkenne Spieler an Hinweisen</small></span></button>
     <button type="button" class="game e" data-game="pen"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/></svg><span class="hs">Rekord ${hs("hsPen")}</span><span><b>Elfer-König</b><br><small>Wie viele verwandelst du in Folge?</small></span></button>
   </div>`;
 }
@@ -1502,7 +1809,7 @@ function shoot(z){
   },380);
 }
 document.addEventListener("click",e=>{
-  const g=e.target.closest("[data-game]"); if(g){ g.dataset.game==="quiz"?startQuiz():startPen(); return; }
+  const g=e.target.closest("[data-game]"); if(g){ ({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho})[g.dataset.game](); return; }
   const s=e.target.closest("[data-shot]"); if(s) shoot(+s.dataset.shot);
 });
 
@@ -1521,7 +1828,7 @@ function openNoti(){
     ${native?`<button type="button" class="bigbtn sec" id="testNoti">Test-Benachrichtigung senden</button>`:""}`);
 }
 function pushNoti(){
-  const s=notiSettings(); store("noti",s);
+  const s=notiSettings(); store("noti",s); s.watch=Object.keys(watchList()).map(Number);
   if(NATIVE && typeof window.AndroidNet.setNotify==="function"){ try{ window.AndroidNet.setNotify(JSON.stringify(s)); }catch(e){} }
 }
 document.addEventListener("change",e=>{ const c=e.target.closest("[data-noti]"); if(!c) return; const s=notiSettings(); s[c.dataset.noti]=c.checked; store("noti",s); pushNoti(); });
@@ -1569,7 +1876,7 @@ $("refresh").addEventListener("click",refresh);
 
 const cached=load("cache");
 if(cached){ Object.assign(state,cached); state.matches=(state.matches||[]).filter(m=>m.goals&&m.id&&/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i.test(m.sc||"")); state.comps=(state.comps||[]).filter(c=>/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i.test(c.sc||"")); }
-renderFact(); renderFan();
+renderFact(); renderDay(); renderFan();
 renderAll();
 refresh();
 pushNoti();
