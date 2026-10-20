@@ -359,6 +359,14 @@ tr.me td{background:var(--soft);font-weight:700}
 .glist .min{text-align:center;font:800 14px/1 var(--display);background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 0}
 .glist small{display:block;font-size:12px;color:var(--muted)}
 .wiki p{font-size:15px;line-height:1.5;color:var(--fg);margin:0}
+.artview .artimg{margin:-2px -2px 0;border-radius:16px;overflow:hidden;aspect-ratio:16/9;background:var(--surface-2)}
+.artview .artimg img{width:100%;height:100%;object-fit:cover;display:block}
+.arttitle{margin:0 0 12px;font:700 27px/1.12 var(--display);text-wrap:balance}
+.artview .art p{font-size:16.5px;line-height:1.65}
+.artview .art p.li{padding-left:6px}
+.artview blockquote{margin:6px 0 14px;padding:4px 0 4px 14px;border-left:4px solid var(--red);font-style:italic;font-size:16px;line-height:1.55}
+.artview .art h5{font-size:18px;text-transform:none;letter-spacing:0;color:var(--fg);margin:18px 0 8px}
+.artsrc{font-size:12.5px;color:var(--muted);margin:14px 0 10px}
 .reader .art p{margin:0 0 10px;font-size:15.5px;line-height:1.6;color:var(--fg)}
 .reader .art h5{margin:14px 0 6px;font:700 15px/1.2 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .reader details.sec{border-top:1px solid var(--line)}
@@ -1398,6 +1406,122 @@ async function loadLineup(m){
   }catch(e){ box.innerHTML=`<p style="margin:0">Die Aufstellung konnte gerade nicht geladen werden.</p>`; }
 }
 
+
+/* ---------- Artikel direkt in der App lesen ---------- */
+function matchNewsHTML(m){
+  const opp=norm(short(m.home?m.t2:m.t1)).slice(0,6);
+  const list=(state.news||[]).filter(n=>norm(n.title).includes(opp) && Math.abs(n.t-m.t)<5*86400e3 && !spoilerHidden(n)).slice(0,6);
+  return list.length?`<div class="plnews">${list.map(n=>`<a href="${esc(n.link)}"><b>${esc(n.title)}</b><div class="meta" style="margin-top:4px">${srcBadge(n.source)}<span class="sep"></span><span>${esc(ago(n.t))}</span></div></a>`).join("")}</div>`:`<p style="margin:0">Noch keine Meldungen zu diesem Spiel.</p>`;
+}
+function b64urlDecode(x){ x=x.replace(/-/g,"+").replace(/_/g,"/"); while(x.length%4) x+="="; return atob(x); }
+async function resolveUrl(u){
+  let x; try{ x=new URL(u); }catch(e){ return u; }
+  if(/(^|\.)bing\.com$/.test(x.hostname) && x.searchParams.get("url")) return x.searchParams.get("url");
+  if(x.hostname==="news.google.com"){
+    const m=x.pathname.match(/articles\/([^/?]+)/);
+    if(m){ try{ const h=b64urlDecode(m[1]).match(/https?:\/\/[\x21-\x7e]+/); if(h) return h[0].replace(/[\x00-\x1f"\\]+.*$/,""); }catch(e){} }
+    try{
+      const html=await getText(u);
+      const mm=html.match(/data-n-au="([^"]+)"/)||html.match(/<a[^>]+href="(https?:\/\/(?![^"]*google\.)[^"]+)"/)||html.match(/url=(https?%3A%2F%2F[^&"]+)/i);
+      if(mm) return decodeURIComponent(mm[1].replace(/&amp;/g,"&"));
+    }catch(e){}
+    return null;
+  }
+  return u;
+}
+const JUNK=/cookie|newsletter|abonnier|anzeige|werbung|lesen sie auch|mehr zum thema|weiterlesen|zum artikel|jetzt registrieren|melden sie sich an|alle rechte vorbehalten|©|teilen auf|whatsapp|facebook|instagram|zur startseite|bildquelle|foto:|bild:|hier klicken|plus-artikel|exklusiv für abonnenten|datenschutz/i;
+function extractArticle(html, url){
+  const doc=new DOMParser().parseFromString(html,"text/html");
+  const meta=n=>doc.querySelector(`meta[property="${n}"],meta[name="${n}"]`)?.getAttribute("content")||"";
+  const out={title:meta("og:title")||doc.title||"", img:safeImg(meta("og:image")), desc:meta("og:description")||meta("description"), blocks:[]};
+  // 1) Strukturierte Daten: viele Verlage liefern den ganzen Text als articleBody
+  let body="";
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(sc=>{
+    try{
+      const walk=o=>{ if(!o||typeof o!=="object") return; if(Array.isArray(o)) return o.forEach(walk); if(typeof o.articleBody==="string" && o.articleBody.length>body.length) body=o.articleBody; if(o["@graph"]) walk(o["@graph"]); };
+      walk(JSON.parse(sc.textContent));
+    }catch(e){}
+  });
+  if(body.length>200){
+    body.replace(/\r/g,"").split(/\n{1,}|(?<=[.!?“"])\s{2,}/).map(t=>t.trim()).filter(t=>t.length>1).forEach(t=>out.blocks.push({k:"p",t}));
+    if(out.blocks.length===1 && body.length>900){ // ein einziger Block: in lesbare Absätze teilen
+      const sent=body.match(/[^.!?]+[.!?“"]+(\s|$)/g)||[body]; out.blocks=[]; let cur="";
+      sent.forEach(x=>{ cur+=x; if(cur.length>380){ out.blocks.push({k:"p",t:cur.trim()}); cur=""; } }); if(cur.trim()) out.blocks.push({k:"p",t:cur.trim()});
+    }
+    return out;
+  }
+  // 2) Sonst: den Bereich mit dem meisten Fließtext finden
+  doc.querySelectorAll("script,style,noscript,nav,header,footer,aside,form,iframe,figure figcaption,[aria-hidden=true],.ad,.ads,.advert,.teaser,.related,.comments,.newsletter,.paywall-teaser").forEach(e=>e.remove());
+  let best=null, bestLen=0;
+  const cands=[...doc.querySelectorAll("article,main,[itemprop=articleBody],[class*=article],[class*=content],[class*=story],[class*=text],section,div")];
+  cands.forEach(c=>{ const len=[...c.querySelectorAll(":scope > p, :scope > div > p")].reduce((n,p)=>n+p.textContent.trim().length,0); if(len>bestLen){ bestLen=len; best=c; } });
+  if(!best) return out;
+  best.querySelectorAll("p,h2,h3,li,blockquote").forEach(el=>{
+    const t=el.textContent.replace(/\s+/g," ").trim(); if(!t) return;
+    const k=/^H/.test(el.tagName)?"h":el.tagName==="LI"?"li":el.tagName==="BLOCKQUOTE"?"q":"p";
+    if(k==="p"&&t.length<35) return; if(k==="li"&&t.length<20) return; if(JUNK.test(t)&&t.length<220) return;
+    if(out.blocks.length && out.blocks[out.blocks.length-1].t===t) return;
+    out.blocks.push({k,t});
+  });
+  return out;
+}
+const artCache={};
+function articleBlocksHTML(a){
+  return a.blocks.map(b=>b.k==="h"?`<h5>${esc(b.t)}</h5>`:b.k==="li"?`<p class="li">• ${esc(b.t)}</p>`:b.k==="q"?`<blockquote>${esc(b.t)}</blockquote>`:`<p>${esc(b.t)}</p>`).join("");
+}
+function openInAppBrowser(url){
+  if(NATIVE && typeof window.AndroidNet.openInApp==="function") window.AndroidNet.openInApp(url);
+  else window.open(url,"_blank","noopener");
+}
+async function openArticle(item){
+  const it=Object.assign({title:"",source:"",t:0,img:""},item);
+  openSheetRaw(`<article class="reader artview">
+      ${it.img?`<div class="artimg"><img src="${esc(it.img)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>`:`<div id="artImgSlot"></div>`}
+      <div class="meta" style="margin:12px 0 6px">${it.source?srcBadge(it.source):""}${it.t?`<span class="sep"></span><span>${esc(ago(it.t))}</span>`:""}</div>
+      <h3 class="arttitle" id="sheetTitle">${esc(it.title)}</h3>
+      <div class="art" id="artBody"><div class="sk" style="height:18px;margin:10px 0"></div><div class="sk" style="height:18px;margin:10px 0;width:92%"></div><div class="sk" style="height:18px;margin:10px 0;width:85%"></div><div class="sk" style="height:18px;margin:10px 0;width:95%"></div><p class="legend">Artikel wird geladen …</p></div>
+      <div id="artFoot"></div>
+    </article>`);
+  const body=()=>$("artBody"), foot=()=>$("artFoot");
+  try{
+    let a=artCache[it.link];
+    if(!a){
+      const real=await resolveUrl(it.link);
+      if(!real) throw new Error("kein Link");
+      a=extractArticle(await getText(real), real); a.url=real; artCache[it.link]=a;
+    }
+    if(!body()) return;
+    if(!it.title && a.title){ $("sheetTitle").textContent=a.title; }
+    if(!it.img && a.img && $("artImgSlot")) $("artImgSlot").outerHTML=`<div class="artimg"><img src="${esc(a.img)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>`;
+    const words=a.blocks.reduce((n,b)=>n+b.t.split(/\s+/).length,0);
+    if(words<40){
+      body().innerHTML=`${a.desc?`<p>${esc(a.desc)}</p>`:""}<div class="notice">Der vollständige Text ist bei diesem Verlag nur auf der eigenen Seite lesbar, zum Beispiel weil er hinter einer Bezahlschranke steht.</div>`;
+    } else {
+      body().innerHTML=articleBlocksHTML(a)+`<p class="legend" style="margin-top:14px">ca. ${Math.max(1,Math.round(words/220))} Min. Lesezeit</p>`;
+    }
+    foot().innerHTML=`<div class="artsrc">Quelle: ${esc(it.source||new URL(a.url).hostname.replace(/^www\./,""))}. Alle Rechte beim Verlag.</div>
+      <button type="button" class="bigbtn sec" data-inapp="${esc(a.url)}">Originalseite in der App ansehen</button>`;
+  }catch(e){
+    if(!body()) return;
+    body().innerHTML=`<div class="notice">Der Artikel konnte nicht direkt geladen werden. Du kannst ihn aber in der App auf der Originalseite ansehen.</div>`;
+    foot().innerHTML=`<button type="button" class="bigbtn sec" data-inapp="${esc(it.link)}">Originalseite in der App ansehen</button>`;
+  }
+}
+window.openArticleUrl=(url,title)=>{
+  const it=[...(state.news||[]),...(state.rumors||[])].find(n=>n.link===url)||{link:url,title:title||""};
+  openArticle(it);
+};
+// Alle Links abfangen: Meldungen werden in der App gelesen, alles andere im In-App-Browser
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a[href]"); if(!a) return;
+  const href=a.getAttribute("href"); if(!/^https?:/i.test(href)) return;
+  e.preventDefault(); e.stopPropagation();
+  const it=[...(state.news||[]),...(state.rumors||[])].find(n=>n.link===href);
+  if(it || a.closest(".story,.card,.rumor,.plnews,.inj,#outBox")) openArticle(it||{link:href,title:a.textContent.trim().replace(/Zur Meldung →/,"")});
+  else openInAppBrowser(href);
+},true);
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-inapp]"); if(b) openInAppBrowser(b.dataset.inapp); });
+
 /* ---------- Detailansicht eines Spiels ---------- */
 const h2hCache={};
 async function loadH2H(oppId){
@@ -1478,7 +1602,7 @@ function openMatch(id){
     ${!hide&&(m.finished||m.goals.length)?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
     ${fact||check.items.length?`<div class="box fact"><h4>${ICON.bulb}Wusstest du?</h4>${fact?`<p class="big">${esc(fact)}</p>`:""}${check.items.length||check.form?`<ul class="facts">${check.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${check.form?`<p style="margin-top:10px">Form von ${esc(short(opp))}:</p>${check.form}`:""}`:""}</div>`:""}
     <div class="box"><h4>${ICON.vs}Bilanz gegen ${esc(short(opp))}</h4><div id="h2hBox"><div class="sk" style="height:110px"></div></div></div>
-    <div class="btnrow"><a href="https://news.google.com/search?q=${encodeURIComponent("Leverkusen "+opp)}&hl=de&gl=DE&ceid=DE:de" target="_blank" rel="noopener">Berichte zum Spiel</a></div>`;
+    <div class="box" id="matchNews"><h4>Meldungen zum Spiel</h4>${matchNewsHTML(m)}</div>`;
   $("sheet").hidden=false; document.body.style.overflow="hidden"; tickCountdown();
   if(!sheetOpen){ sheetOpen=true; try{ history.pushState({sheet:1},""); }catch(e){} }
   $("sheet").querySelector(".panel").scrollTop=0;

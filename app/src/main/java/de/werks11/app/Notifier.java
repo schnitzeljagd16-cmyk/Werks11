@@ -98,9 +98,8 @@ public class Notifier {
     static void show(Context c, int id, String channel, String title, String text, String url) {
         if (!permitted(c)) return;
         createChannels(c);
-        Intent open = (url != null && url.startsWith("https://"))
-                ? new Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                : new Intent(c, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent open = new Intent(c, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if (url != null && url.startsWith("https://")) { open.putExtra("article_url", url); open.putExtra("article_title", text); }
         PendingIntent pi = PendingIntent.getActivity(c, id, open, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         android.app.Notification.Builder b = Build.VERSION.SDK_INT >= 26
                 ? new android.app.Notification.Builder(c, channel)

@@ -42,11 +42,17 @@ public class MainActivity extends Activity {
                 Uri uri = request.getUrl();
                 String scheme = uri.getScheme();
                 if ("http".equals(scheme) || "https".equals(scheme)) {
-                    // Artikel im normalen Browser öffnen
-                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                    // Seiten bleiben in der App (eigener Lesebereich)
+                    openInApp(uri.toString());
                     return true;
                 }
                 return false;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                pageReady = true;
+                deliverPending();
             }
         });
 
@@ -55,6 +61,41 @@ public class MainActivity extends Activity {
         } else {
             web.loadUrl("file:///android_asset/index.html");
         }
+        takeArticle(getIntent());
+    }
+
+    private boolean pageReady = false;
+    private String pendingUrl = null, pendingTitle = null;
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        takeArticle(intent);
+    }
+
+    /** Benachrichtigung angetippt: Artikel in der App öffnen. */
+    private void takeArticle(Intent i) {
+        if (i == null) return;
+        String u = i.getStringExtra("article_url");
+        if (u == null) return;
+        pendingUrl = u;
+        pendingTitle = i.getStringExtra("article_title");
+        i.removeExtra("article_url");
+        deliverPending();
+    }
+
+    private void deliverPending() {
+        if (!pageReady || pendingUrl == null) return;
+        String js = "window.openArticleUrl && window.openArticleUrl(" + org.json.JSONObject.quote(pendingUrl) + "," + org.json.JSONObject.quote(pendingTitle == null ? "" : pendingTitle) + ")";
+        pendingUrl = null;
+        web.postDelayed(() -> web.evaluateJavascript(js, null), 600);
+    }
+
+    void openInApp(String url) {
+        Intent r = new Intent(this, ReaderActivity.class);
+        r.putExtra("url", url);
+        startActivity(r);
     }
 
     @Override
@@ -72,6 +113,11 @@ public class MainActivity extends Activity {
 
     /** Lädt Webseiten direkt übers Handy – ohne die Sperren eines Browsers. */
     public class Net {
+        @JavascriptInterface
+        public void openInApp(String url) {
+            if (url != null && (url.startsWith("https://") || url.startsWith("http://"))) runOnUiThread(() -> MainActivity.this.openInApp(url));
+        }
+
         @JavascriptInterface
         public void setNotify(String json) {
             Notifier.apply(getApplicationContext(), json);
@@ -110,7 +156,9 @@ public class MainActivity extends Activity {
                     c.setConnectTimeout(10000);
                     c.setReadTimeout(15000);
                     c.setInstanceFollowRedirects(true);
-                    c.setRequestProperty("User-Agent", "Mozilla/5.0 (Android) Werks11/1.0");
+                    c.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36");
+                    c.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,application/json;q=0.8,*/*;q=0.7");
+                    c.setRequestProperty("Cookie", "CONSENT=YES+");
                     c.setRequestProperty("Accept-Language", "de-DE,de;q=0.9");
                     int code = c.getResponseCode();
                     if (code < 200 || code >= 300) throw new Exception("HTTP " + code);
