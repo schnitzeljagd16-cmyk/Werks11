@@ -359,6 +359,14 @@ tr.me td{background:var(--soft);font-weight:700}
 .glist .min{text-align:center;font:800 14px/1 var(--display);background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 0}
 .glist small{display:block;font-size:12px;color:var(--muted)}
 .wiki p{font-size:15px;line-height:1.5;color:var(--fg);margin:0}
+.reader .art p{margin:0 0 10px;font-size:15.5px;line-height:1.6;color:var(--fg)}
+.reader .art h5{margin:14px 0 6px;font:700 15px/1.2 var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.reader details.sec{border-top:1px solid var(--line)}
+.reader details.sec summary{cursor:pointer;list-style:none;padding:12px 0;font:700 18px/1.2 var(--display);display:flex;justify-content:space-between;gap:10px;align-items:center}
+.reader details.sec summary::-webkit-details-marker{display:none}
+.reader details.sec summary::after{content:"+";font:700 22px/1 var(--body);color:var(--red)}
+.reader details.sec[open] summary::after{content:"–"}
+.reader .hit{font:700 11px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;background:var(--soft);color:var(--red);padding:4px 7px;border-radius:999px;margin-left:auto}
 .wiki a{color:var(--red);font-weight:600;font-size:13px;text-decoration:none;display:inline-block;margin-top:8px}
 .plnews{display:flex;flex-direction:column}
 .plnews a{display:block;color:inherit;text-decoration:none;padding:9px 0}
@@ -1607,9 +1615,50 @@ function openFact(i){
   const [cat,txt]=B04_FACTS[i], [more,wiki]=FACT_MORE[i]||["",""];
   openSheetRaw(`<div class="factcard" style="box-shadow:none"><div class="k"><span class="chipc" id="sheetTitle">${esc(cat)}</span></div><p style="cursor:default">${esc(txt)}</p></div>
     ${more?`<div class="box"><h4>${ICON.bulb}Die Geschichte dahinter</h4><p style="margin:0;color:var(--fg);font-size:15.5px;line-height:1.55">${esc(more)}</p>
-      ${wiki?`<a href="https://de.wikipedia.org/w/index.php?search=${encodeURIComponent(wiki)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;color:var(--red);font-weight:700;font-size:14px;text-decoration:none">Mehr bei Wikipedia →</a>`:""}</div>`:""}
+      </div>`:""}
+    ${wiki?`<div class="box reader" id="readerBox"><h4>Die ganze Geschichte</h4><div class="sk" style="height:160px"></div></div>`:""}
     <button type="button" class="bigbtn sec" data-factnext="${i}">Nächster Fakt</button>`);
+  if(wiki) renderArticle(wiki, txt+" "+more, $("readerBox"));
 }
+
+/* ---------- Wikipedia-Artikel direkt in der App lesen ---------- */
+const articleCache={};
+async function wikiArticle(q){
+  if(articleCache[q]) return articleCache[q];
+  const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=1&format=json&origin=*"));
+  const title=sj.query?.search?.[0]?.title; if(!title) return null;
+  const j=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=wiki&redirects=1&titles="+encodeURIComponent(title)+"&format=json&origin=*"));
+  const pg=Object.values(j.query?.pages||{})[0]; if(!pg||!pg.extract) return null;
+  const parts=pg.extract.split(/\n*(={2,5})\s*(.+?)\s*\1\n/);
+  const art={title:pg.title, intro:parts[0].trim(), sections:[]};
+  for(let k=1;k<parts.length;k+=3) art.sections.push({lvl:parts[k].length, h:parts[k+1], text:(parts[k+2]||"").trim()});
+  art.sections=art.sections.filter(x=>!/^(weblinks|einzelnachweise|literatur|siehe auch|anmerkungen|quellen|filmografie|diskografie)$/i.test(x.h));
+  // Unterabschnitte an ihren Oberabschnitt hängen
+  const merged=[]; art.sections.forEach(x=>{ if(x.lvl>2 && merged.length){ merged[merged.length-1].subs.push(x); } else merged.push({...x, subs:[]}); });
+  art.sections=merged; articleCache[q]=art; return art;
+}
+function paras(t){ return t.split(/\n+/).map(x=>x.trim()).filter(Boolean).map(x=>`<p>${esc(x)}</p>`).join(""); }
+async function renderArticle(q, context, box){
+  if(!box) return;
+  try{
+    const a=await wikiArticle(q);
+    if(!box.isConnected) return;
+    if(!a){ box.innerHTML=`<h4>Die ganze Geschichte</h4><p style="color:var(--muted)">Dazu gibt es gerade keinen Artikel.</p>`; return; }
+    const words=[...new Set(norm(context).match(/[a-zäöüß0-9]{5,}/g)||[])];
+    const score=sec=>{ const t=norm(sec.h+" "+sec.text+" "+sec.subs.map(x=>x.h+" "+x.text).join(" ")); return words.reduce((n,w)=>n+(t.includes(w)?1:0),0); };
+    let best=-1, bi=-1; a.sections.forEach((x,k)=>{ const sc=score(x); if(sc>best){ best=sc; bi=k; } });
+    box.innerHTML=`<h4>Die ganze Geschichte · ${esc(a.title)}</h4>
+      <div class="art">${paras(a.intro)}</div>
+      ${a.sections.map((x,k)=>`<details class="sec"${k===bi&&best>1?" open":""}><summary>${esc(x.h)}${k===bi&&best>1?' <span class="hit">passt zum Fakt</span>':""}</summary><div class="art">${paras(x.text)}${x.subs.map(u=>`<h5>${esc(u.h)}</h5>${paras(u.text)}`).join("")}</div></details>`).join("")}
+      <p class="legend" style="margin-top:12px">Text: Wikipedia, Lizenz CC BY-SA 4.0</p>`;
+    const open=box.querySelector("details[open]"); if(open) setTimeout(()=>open.scrollIntoView({behavior:"smooth",block:"start"}),300);
+  }catch(e){ if(box.isConnected) box.innerHTML=`<h4>Die ganze Geschichte</h4><p style="color:var(--muted)">Der Artikel konnte gerade nicht geladen werden. Prüfe deine Internetverbindung.</p>`; }
+}
+function openReader(q, title){
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">${esc(title||q)}</p><div class="box reader" id="readerBox"><div class="sk" style="height:200px"></div></div>`);
+  renderArticle(q, "", $("readerBox"));
+}
+document.addEventListener("click",e=>{ const r=e.target.closest("[data-read]"); if(r){ e.preventDefault(); openReader(r.dataset.read, r.dataset.title); } });
 document.addEventListener("click",e=>{
   const f=e.target.closest("[data-fact]"); if(f){ openFact(+f.dataset.fact); return; }
   const n=e.target.closest("[data-factnext]"); if(n){ factIdx=(+n.dataset.factnext+1)%B04_FACTS.length; store("factLast",factIdx); renderFact(); openFact(factIdx); }
@@ -1734,7 +1783,7 @@ function openPlayer(name){
     if(!w){ box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p style="color:var(--muted)">Keine weiteren Infos gefunden.</p>`; return; }
     if(w.img){ const ph=$("plPhoto"); if(ph) ph.innerHTML=`<img src="${esc(w.img)}" alt="" onerror="this.remove()">`; }
     if(w.born){ $("plAge").textContent=ageOf(w.born); $("plBorn").textContent="Geboren am "+fmtDate(new Date(w.born),{day:"numeric",month:"long",year:"numeric"})+(w.place?" in "+w.place:""); }
-    box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p>${esc(w.extract)}</p>${w.url?`<a href="${esc(w.url)}" target="_blank" rel="noopener">Weiterlesen bei Wikipedia →</a>`:""}`;
+    box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p>${esc(w.extract)}</p><button type="button" class="bigbtn sec" style="margin-top:12px" data-read="${esc(w.title)}" data-title="${esc(w.title)}">Ganzen Artikel lesen</button>`;
   }).catch(()=>{ const box=$("plWiki"); if(box) box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p style="color:var(--muted)">Infos konnten gerade nicht geladen werden.</p>`; });
 }
 document.addEventListener("click",e=>{ const p=e.target.closest("[data-pname]"); if(p && !e.target.closest("a")) openPlayer(p.dataset.pname); });
