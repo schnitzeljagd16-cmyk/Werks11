@@ -1439,7 +1439,7 @@ function whoHints(p){
   const goals=playerGoals(name).length;
   return [
     `Position: ${POS_FULL[p[1]]||p[1]}`,
-    `Nationalität: ${NAT_FULL[p[2]]||p[2]}`,
+    `Nationalität: ${natDe(p[2],p[3])}`,
     es?`Diese Saison: ${es.app} Einsätze, ${es.g} Tore, ${es.a} Vorlagen`:`Diese Saison: ${goals} ${goals===1?"Tor":"Tore"}`,
     `Rückennummer: ${p[0]}`,
     `Der Nachname beginnt mit „${surname(name)[0]}“`
@@ -1740,6 +1740,21 @@ function norm(t){ return String(t||"").toLowerCase().normalize("NFD").replace(/[
 /* ---------- Kader (Wikipedia, sonst gespeicherter Stand) ---------- */
 const NAT_DE={Netherlands:"NED",Argentina:"ARG",Spain:"ESP",England:"ENG",France:"FRA",Germany:"GER",Portugal:"POR","United States":"USA","Burkina Faso":"BFA",Brazil:"BRA","Czech Republic":"CZE",Nigeria:"NGA",Algeria:"ALG",Cameroon:"CMR",Morocco:"MAR",Switzerland:"SUI",Belgium:"BEL",Senegal:"SEN",Mali:"MLI",Ukraine:"UKR",Austria:"AUT",Ecuador:"ECU",Colombia:"COL",Croatia:"CRO",Poland:"POL","Ivory Coast":"CIV",Ghana:"GHA",Japan:"JPN",Denmark:"DEN",Sweden:"SWE",Norway:"NOR",Finland:"FIN",Italy:"ITA",Scotland:"SCO",Wales:"WAL",Ireland:"IRL",Turkey:"TUR",Greece:"GRE",Kosovo:"KOS",Albania:"ALB",Serbia:"SRB",Slovakia:"SVK",Hungary:"HUN",Mexico:"MEX",Chile:"CHI",Uruguay:"URU",Paraguay:"PAR",Canada:"CAN",Jamaica:"JAM",Haiti:"HAI",Tunisia:"TUN",Egypt:"EGY","DR Congo":"COD",Guinea:"GUI",Gabon:"GAB",Zambia:"ZAM","South Korea":"KOR",Australia:"AUS",Iceland:"ISL",Slovenia:"SVN"};
 const POS_DE={GK:"TW",DF:"AB",MF:"MF",FW:"ST"};
+/* Nationalität auf Deutsch – Wikipedia nennt oft den Verband („Royal Netherlands Football Association“) statt des Landes */
+const NAT_WORDS=[[/netherlands|dutch|knvb/i,"Niederlande"],[/argentin/i,"Argentinien"],[/spain|spanish|rfef/i,"Spanien"],[/the football association|\bengland\b|english/i,"England"],
+  [/france|french/i,"Frankreich"],[/germany|german|dfb/i,"Deutschland"],[/portug/i,"Portugal"],[/united states|u\.s\. soccer|\busa\b/i,"USA"],[/burkina/i,"Burkina Faso"],
+  [/brazil/i,"Brasilien"],[/czech/i,"Tschechien"],[/nigeria/i,"Nigeria"],[/algeria/i,"Algerien"],[/cameroon/i,"Kamerun"],[/morocc/i,"Marokko"],[/switzerland|swiss/i,"Schweiz"],
+  [/belgi/i,"Belgien"],[/senegal/i,"Senegal"],[/\bmali\b|malian/i,"Mali"],[/ukrain/i,"Ukraine"],[/austria/i,"Österreich"],[/ecuador/i,"Ecuador"],[/colombia/i,"Kolumbien"],
+  [/croatia/i,"Kroatien"],[/poland|polish/i,"Polen"],[/ivory coast|ivorian|côte d/i,"Elfenbeinküste"],[/ghana/i,"Ghana"],[/japan/i,"Japan"],[/denmark|danish/i,"Dänemark"],
+  [/sweden|swedish/i,"Schweden"],[/norw/i,"Norwegen"],[/finland|finnish/i,"Finnland"],[/ital/i,"Italien"],[/scotland|scottish/i,"Schottland"],[/wales|welsh/i,"Wales"],
+  [/ireland|irish/i,"Irland"],[/turk/i,"Türkei"],[/greece|hellenic|greek/i,"Griechenland"],[/kosovo/i,"Kosovo"],[/albania/i,"Albanien"],[/serbia/i,"Serbien"],
+  [/slovakia|slovak/i,"Slowakei"],[/sloven/i,"Slowenien"],[/hungar/i,"Ungarn"],[/mexic/i,"Mexiko"],[/chile/i,"Chile"],[/urugua/i,"Uruguay"],[/paragua/i,"Paraguay"],
+  [/canad/i,"Kanada"],[/jamaica/i,"Jamaika"],[/tunisia/i,"Tunesien"],[/egypt/i,"Ägypten"],[/congo/i,"DR Kongo"],[/guinea/i,"Guinea"],[/gabon/i,"Gabun"],
+  [/korea/i,"Südkorea"],[/australia/i,"Australien"],[/iceland/i,"Island"],[/bosnia/i,"Bosnien-Herzegowina"],[/romania/i,"Rumänien"],[/bulgaria/i,"Bulgarien"],
+  [/georgia/i,"Georgien"],[/israel/i,"Israel"],[/venezuela/i,"Venezuela"],[/peru/i,"Peru"],[/zambia/i,"Sambia"],[/mozambique/i,"Mosambik"],[/angola/i,"Angola"],[/haiti/i,"Haiti"]];
+function natFromText(t){ for(const [re,de] of NAT_WORDS){ if(re.test(t||"")) return de; } return ""; }
+function natFromName(n){ const f=SQUAD_FALLBACK.players.find(p=>norm(surname(p[3].replace(/\(.*?\)/,"")))===norm(surname(n))); return f?(NAT_FULL[f[2]]||""):""; }
+function natDe(v,name){ if(!v) return natFromName(name||""); if(NAT_FULL[v]) return NAT_FULL[v]; if(/^[A-Z]{3}$/.test(v)) return natFromName(name||"")||v; return v; }
 function parseWikiSquad(html){
   const doc=new DOMParser().parseFromString(html,"text/html");
   const out=[]; const seen=new Set();
@@ -1757,8 +1772,9 @@ function parseWikiSquad(html){
       if(/\(at |\bon loan\b/i.test(name)) return;
       const cap=/\(captain\)/i.test(name), vice=/vice/i.test(name);
       name=name.replace(/\((vice-)?captain\)/i,"").replace(/\(.*?\)/g,"").trim(); if(!name||seen.has(name)) return; seen.add(name);
-      const natEl=tds[pi+1]; const natName=(natEl?.querySelector("a[title]")?.getAttribute("title")||natEl?.textContent||"").trim();
-      out.push([isNaN(nr)?null:nr, POS_DE[txts[pi]], NAT_DE[natName]||natName.slice(0,3).toUpperCase(), name+(cap?" (Kapitän)":"")]);
+      const natEl=tds[pi+1];
+      const natText=[...(natEl?.querySelectorAll("a[title],img[alt],span[title]")||[])].map(x=>x.getAttribute("title")||x.getAttribute("alt")||"").join(" ")+" "+(natEl?.textContent||"");
+      out.push([isNaN(nr)?null:nr, POS_DE[txts[pi]], natFromText(natText)||natFromName(name)||"", name+(cap?" (Kapitän)":"")]);
     });
   });
   return out.length>=18 ? out : null;
@@ -1953,7 +1969,7 @@ function renderSquad(){
     const ps=sq.players.filter(p=>p[1]===k).sort((a,b)=>(a[0]??99)-(b[0]??99)); if(!ps.length) return "";
     return `<div class="pos-h">${label}</div><div class="mlist">${ps.map(p=>{
       const key=norm(surname(p[3].replace(/\(.*?\)/,""))), ij=injMap[key], g=goals[key];
-      return `<div class="pl${ij?" out":""}" data-pname="${esc(p[3].replace(/\(.*?\)/,"").trim())}" role="button" tabindex="0"><span class="nr">${p[0]??"–"}</span><div style="min-width:0"><b>${esc(p[3])}</b><small>${esc(p[2])}</small></div>
+      return `<div class="pl${ij?" out":""}" data-pname="${esc(p[3].replace(/\(.*?\)/,"").trim())}" role="button" tabindex="0"><span class="nr">${p[0]??"–"}</span><div style="min-width:0"><b>${esc(p[3])}</b><small>${esc(natDe(p[2],p[3]))}</small></div>
         <span class="st">${g?`<span class="goals">⚽ ${g}</span>`:""}${ij?`<span class="hurt ${ij.kind==="reh"?"reh":""}">${ij.kind==="ban"?"Gesperrt":ij.kind==="reh"?"Reha":"Verletzt"}</span>`:""}<span class="chev">›</span></span></div>`;
     }).join("")}</div>`;
   }).join("");
@@ -2001,7 +2017,7 @@ function openPlayer(name){
   if(es && !(state.stats.games.every(g=>g.full))) es=null;
   openSheetRaw(`
     <div class="phero" data-nr="${nr??""}"><div class="ph" id="plPhoto">${esc(initials(clean))}</div>
-      <div style="min-width:0"><h3 id="sheetTitle">${esc(clean)}</h3><div class="sub">${nr!=null?"#"+nr+" · ":""}${esc(POS_FULL[pos]||pos)}${nat?" · "+esc(NAT_FULL[nat]||nat):""}</div>
+      <div style="min-width:0"><h3 id="sheetTitle">${esc(clean)}</h3><div class="sub">${nr!=null?"#"+nr+" · ":""}${esc(POS_FULL[pos]||pos)}${natDe(nat,clean)?" · "+esc(natDe(nat,clean)):""}</div>
       ${cap?`<span class="pill">Kapitän</span>`:""}${inj?`<span class="pill" style="background:${inj.kind==="reh"?"var(--draw)":"#000"}">${esc(KIND[inj.kind][1])}</span>`:""}</div></div>
     <div class="box"><h4>Steckbrief</h4><div class="kv" id="plKv">
       <div><b id="plAge">–</b><small>Alter</small></div><div><b>${goals.length}</b><small>Saisontore</small></div><div><b>${es?es.app:games}</b><small>${es?"Einsätze":"Spiele mit Tor"}</small></div>
