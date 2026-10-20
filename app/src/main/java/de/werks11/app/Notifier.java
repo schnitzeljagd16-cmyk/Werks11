@@ -120,8 +120,10 @@ public class Notifier {
         HttpURLConnection c = (HttpURLConnection) new URL(url).openConnection();
         c.setConnectTimeout(10000);
         c.setReadTimeout(15000);
-        c.setRequestProperty("User-Agent", "Mozilla/5.0 (Android) Werks11/1.2");
+        c.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36");
+        c.setRequestProperty("Accept", "application/rss+xml,application/xml,text/xml,application/json,text/html;q=0.9,*/*;q=0.8");
         c.setRequestProperty("Accept-Language", "de-DE,de;q=0.9");
+        c.setRequestProperty("Cookie", "CONSENT=YES+; SOCS=CAI");
         try {
             if (c.getResponseCode() != 200) throw new Exception("HTTP " + c.getResponseCode());
             InputStream in = c.getInputStream();
@@ -145,14 +147,26 @@ public class Notifier {
         Matcher m = Pattern.compile("(?s)<item>(.*?)</item>").matcher(xml);
         while (m.find()) {
             String it = m.group(1);
-            String t = find(it, "title"), l = find(it, "link"), src = find(it, "source");
+            String t = find(it, "title"), l = find(it, "link"), src = find(it, "source"), pd = find(it, "pubDate");
+            if (src.isEmpty()) src = find(it, "News:Source");
             if (t.isEmpty()) continue;
             Matcher gm = Pattern.compile("^(.*)\\s+-\\s+([^-]{2,60})$").matcher(t);
-            if (src.isEmpty() && gm.find()) { src = gm.group(2).trim(); t = gm.group(1).trim(); }
-            else if (gm.find(0)) { t = gm.group(1).trim(); }
-            out.add(new String[]{t, l, src});
+            if (gm.find()) {
+                String suf = gm.group(2).trim();
+                boolean isSrc = !src.isEmpty() && suf.equalsIgnoreCase(src.trim());
+                if (isSrc || (src.isEmpty() && suf.split("\\s+").length <= 4)) { if (src.isEmpty()) src = suf; t = gm.group(1).trim(); }
+            }
+            out.add(new String[]{t, l, src, String.valueOf(rfc822(pd))});
         }
         return out;
+    }
+
+    static long rfc822(String d) {
+        if (d == null || d.isEmpty()) return 0;
+        for (String f : new String[]{"EEE, dd MMM yyyy HH:mm:ss zzz", "EEE, dd MMM yyyy HH:mm:ss Z", "EEE, d MMM yyyy HH:mm:ss zzz"}) {
+            try { return new SimpleDateFormat(f, Locale.US).parse(d.trim()).getTime(); } catch (Exception ignored) { }
+        }
+        return 0;
     }
 
     static String find(String s, String tag) {
@@ -168,47 +182,69 @@ public class Notifier {
     static void check(Context c) {
         JSONObject s = settings(c);
         if (!anyOn(s)) return;
-        if (s.optBoolean("news") || s.optBoolean("rumors")) { try { checkNews(c, s); } catch (Exception ignored) { } }
-        if (s.optBoolean("kickoff") || s.optBoolean("goals")) { try { checkMatches(c, s); } catch (Exception ignored) { } }
+        String err = "";
+        int found = -1;
+        if (s.optBoolean("news") || s.optBoolean("rumors")) { try { found = checkNews(c, s); } catch (Exception e) { err = String.valueOf(e.getMessage()); } }
+        if (s.optBoolean("kickoff") || s.optBoolean("goals")) { try { checkMatches(c, s); } catch (Exception e) { if (err.isEmpty()) err = String.valueOf(e.getMessage()); } }
+        prefs(c).edit().putLong("lastCheck", System.currentTimeMillis()).putInt("lastSent", Math.max(0, found)).putString("lastErr", err).apply();
     }
 
-    static void checkNews(Context c, JSONObject s) throws Exception {
+    static int checkNews(Context c, JSONObject s) throws Exception {
         SharedPreferences p = prefs(c);
-        Set<String> seen = new HashSet<>(p.getStringSet("seen", new HashSet<>()));
+        List<String> seenList = new ArrayList<>();
+        try { JSONArray a = new JSONArray(p.getString("seenList", "[]")); for (int i = 0; i < a.length(); i++) seenList.add(a.getString(i)); } catch (Exception ignored) { }
+        Set<String> seen = new HashSet<>(seenList);
         boolean first = seen.isEmpty();
         List<String[]> items = new ArrayList<>();
-        String[] feeds = {
-                "https://newsfeed.kicker.de/team/bayer-04-leverkusen",
-                "https://news.google.com/rss/search?q=" + Uri.encode("\"Bayer Leverkusen\" when:1d") + "&hl=de&gl=DE&ceid=DE:de",
-                "https://news.google.com/rss/search?q=" + Uri.encode("Leverkusen Transfer when:2d") + "&hl=de&gl=DE&ceid=DE:de"
+        String[][] feeds = {
+                {"https://newsfeed.kicker.de/team/bayer-04-leverkusen", "kicker", "team"},
+                {"https://rp-online.de/sport/fussball/bayer-04/feed.rss", "RP Online", "team"},
+                {"https://news.google.com/rss/search?q=" + Uri.encode("\"Bayer Leverkusen\" when:1d") + "&hl=de&gl=DE&ceid=DE:de", "", ""},
+                {"https://news.google.com/rss/search?q=" + Uri.encode("\"Bayer 04\" when:1d") + "&hl=de&gl=DE&ceid=DE:de", "", ""},
+                {"https://news.google.com/rss/search?q=" + Uri.encode("Leverkusen Transfer when:2d") + "&hl=de&gl=DE&ceid=DE:de", "", ""},
+                {"https://www.bing.com/news/search?q=%22Bayer+Leverkusen%22&format=rss&setlang=de&cc=DE", "", ""}
         };
-        for (int i = 0; i < feeds.length; i++) {
+        int okFeeds = 0;
+        for (String[] f : feeds) {
             try {
-                for (String[] it : rss(get(feeds[i]))) {
-                    if (i > 0 && !RELEVANT.matcher(it[0]).find()) continue;
+                List<String[]> got = rss(get(f[0]));
+                if (!got.isEmpty()) okFeeds++;
+                for (String[] it : got) {
+                    if (f[2].isEmpty() && !RELEVANT.matcher(it[0]).find()) continue;
                     if (SKIP.matcher(it[0]).find()) continue;
-                    if (i == 0 && it[2].isEmpty()) it[2] = "kicker";
+                    if (it[2].isEmpty()) it[2] = f[1].isEmpty() ? "Werks11" : f[1];
                     items.add(it);
                 }
             } catch (Exception ignored) { }
         }
+        if (okFeeds == 0) throw new Exception("Keine Nachrichtenquelle erreichbar");
+        // Neueste zuerst
+        items.sort((a, b) -> Long.compare(Long.parseLong(b[3]), Long.parseLong(a[3])));
+        long now = System.currentTimeMillis();
         int sent = 0;
-        Set<String> next = new HashSet<>(seen);
+        String[] newest = null;
         for (String[] it : items) {
             String k = key(it[0]);
             if (k.length() > 60) k = k.substring(0, 60);
             if (seen.contains(k)) continue;
-            next.add(k);
-            if (first || sent >= 3) continue;
+            seen.add(k); seenList.add(k);
+            long t = Long.parseLong(it[3]);
+            boolean fresh = t == 0 || now - t < 12 * 3600 * 1000L;
             boolean rumor = RUMOR.matcher(it[0]).find();
-            if (s.optBoolean("news") || (rumor && s.optBoolean("rumors"))) {
-                show(c, 2000 + Math.abs(k.hashCode() % 5000), CH_NEWS, rumor ? "Gerüchteküche · " + it[2] : "Werks11 · " + it[2], it[0], it[1]);
-                sent++;
-            }
+            boolean wanted = s.optBoolean("news") || (rumor && s.optBoolean("rumors"));
+            if (!wanted || !fresh) continue;
+            if (newest == null) newest = it;
+            if (first || sent >= 4) continue;
+            show(c, 2000 + Math.abs(k.hashCode() % 5000), CH_NEWS, rumor ? "Gerüchteküche · " + it[2] : "Werks11 · " + it[2], it[0], it[1]);
+            sent++;
         }
-        // Liste klein halten
-        if (next.size() > 400) { List<String> l = new ArrayList<>(next); next = new HashSet<>(l.subList(l.size() - 300, l.size())); }
-        p.edit().putStringSet("seen", next).apply();
+        if (first && newest != null) { // einmalige Bestätigung, dass alles läuft
+            show(c, 1999, CH_NEWS, "Werks11 · Benachrichtigungen aktiv", "Ab jetzt meldet sich Werks11 bei neuen Meldungen. Zuletzt: " + newest[0], newest[1]);
+            sent++;
+        }
+        while (seenList.size() > 600) seenList.remove(0);
+        p.edit().putString("seenList", new JSONArray(seenList).toString()).apply();
+        return sent;
     }
 
     static long parseUtc(String iso) {

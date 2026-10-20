@@ -121,6 +121,41 @@ public class MainActivity extends Activity {
     /** Lädt Webseiten direkt übers Handy – ohne die Sperren eines Browsers. */
     public class Net {
         @JavascriptInterface
+        public String notifyStatus() {
+            try {
+                android.content.SharedPreferences p = Notifier.prefs(getApplicationContext());
+                android.app.job.JobScheduler js = (android.app.job.JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                boolean scheduled = js != null && js.getPendingJob(Notifier.JOB_ID) != null;
+                android.os.PowerManager pm = (android.os.PowerManager) getSystemService(POWER_SERVICE);
+                boolean battery = pm == null || pm.isIgnoringBatteryOptimizations(getPackageName());
+                org.json.JSONObject o = new org.json.JSONObject();
+                o.put("lastCheck", p.getLong("lastCheck", 0)); o.put("lastSent", p.getInt("lastSent", 0)); o.put("lastErr", p.getString("lastErr", ""));
+                o.put("scheduled", scheduled); o.put("battery", battery); o.put("permitted", Notifier.permitted(getApplicationContext()));
+                return o.toString();
+            } catch (Exception e) { return "{}"; }
+        }
+
+        @JavascriptInterface
+        public void checkNow() {
+            pool.execute(() -> {
+                try { Notifier.check(getApplicationContext()); } catch (Exception ignored) { }
+                runOnUiThread(() -> web.evaluateJavascript("window.__notiChecked && window.__notiChecked()", null));
+            });
+        }
+
+        @JavascriptInterface
+        public void openBattery() {
+            runOnUiThread(() -> {
+                try {
+                    Intent i = new Intent(android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + getPackageName()));
+                    startActivity(i);
+                } catch (Exception e) {
+                    try { startActivity(new Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)); } catch (Exception ignored) { }
+                }
+            });
+        }
+
+        @JavascriptInterface
         public int versionCode() { return Updater.versionCode(getApplicationContext()); }
 
         @JavascriptInterface
@@ -151,7 +186,9 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void setNotify(String json) {
+            boolean firstTime = !Notifier.prefs(getApplicationContext()).contains("lastCheck");
             Notifier.apply(getApplicationContext(), json);
+            if (firstTime) pool.execute(() -> { try { Notifier.check(getApplicationContext()); } catch (Exception ignored) { } });
             try {
                 if (Notifier.anyOn(new org.json.JSONObject(json)) && android.os.Build.VERSION.SDK_INT >= 33
                         && checkSelfPermission("android.permission.POST_NOTIFICATIONS") != android.content.pm.PackageManager.PERMISSION_GRANTED) {

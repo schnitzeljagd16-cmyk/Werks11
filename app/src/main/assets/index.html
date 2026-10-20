@@ -2643,13 +2643,35 @@ function openNoti(){
     <div class="box"><div class="set"><div><b>Torjubel-Ton</b><small>Kurzer Jubel, wenn Bayer 04 trifft und die App offen ist</small></div><label class="sw"><input type="checkbox" data-noti="sound" ${s.sound!==false?"checked":""}><span></span></label></div></div>
     ${native?`<button type="button" class="bigbtn sec" id="checkUpd">Nach Updates suchen</button>`:""}
     <p class="legend">Die App schaut etwa alle 15 Minuten im Hintergrund nach. Tore können deshalb mit kurzer Verzögerung kommen.</p>
+    ${native?`<div class="box" id="notiStatus"></div>`:""}
     ${native?`<button type="button" class="bigbtn sec" id="testNoti">Test-Benachrichtigung senden</button>`:""}`);
+  if(native) renderNotiStatus();
 }
+function notiStatusHTML(){
+  let st={}; try{ st=JSON.parse(window.AndroidNet.notifyStatus()||"{}"); }catch(e){}
+  const s=notiSettings(); const on=s.news||s.rumors||s.kickoff||s.goals;
+  const when=st.lastCheck?fmtDate(new Date(st.lastCheck),{weekday:"short",hour:"2-digit",minute:"2-digit"})+" Uhr":"noch nie";
+  const warn=[];
+  if(st.permitted===false) warn.push(`<li><b>Benachrichtigungen sind in Android ausgeschaltet.</b> Schalte sie in den Android-Einstellungen für Werks11 ein.</li>`);
+  if(on && st.scheduled===false) warn.push(`<li>Die Hintergrund-Prüfung war nicht geplant – ist jetzt neu gestartet.</li>`);
+  if(st.battery===false) warn.push(`<li>Die <b>Akku-Optimierung</b> kann Benachrichtigungen stark verzögern oder verhindern. Erlaube Werks11 eine Ausnahme.</li>`);
+  if(st.lastErr) warn.push(`<li>Letzter Fehler: ${esc(st.lastErr)}</li>`);
+  return `<h4>Status</h4><p style="margin:0;color:var(--fg)">Zuletzt geprüft: <b>${esc(when)}</b>${st.lastCheck?` · ${st.lastSent||0} ${st.lastSent===1?"Benachrichtigung":"Benachrichtigungen"} gesendet`:""}</p>
+    ${warn.length?`<ul class="facts">${warn.join("")}</ul>`:`<p>Alles eingerichtet.</p>`}
+    <div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" id="checkNow">Jetzt prüfen</button>${st.battery===false?`<button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" id="openBattery">Akku-Ausnahme erlauben</button>`:""}</div>`;
+}
+function renderNotiStatus(){ const b=$("notiStatus"); if(b) b.innerHTML=notiStatusHTML(); }
+window.__notiChecked=()=>{ renderNotiStatus(); const b=$("checkNow"); if(b){ b.textContent="Geprüft ✓"; setTimeout(()=>{ if($("checkNow")) $("checkNow").textContent="Jetzt prüfen"; },2500); } };
+document.addEventListener("click",e=>{
+  if(e.target.closest("#checkNow")){ const b=$("checkNow"); b.textContent="Prüft …"; pushNoti(); window.AndroidNet.checkNow(); }
+  if(e.target.closest("#openBattery")) window.AndroidNet.openBattery();
+});
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) renderNotiStatus(); });
 function pushNoti(){
   const s=notiSettings(); store("noti",s); s.watch=Object.keys(watchList()).map(Number);
   if(NATIVE && typeof window.AndroidNet.setNotify==="function"){ try{ window.AndroidNet.setNotify(JSON.stringify(s)); }catch(e){} }
 }
-document.addEventListener("change",e=>{ const c=e.target.closest("[data-noti]"); if(!c) return; const s=notiSettings(); s[c.dataset.noti]=c.checked; store("noti",s); pushNoti(); });
+document.addEventListener("change",e=>{ const c=e.target.closest("[data-noti]"); if(!c) return; const s=notiSettings(); s[c.dataset.noti]=c.checked; store("noti",s); pushNoti(); setTimeout(renderNotiStatus,300); });
 document.addEventListener("click",e=>{
   if(e.target.closest("#bell")) openNoti();
   if(e.target.closest("#testNoti")){ try{ window.AndroidNet.testNotify(); }catch(e){} }
