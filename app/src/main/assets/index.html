@@ -425,6 +425,25 @@ tr.me td{background:var(--soft);font-weight:700}
 .bdg.on em{color:var(--win)}
 .game.k{background:linear-gradient(150deg,#6b2bb3,#2e0f55)}
 .game.b{background:linear-gradient(150deg,#c58a00,#5c3d00)}
+/* Transfers, Videos, Wetter */
+.trf{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 14px}
+.trf+.trf{border-top:1px solid var(--line)}
+.trf .pos{font:700 11px/1 var(--body);color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:4px 0;text-align:center}
+.trf b{display:block;font-size:15px;cursor:pointer}
+.trf small{display:block;font-size:12.5px;color:var(--muted)}
+.trf .fee{font:800 15px/1.1 var(--display);text-align:right;max-width:110px}
+.vids{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scroll-padding:0 16px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.vids::-webkit-scrollbar{display:none}
+.vid{flex:0 0 220px;scroll-snap-align:start;border:0;background:none;text-align:left;cursor:pointer;color:inherit;display:flex;flex-direction:column;gap:6px;padding:0}
+.vth{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--surface-2);box-shadow:var(--shadow)}
+.vth img{width:100%;height:100%;object-fit:cover;display:block}
+.vth i{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(214,0,28,.92);color:#fff;display:grid;place-items:center;font-style:normal;font-size:16px;padding-left:3px}
+.vid b{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vid small{font-size:12px;color:var(--muted)}
+.wx{display:flex;gap:12px;align-items:center}
+.wx .wi{font-size:40px;line-height:1}
+.wx b{display:block;font-size:16px}
+.wx small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 /* Spielerprofil */
 .phero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;
   background:radial-gradient(90% 80% at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(150deg,#d6001c,#5e000d)}
@@ -587,6 +606,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
 
     <section data-view="games" hidden>
       <div id="heroBox2"></div>
+      <div id="videoBox" style="margin-top:18px"></div>
       <div id="gamesBox"></div>
     </section>
 
@@ -608,6 +628,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       <div class="seg" id="clubSeg" role="group" aria-label="Bereich wählen">
         <button type="button" data-club="kader" aria-pressed="true">Kader</button>
         <button type="button" data-club="legenden" aria-pressed="false">Legenden</button>
+        <button type="button" data-club="transfers" aria-pressed="false">Transfers</button>
         <button type="button" data-club="historie" aria-pressed="false">Historie</button>
       </div>
       <div id="clubKader">
@@ -618,6 +639,7 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       </div>
       <div id="clubLegenden" hidden></div>
       <div id="clubHistorie" hidden></div>
+      <div id="clubTransfers" hidden></div>
     </section>
 
     <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabellen von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>, Ausfälle von <a href="https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/" target="_blank" rel="noopener">LigaInsider</a>, Kader von Wikipedia. Werks11 ist eine inoffizielle Fan-App.</p>
@@ -1018,13 +1040,15 @@ function reliability(src){
 }
 const NOT_CLUB=/\bafd\b|weidel|\bpartei|wahlkampf|landtag|bundestag|stadtrat|bürgermeister|polizei|feuerwehr|chempark|bayer ag\b|bayer-konzern|\baktie|börse|glyphosat|wett ?tipps?|tipp & quoten|wettquoten|\bodds\b|betting|prediction|livestream kostenlos|watch .* online|kyivstar|free stream/i;
 const FOOTBALL=/fußball|fussball|bundesliga|bayarena|spiel(er|t|e)?\b|trainer|\btor(e|jäger)?\b|transfer|pokal|liga|kader|stürmer|abwehr|mittelfeld|keeper|torwart|verletz|sieg|niederlage|remis|elfmeter|champions|europa league|rolfes|carro|derby|fans?\b|aufstellung|startelf|vertrag|wechsel|leihe/i;
-const OTHER_SPORT=/frauen|damen|juniorinnen|\bu1[5-9]\b|\bu2[0-3]\b|nachwuchs|jugend|basketball|giants|handball|elfen|eishockey|hockey|volleyball|leichtathletik|schwimm|tennis|tischtennis|boxen|turnen|e-?sport|fifa ?\d|ea fc|american football|rugby|ringen|fechten/i;
+const YOUTH_WOMEN=/frauen|damen|juniorinnen|\bu1[5-9]\b|\bu2[0-3]\b|nachwuchs|jugend|women|youth/i;
+const OTHER_SPORT=/basketball|giants|handball|elfen|eishockey|hockey|volleyball|leichtathletik|schwimm|tennis|tischtennis|boxen|turnen|e-?sport|fifa ?\d|ea fc|american football|rugby|ringen|fechten/i;
 // Fußball-Begriffe nur aus der Überschrift (Deutsch und Englisch)
 const FOOTBALL_TITLE=/fußball|fussball|bundesliga|champions league|europa league|conference league|dfb|pokal|uefa|trainer|coach|transfer|wechsel|leihe|ablöse|vertrag|tor(e|jäger|wart|schütze)?\b|stürmer|verteidiger|abwehr|mittelfeld|keeper|kader|startelf|aufstellung|verletz|ausfall|fällt .*aus|elfmeter|tabelle|spieltag|derby|sieg|niederlage|remis|unentschieden|\b\d{1,2}\s?:\s?\d{1,2}\b|gegen (den |die )?(fc|sc|vfb|vfl|borussia|bayern|rb|eintracht|werder|union|tsg|hsv|1\.)|schick|xabi|rolfes|carro|martínez|martinez|football|soccer|striker|midfielder|defender|goalkeeper|match|goal|league|manager|signing|loan/i;
 const STRONG_CLUB=/bayer 04|bayer leverkusen|werkself|\bb04\b|bayarena|leverkusens? (trainer|coach|stürmer|keeper|kapitän|sportchef|boss|star|profi|neuzugang|talent|abwehr)/i;
 function relevant(it){
   const t=it.title||"";
   if(OTHER_SPORT.test(t)) return false;
+  if(YOUTH_WOMEN.test(t)){ if(!srcPrefs().women || !/leverkusen|bayer 04|werkself/i.test(t+" "+(it.hay||""))) return false; it.cat="w"; return true; }
   if(NOT_CLUB.test(t) || NOT_CLUB.test(it.hay||"")) return false;
   if(Date.now()-it.t > 10*86400e3) return false;
   if(hiddenIds()[artKey(it)]) return false;
@@ -1051,7 +1075,8 @@ function dedupe(items){
   return out;
 }
 async function loadNews(){
-  const jobs=[...NEWS_QUERIES.map(q=>({name:"Google News",url:gnUrl(q)})), ...RUMOR_QUERIES.map(q=>({name:"Google News",url:gnUrl(q)})), ...FEEDS];
+  const extra=srcPrefs().women?["Bayer Leverkusen Frauen","Bayer 04 Frauen","Bayer 04 U19"]:[];
+  const jobs=[...NEWS_QUERIES.map(q=>({name:"Google News",url:gnUrl(q)})), ...RUMOR_QUERIES.map(q=>({name:"Google News",url:gnUrl(q)})), ...extra.map(q=>({name:"Google News",url:gnUrl(q)})), ...FEEDS];
   const res=await Promise.allSettled(jobs.map(f=>getFeed(f.url).then(items=>items.map(i=>cleanItem(i,f)))));
   const ok=res.filter(r=>r.status==="fulfilled");
   if(!ok.length) throw new Error("news");
@@ -1192,10 +1217,12 @@ function openSources(){
   openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Nachrichtenquellen</p>
     <p class="legend" style="margin:-6px 0 12px">Wähle, von welchen Kanälen du Meldungen sehen willst. Eingeschaltete Quellen stehen als eigener Filter neben „Alle“.</p>
     <div class="btnrow" style="margin-bottom:12px"><button type="button" class="reveal" data-srcall="on">Alle an</button><button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" data-srcall="pro">Nur seriöse</button><button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" data-srcall="off">Alle aus</button></div>
+    <div class="box"><div class="set"><div><b>Frauen &amp; U19 einbeziehen</b><small>Meldungen zu den Frauen und zum Nachwuchs von Bayer 04, mit eigenem Filter</small></div><label class="sw"><input type="checkbox" id="womenPref" ${p.women?"checked":""}><span></span></label></div></div>
     <div class="box">${names.map(n=>`<div class="set"><div><b>${esc(n)}</b><small>${counts[n]?counts[n]+(counts[n]===1?" aktuelle Meldung":" aktuelle Meldungen"):"gerade keine Meldungen"}${n!=="Weitere Quellen"?` · ${rel(n)==="hoch"?"sehr verlässlich":rel(n)==="mittel"?"verlässlich":"gemischt"}`:""}</small></div><label class="sw"><input type="checkbox" data-srcpref="${esc(n)}" ${p.off.includes(n)?"":"checked"}><span></span></label></div>`).join("")}</div>
     ${Object.keys(hiddenIds()).length?`<button type="button" class="bigbtn sec" data-unhide>Ausgeblendete Meldungen wieder zeigen (${Object.keys(hiddenIds()).length})</button>`:""}`);
 }
-function setSrc(off){ store("srcPrefs",{off}); renderNews(); renderRumors(); }
+function setSrc(off){ const p=srcPrefs(); p.off=off; store("srcPrefs",p); renderNews(); renderRumors(); }
+document.addEventListener("change",e=>{ if(e.target.id==="womenPref"){ const p=srcPrefs(); p.women=e.target.checked; store("srcPrefs",p); notice(p.women?"Frauen & U19 werden beim nächsten Aktualisieren geladen.":"Frauen & U19 ausgeblendet."); setTimeout(()=>notice(""),3000); refresh(); } });
 document.addEventListener("input",e=>{ if(e.target.id==="q"){ newsLimit=20; renderNews(); } });
 document.addEventListener("click",e=>{ if(e.target.closest("#qClear")){ $("q").value=""; renderNews(); } });
 document.addEventListener("change",e=>{ const c=e.target.closest("[data-srcpref]"); if(!c) return; const p=srcPrefs(); const n=c.dataset.srcpref; p.off=p.off.filter(x=>x!==n); if(!c.checked) p.off.push(n); setSrc(p.off); });
@@ -1218,14 +1245,15 @@ function renderNews(){
   const counts={};
   vis.forEach(i=>{const k=srcKey(i.source); counts[k]=(counts[k]||0)+1;});
   const keys=Object.keys(counts).sort((a,b)=>(a==="Weitere Quellen")-(b==="Weitere Quellen")||counts[b]-counts[a]);
-  if(srcFilter!=="Alle" && srcFilter!=="Gemerkt" && !counts[srcFilter]) srcFilter="Alle";
+  if(srcFilter!=="Alle" && srcFilter!=="Gemerkt" && srcFilter!=="Frauen" && !counts[srcFilter]) srcFilter="Alle";
   if(srcFilter==="Gemerkt" && !saved.length) srcFilter="Alle";
   $("filters").innerHTML=[`<button type="button" data-src="Alle" aria-pressed="${srcFilter==="Alle"}">${q?"Treffer":"Alle"}<span>${vis.length}</span></button>`]
     .concat(saved.length?[`<button type="button" data-src="Gemerkt" aria-pressed="${srcFilter==="Gemerkt"}">★ Gemerkt<span>${saved.length}</span></button>`]:[])
+    .concat(vis.some(i=>i.cat==="w")?[`<button type="button" data-src="Frauen" aria-pressed="${srcFilter==="Frauen"}">Frauen &amp; U19<span>${vis.filter(i=>i.cat==="w").length}</span></button>`]:[])
     .concat(keys.map(k=>`<button type="button" data-src="${esc(k)}" aria-pressed="${srcFilter===k}">${esc(k)}<span>${counts[k]}</span></button>`))
     .concat([`<button type="button" id="srcSettings" class="srcset">⚙ Quellen</button>`]).join("");
   $("filters").hidden=false;
-  const list=srcFilter==="Gemerkt"?saved:srcFilter==="Alle"?vis:vis.filter(i=>srcKey(i.source)===srcFilter);
+  const list=srcFilter==="Gemerkt"?saved:srcFilter==="Frauen"?vis.filter(i=>i.cat==="w"):srcFilter==="Alle"?vis:vis.filter(i=>srcKey(i.source)===srcFilter);
   if(q && !list.length){ $("newsList").innerHTML=`<div class="empty">Keine Meldungen zu „${esc($("q").value)}“.</div>`; return; }
   if(!list.length){ $("newsList").innerHTML=`<div class="empty">${state.news.length?"Keine Meldungen aus den gewählten Quellen. Tippe auf „⚙ Quellen“, um weitere einzuschalten.":"Keine Meldungen gefunden. Tippe oben auf Aktualisieren."}</div>`; return; }
   const lead=list[0]; // streng nach Zeit: die neueste Meldung ist immer oben
@@ -1846,6 +1874,107 @@ window.__updState=(pct,st)=>{
 };
 document.addEventListener("click",e=>{ if(e.target.closest("#doUpdate")){ const u=load("updAvail"); if(u) window.AndroidNet.installUpdate(u.url); } if(e.target.closest("#checkUpd")) checkUpdate(true); });
 
+/* ---------- Transfer-Center (Wikipedia-Saisonartikel) ---------- */
+function parseFee(t){ t=String(t||"").replace(/\[.*?\]/g,""); const m=t.match(/€\s?([\d.,]+)\s*(m\b|million|mio)?/i); if(!m) return 0;
+  let n=m[1].replace(/[.,]$/,"");
+  if(/,\d{3}(,|$)/.test(n)) n=n.replace(/,/g,"");            // 9,000,000
+  else if(/\.\d{3}(\.|$)/.test(n) && !m[2]) n=n.replace(/\./g,""); // 9.000.000
+  else n=n.replace(",",".");
+  let v=parseFloat(n)||0; if(m[2]) v*=1e6; return v; }
+function moneyDe(v){ return v>=1e6?(v/1e6).toLocaleString("de-DE",{maximumFractionDigits:2})+" Mio. €":v.toLocaleString("de-DE")+" €"; }
+const MONTH_EN={january:"Januar",february:"Februar",march:"März",april:"April",may:"Mai",june:"Juni",july:"Juli",august:"August",september:"September",october:"Oktober",november:"November",december:"Dezember"};
+function dateDe(d){ return String(d||"").replace(/^(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})$/,(x,a,b,c)=>a+". "+(MONTH_EN[b.toLowerCase()]||b)+" "+c); }
+function feeDe(t){ t=String(t||"").replace(/\[.*?\]/g,"").trim(); if(!t) return "–";
+  if(/^free/i.test(t)) return "ablösefrei"; if(/^loan/i.test(t)){ const v=parseFee(t); return v?"Leihe ("+moneyDe(v)+")":"Leihe"; } if(/undisclosed/i.test(t)) return "nicht bekannt"; if(/end of loan|loan return|return/i.test(t)) return "Leihende"; if(/released|retired|end of contract/i.test(t)) return "Vertragsende";
+  const v=parseFee(t); return v?moneyDe(v):t; }
+function parseTransfers(html){
+  const doc=new DOMParser().parseFromString(html,"text/html"); const out={inn:[],out:[]};
+  doc.querySelectorAll("table").forEach(tb=>{
+    const head=[...tb.querySelectorAll("tr:first-child th, thead th")].map(th=>th.textContent.trim().toLowerCase());
+    const dir=head.some(h=>/transferred from|from$|^from/.test(h))?"inn":head.some(h=>/transferred to|^to$|^to /.test(h))?"out":null; if(!dir) return;
+    const ip=head.findIndex(h=>/player|name/.test(h)), ic=head.findIndex(h=>/from|to/.test(h)), ifee=head.findIndex(h=>/fee/.test(h)), ipos=head.findIndex(h=>/pos/.test(h)), idate=head.findIndex(h=>/date/.test(h));
+    let lastDate="";
+    tb.querySelectorAll("tr").forEach(tr=>{
+      const tds=[...tr.children].filter(c=>c.tagName==="TD"); if(tds.length<3) return;
+      const off=head.length-tds.length; // fehlende Datumsspalte durch rowspan
+      const cell=i=>i<0?"":(tds[i-(i>idate&&idate>=0&&off>0?off:0)]?.textContent||"").replace(/\[.*?\]/g,"").replace(/\s+/g," ").trim();
+      const name=cell(ip); if(!name) return;
+      const d=idate>=0&&off<=0?cell(idate):""; if(d) lastDate=d;
+      out[dir].push({pos:POS_DE[cell(ipos)]||cell(ipos), name, club:cell(ic), fee:cell(ifee), date:d||lastDate});
+    });
+  });
+  return out.inn.length||out.out.length?out:null;
+}
+async function loadTransfers(){
+  const ssn=state.season||season(); const title=`${ssn}–${String(ssn+1).slice(2)} Bayer 04 Leverkusen season`;
+  const html=await getText("https://en.wikipedia.org/wiki/"+encodeURIComponent(title.replace(/ /g,"_")));
+  const t=parseTransfers(html); if(!t) throw new Error("keine Transfers");
+  state.transfers={...t, at:Date.now(), season:ssn}; store("cache",state);
+}
+function renderTransfers(){
+  const box=$("clubTransfers"); if(!box) return; const T=state.transfers;
+  const rumors=visibleNews(state.rumors).slice(0,5);
+  const row=(x,dir)=>`<div class="trf"><span class="pos">${esc(x.pos||"")}</span><div style="min-width:0"><b data-pname="${esc(x.name)}">${esc(x.name)}</b><small>${dir==="inn"?"von":"zu"} ${esc(x.club)}${x.date?` · ${esc(dateDe(x.date))}`:""}</small></div><span class="fee">${esc(feeDe(x.fee))}</span></div>`;
+  let h="";
+  if(T){
+    const sum=l=>l.reduce((n,x)=>n+(/loan/i.test(x.fee)&&!/€/.test(x.fee)?0:parseFee(x.fee)),0);
+    const si=sum(T.inn), so=sum(T.out);
+    h+=`<div class="qscore" style="margin-bottom:12px"><div><b>${T.inn.length}</b><small>Zugänge</small></div><div><b>${T.out.length}</b><small>Abgänge</small></div><div><b>${(so-si>=0?"+":"−")+Math.abs((so-si)/1e6).toLocaleString("de-DE",{maximumFractionDigits:1})}</b><small>Mio. € Saldo</small></div></div>
+      <div class="sec-h"><h2>Zugänge ${T.season}/${String(T.season+1).slice(2)}</h2><span class="legend">${(si/1e6).toLocaleString("de-DE",{maximumFractionDigits:1})} Mio. € ausgegeben</span></div><div class="mlist">${T.inn.map(x=>row(x,"inn")).join("")||'<div class="trf"><small>Keine</small></div>'}</div>
+      <div class="sec-h" style="margin-top:20px"><h2>Abgänge</h2><span class="legend">${(so/1e6).toLocaleString("de-DE",{maximumFractionDigits:1})} Mio. € eingenommen</span></div><div class="mlist">${T.out.map(x=>row(x,"out")).join("")||'<div class="trf"><small>Keine</small></div>'}</div>
+      <p class="legend" style="margin-top:8px">Quelle: Wikipedia (Saisonartikel). Ablösesummen laut Medienberichten, ohne Bonuszahlungen.</p>`;
+  } else h+=`<div class="empty">Die Transferliste konnte gerade nicht geladen werden.</div>`;
+  h+=`<div class="sec-h" style="margin-top:20px"><h2>Aktuelle Gerüchte</h2><button type="button" data-go="rumors">Alle</button></div>${rumors.length?`<div class="feed">${rumors.map(rumorCard).join("")}</div>`:`<div class="empty">Gerade keine Gerüchte.</div>`}`;
+  box.innerHTML=h;
+}
+
+/* ---------- Videos (YouTube) ---------- */
+const VIDEO_CHANNELS=[["UCSMZmPVql528Cph9WPvt0GA",false],["UCgZU23pS3dDO7-EzJNDnOuA",false],["UCywzklUFTWcoYGhUMzM48cw",false],["UC6UL29enLNe4mqwTfAyeNuw",true]]; // [Kanal, nur Leverkusen-Videos]
+function parseYt(xml){
+  const doc=new DOMParser().parseFromString(xml,"text/xml");
+  const author=doc.querySelector("feed > author > name")?.textContent||doc.querySelector("feed > title")?.textContent||"";
+  return {author, items:[...doc.querySelectorAll("entry")].map(e=>({id:(e.getElementsByTagName("yt:videoId")[0]||{}).textContent||"", title:e.querySelector("title")?.textContent||"", t:Date.parse(e.querySelector("published")?.textContent||"")||0, ch:author}))};
+}
+async function loadVideos(){
+  const all=[];
+  await Promise.all(VIDEO_CHANNELS.map(async([id,filter])=>{
+    try{ const f=parseYt(await getText("https://www.youtube.com/feeds/videos.xml?channel_id="+id));
+      if(!filter && !/leverkusen|bayer 04/i.test(f.author)) return; // nur echte Vereinskanäle
+      f.items.forEach(v=>{ if(v.id && (!filter || /leverkusen|bayer 04|werkself/i.test(v.title))) all.push(v); });
+    }catch(e){}
+  }));
+  if(!all.length) throw new Error("videos");
+  const seen=new Set(); state.videos=all.sort((a,b)=>b.t-a.t).filter(v=>!seen.has(v.id)&&seen.add(v.id)).slice(0,24);
+}
+function videoCard(v){ return `<button type="button" class="vid" data-video="${esc(v.id)}"><span class="vth"><img src="https://i.ytimg.com/vi/${esc(v.id)}/mqdefault.jpg" alt="" loading="lazy"><i>▶</i></span><b>${esc(v.title)}</b><small>${esc(v.ch)} · ${esc(ago(v.t))}</small></button>`; }
+function renderVideos(){
+  const box=$("videoBox"); if(!box) return; const vs=(state.videos||[]).filter(v=>!state.matches.some(m=>isWatching(m)&&v.t>m.t-3600e3));
+  box.innerHTML=vs.length?`<div class="sec-h"><h2>Videos &amp; Highlights</h2></div><div class="vids">${vs.slice(0,12).map(videoCard).join("")}</div>`:"";
+}
+document.addEventListener("click",e=>{ const v=e.target.closest("[data-video]"); if(v) openInAppBrowser("https://m.youtube.com/watch?v="+encodeURIComponent(v.dataset.video)); });
+
+/* ---------- Spieltag-Infos: Wetter & Anreise ---------- */
+const BAYARENA={lat:51.0383,lon:7.0023};
+const WCODE={0:["☀️","sonnig"],1:["🌤️","überwiegend sonnig"],2:["⛅","teils bewölkt"],3:["☁️","bewölkt"],45:["🌫️","Nebel"],48:["🌫️","Nebel"],51:["🌦️","leichter Niesel"],53:["🌦️","Nieselregen"],55:["🌧️","starker Niesel"],61:["🌦️","leichter Regen"],63:["🌧️","Regen"],65:["🌧️","starker Regen"],66:["🌧️","gefrierender Regen"],67:["🌧️","gefrierender Regen"],71:["🌨️","leichter Schneefall"],73:["🌨️","Schneefall"],75:["❄️","starker Schneefall"],77:["🌨️","Schneegriesel"],80:["🌦️","Regenschauer"],81:["🌧️","Regenschauer"],82:["⛈️","heftige Schauer"],85:["🌨️","Schneeschauer"],86:["🌨️","Schneeschauer"],95:["⛈️","Gewitter"],96:["⛈️","Gewitter mit Hagel"],99:["⛈️","Gewitter mit Hagel"]};
+function placeName(m){ if(m.home) return "BayArena, Leverkusen"; return (m.city||short(m.home?m.t2:m.t1)).replace(/^(OFI|AC|AS|SS|SSC|FK|NK|SK|SV|FC|RC|RCD|CF|CD|UD|SL|SC)\s+/,""); }
+async function loadMatchday(m){
+  const box=$("dayInfo"); if(!box) return; const head=box.querySelector("h4").outerHTML;
+  let h="";
+  try{
+    let geo=BAYARENA, place="BayArena";
+    if(!m.home){ const q=placeName(m); const g=await getJson("https://geocoding-api.open-meteo.com/v1/search?count=1&language=de&name="+encodeURIComponent(q)); const r=g.results&&g.results[0]; if(!r) throw new Error("ort"); geo={lat:r.latitude,lon:r.longitude}; place=r.name+(r.country?", "+r.country:""); }
+    const w=await getJson(`https://api.open-meteo.com/v1/forecast?latitude=${geo.lat}&longitude=${geo.lon}&hourly=temperature_2m,precipitation_probability,weathercode,windspeed_10m&timezone=UTC&forecast_days=16`);
+    const hrs=w.hourly?.time||[]; let k=-1, best=1e15; hrs.forEach((t,i)=>{ const d=Math.abs(Date.parse(t+"Z")-m.t); if(d<best){ best=d; k=i; } });
+    if(k>=0 && best<2*3600e3){
+      const code=w.hourly.weathercode[k], [ic,txt]=WCODE[code]||["🌡️",""];
+      h+=`<div class="wx"><span class="wi">${ic}</span><div><b>${Math.round(w.hourly.temperature_2m[k])} °C · ${esc(txt)}</b><small>Zum Anpfiff in ${esc(place)} · Regenrisiko ${w.hourly.precipitation_probability[k]??"–"} % · Wind ${Math.round(w.hourly.windspeed_10m[k])} km/h</small></div></div>`;
+    } else h+=`<p style="margin:0">Die Wettervorhersage gibt es etwa 2 Wochen vor dem Spiel.</p>`;
+  }catch(e){ h+=`<p style="margin:0">Das Wetter konnte gerade nicht geladen werden.</p>`; }
+  if(m.home) h+=`<ul class="facts"><li>BayArena, Bismarckstraße 122–124, 51373 Leverkusen</li><li>Nächster Bahnhof: Leverkusen Mitte</li><li>Rund 30.000 Plätze</li></ul>
+    <div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" data-inapp="https://www.bayer04.de">Tickets &amp; Infos bei Bayer 04</button></div>`;
+  if($("dayInfo")) $("dayInfo").innerHTML=head+h;
+}
+
 /* ---------- Detailansicht eines Spiels ---------- */
 const h2hCache={};
 async function loadH2H(oppId){
@@ -1925,6 +2054,7 @@ function openMatch(id){
     ${!m.finished&&m.t-Date.now()<3*86400e3 || live?`<div class="box"><h4>Aufstellung Bayer 04</h4><div id="lineupBox"><div class="sk" style="height:120px"></div></div></div>`:""}
     ${m.finished&&!hide?motmHTML(m):""}
     ${(live||m.finished)&&!hide?`<div class="box" id="tickerBox"><h4>${live?'<span class="pill live" style="font-size:11px;padding:4px 7px">Live</span> Ticker':"Spielverlauf &amp; Statistik"}</h4><div class="sk" style="height:110px"></div></div>`:""}
+    ${!m.finished&&m.t-Date.now()<16*86400e3?`<div class="box" id="dayInfo"><h4>☁️ Spieltag-Infos</h4><div class="sk" style="height:60px"></div></div>`:""}
     ${!m.finished&&!live?`<div class="box" id="oppBox"><h4>${ICON.vs}Gegner-Check: ${esc(short(opp))}</h4><div class="sk" style="height:110px"></div></div>`:""}
     ${!hide&&(m.finished||m.goals.length)?`<div class="box"><h4>${ICON.ball}Tore</h4>${timelineHTML(m)}${m.viewers?`<p>${ICON.eye.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px"')} ${m.viewers.toLocaleString("de-DE")} Zuschauer</p>`:""}</div>`:""}
     ${fact||check.items.length?`<div class="box fact"><h4>${ICON.bulb}Wusstest du?</h4>${fact?`<p class="big">${esc(fact)}</p>`:""}${check.items.length||check.form?`<ul class="facts">${check.items.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>${check.form?`<p style="margin-top:10px">Form von ${esc(short(opp))}:</p>${check.form}`:""}`:""}</div>`:""}
@@ -1936,6 +2066,7 @@ function openMatch(id){
   if($("lineupBox")) loadLineup(m);
   if($("tickerBox")) loadTicker(m);
   if($("oppBox")) loadOppCheck(m);
+  if($("dayInfo")) loadMatchday(m);
   if(oppId) loadH2H(oppId).then(list=>{ const b=$("h2hBox"); if(b) b.innerHTML=h2hHTML(list.filter(x=>x.t<m.t-3600e3 || m.finished), opp); })
     .catch(()=>{ const b=$("h2hBox"); if(b) b.innerHTML=`<p style="margin:0">Die Bilanz konnte gerade nicht geladen werden.</p>`; });
 }
@@ -1953,7 +2084,7 @@ function renderStamp(){
   const src = state.feedsAll ? " · "+state.feedsOk+" von "+state.feedsAll+" Quellen" : "";
   $("stamp").textContent = t ? "Stand "+fmtDate(new Date(t),{hour:"2-digit",minute:"2-digit"})+" Uhr"+src : "Lade …";
 }
-function renderAll(){ renderFan(); renderGames(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
+function renderAll(){ renderFan(); renderGames(); renderVideos(); if(clubSel==="transfers") renderTransfers(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
 
 
 /* ---------- Text-Abruf (HTML-Seiten) ---------- */
@@ -2282,7 +2413,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Enter"){ const p=e.target.c
 let clubSel="kader";
 function renderClub(){
   document.querySelectorAll("[data-club]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.club===clubSel)));
-  $("clubKader").hidden=clubSel!=="kader"; $("clubLegenden").hidden=clubSel!=="legenden"; $("clubHistorie").hidden=clubSel!=="historie";
+  $("clubKader").hidden=clubSel!=="kader"; $("clubLegenden").hidden=clubSel!=="legenden"; $("clubHistorie").hidden=clubSel!=="historie"; $("clubTransfers").hidden=clubSel!=="transfers";
+  if(clubSel==="transfers") renderTransfers();
   if(clubSel==="legenden" && !$("clubLegenden").dataset.done){
     const card=(L,i,kind)=>`<button type="button" class="leg" data-legend="${kind}:${i}"><span class="lph" data-lphoto="${esc(L[0])}">${esc(initials(L[0]))}</span><span class="yrs">${esc(L[2])}</span><b>${esc(L[0])}</b><small>${esc(L[1])}</small></button>`;
     $("clubLegenden").innerHTML=`<div class="sec-h"><h2>Spieler-Legenden</h2></div><div class="legs">${LEGENDS.map((L,i)=>card(L,i,"p")).join("")}</div>
@@ -2542,11 +2674,12 @@ async function refresh(){
   if(!navigator.onLine){ notice("Kein Internet. Du siehst den zuletzt geladenen Stand."); }
   const failed=[];
   const run=async(k,fn)=>{ try{ await fn(); state.ts[k]=Date.now(); }catch(e){ failed.push(k); } renderAll(); };
-  await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)), run("stats",loadStats) ]);
+  await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)).then(()=>run("transfers",loadTransfers)), run("stats",loadStats), run("videos",loadVideos) ]);
   store("cache",state);
   if(navigator.onLine){
-    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle",stats:"Statistik"};
-    notice(failed.length? failed.map(k=>names[k]).join(" und ")+" konnten gerade nicht geladen werden. Angezeigt wird der letzte Stand." : "");
+    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle",stats:"Statistik",transfers:"Transfers",videos:"Videos"};
+    const fl=failed.filter(k=>!["transfers","videos"].includes(k));
+    notice(fl.length? fl.map(k=>names[k]).join(" und ")+" konnten gerade nicht geladen werden. Angezeigt wird der letzte Stand." : "");
   }
   btn.disabled=false; btn.classList.remove("busy"); busy=false;
 }
