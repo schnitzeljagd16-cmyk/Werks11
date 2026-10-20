@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Werks11</title>
+<meta name="description" content="News, Gerüchte, Spiele und Tabelle rund um Bayer 04 Leverkusen">
+<meta name="theme-color" content="#d6001c" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f0b0c" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: Stadionheft fürs Handy – oben ein Flutlicht-Spieltagsblock (einziger lauter Moment), darunter ruhige Karten; Reiterleiste unten für den Daumen */
+:root{
+  --bg:#f4f1f1; --surface:#ffffff; --surface-2:#f8f5f5; --fg:#1a1315; --muted:#6e6164; --line:#e6dfe0;
+  --red:#d6001c; --red-2:#a50016; --soft:#fbe9eb; --night:#140c0e; --night-2:#2a0d12;
+  --win:#16884a; --draw:#c58a00; --loss:#d6001c;
+  --cl:#2c5fd1; --el:#e07a00; --ecl:#1f9d6b; --rel:#d6001c;
+  --shadow:0 1px 2px rgba(40,10,15,.06),0 6px 18px -8px rgba(40,10,15,.18);
+  --display:"Barlow Condensed","Roboto Condensed","Arial Narrow",sans-serif;
+  --body:"Source Sans 3","Roboto","Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0f0b0c; --surface:#1b1517; --surface-2:#221b1d; --fg:#f4edef; --muted:#a6989b; --line:#30272a;
+  --red:#ee1c36; --red-2:#b3001a; --soft:#33171c; --night:#070405; --night-2:#2b0a10;
+  --win:#3fca7e; --draw:#e8b13a; --loss:#ff4a5f;
+  --cl:#6d97ff; --el:#ffa13d; --ecl:#4fd1a0; --rel:#ff4a5f;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 22px -10px rgba(0,0,0,.7);
+  color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;
+  padding-bottom:calc(68px + env(safe-area-inset-bottom,0px));overscroll-behavior-y:contain}
+img{max-width:100%}
+.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+
+/* Kopfzeile */
+header{position:sticky;top:0;z-index:20;background:var(--red);color:#fff;padding-top:env(safe-area-inset-top,0px);
+  background-image:linear-gradient(115deg,transparent 0 62%,rgba(0,0,0,.14) 62% 70%,transparent 70% 76%,rgba(0,0,0,.14) 76% 84%,transparent 84%)}
+@media (prefers-color-scheme: dark){header{background-color:#1a0a0d;border-bottom:1px solid #3a1118}}
+header .wrap{display:flex;align-items:center;gap:10px;height:58px}
+.crest{width:36px;height:36px;border-radius:10px;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.brand{flex:1;min-width:0;display:flex;flex-direction:column}
+.brand b{font:italic 800 25px/1 var(--display);letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.brand .eleven{display:inline-block;background:#0d0d0d;color:#fff;padding:1px 5px 0 4px;margin-left:3px;border-radius:5px;font-style:italic;transform:skewX(-6deg)}
+.brand small{font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;display:grid;place-items:center;cursor:pointer;flex:none}
+.iconbtn svg{width:21px;height:21px}
+.iconbtn.busy svg{animation:rot .9s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+#ptr{height:0;overflow:hidden;display:grid;place-items:center;color:var(--muted);font-size:13px;transition:height .2s}
+
+main .wrap{display:flex;flex-direction:column;gap:22px;padding-block:16px 28px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:0 0 10px}
+h2{font:700 14px/1.2 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0}
+.sec-h a,.sec-h button{border:0;background:none;color:var(--red);font:600 14px/1 var(--body);cursor:pointer;padding:4px 0}
+.notice{padding:10px 12px;border-radius:12px;background:var(--soft);font-size:14px}
+
+/* Flutlicht-Spieltagsblock */
+.hero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px 16px;
+  background:radial-gradient(120% 80% at 50% -20%,rgba(255,255,255,.22),transparent 55%),
+             radial-gradient(90% 70% at 50% 120%,rgba(214,0,28,.55),transparent 70%),
+             linear-gradient(160deg,var(--night-2),var(--night) 70%);box-shadow:var(--shadow)}
+.hero::before{content:"";position:absolute;inset:auto -10% -40% -10%;height:70%;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 26px,transparent 26px 52px);transform:perspective(300px) rotateX(55deg);transform-origin:bottom}
+.hero>*{position:relative}
+.hero .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font:700 13px/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font:700 12px/1 var(--display);letter-spacing:.1em}
+.pill.live{background:var(--red)}
+.pill.live::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+.duel{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:16px 0 10px}
+.side{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;text-align:center}
+.logo{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.95);display:grid;place-items:center;padding:10px;box-shadow:0 0 0 4px rgba(255,255,255,.08),0 10px 24px -8px rgba(0,0,0,.6)}
+.logo img{width:100%;height:100%;object-fit:contain}
+.logo .mono{font:800 22px/1 var(--display);color:var(--night)}
+.side b{font:700 17px/1.05 var(--display);overflow-wrap:anywhere}
+.mid{text-align:center;min-width:92px}
+.mid .clock{font:800 40px/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.mid .vs{font:italic 800 15px/1 var(--display);color:rgba(255,255,255,.6);letter-spacing:.2em;margin-top:6px}
+.countdown{display:flex;justify-content:center;gap:6px;margin-top:4px}
+.countdown span{min-width:54px;padding:7px 4px 6px;border-radius:10px;background:rgba(255,255,255,.08);text-align:center;font:800 22px/1 var(--display);font-variant-numeric:tabular-nums}
+.countdown small{display:block;font:600 10px/1.2 var(--body);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:3px}
+.hero .when{text-align:center;font-size:14px;color:rgba(255,255,255,.82);margin-top:12px}
+
+/* Form & Platz */
+.formrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.formrow .lbl{font:700 12px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.form{display:flex;gap:5px}
+.form i{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font:800 14px/1 var(--display);font-style:normal;color:#fff}
+.f-w{background:var(--win)} .f-d{background:var(--draw)} .f-l{background:var(--loss)}
+.place{margin-left:auto;text-align:right}
+.place b{font:800 30px/1 var(--display);font-variant-numeric:tabular-nums}
+.place small{display:block;font-size:12px;color:var(--muted)}
+
+/* Filter */
+.filters{display:flex;gap:6px;overflow-x:auto;margin:0 -16px 10px;padding:0 16px 2px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 13px;font:600 13px/1 var(--body);cursor:pointer;white-space:nowrap}
+.filters button[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.filters button span{opacity:.6;margin-left:5px;font-variant-numeric:tabular-nums}
+
+/* Nachrichten */
+.feed{display:flex;flex-direction:column;gap:10px}
+.story{display:block;color:inherit;text-decoration:none;background:var(--surface);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line)}
+.story .pic{aspect-ratio:16/9;background:var(--surface-2);position:relative;overflow:hidden}
+.story .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.story .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px}
+.story h3{margin:0;font:700 23px/1.12 var(--display);text-wrap:balance}
+.card{display:grid;grid-template-columns:1fr 84px;gap:12px;align-items:start;color:inherit;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px;box-shadow:var(--shadow);min-width:0}
+.card.noimg{grid-template-columns:1fr}
+.card h3{margin:0 0 6px;font-size:16px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.thumb{width:84px;height:84px;border-radius:12px;overflow:hidden;background:var(--surface-2)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+a.card:active,a.story:active{transform:scale(.99)}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:12.5px;color:var(--muted)}
+.src{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--fg)}
+.src i{width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font:800 10px/1 var(--display);font-style:normal;color:#fff;flex:none}
+.sep::before{content:"·"}
+.more{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:12px;font-weight:700;cursor:pointer;color:var(--red)}
+
+/* Gerüchte */
+.rumor{display:block;color:inherit;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.rumor h3{margin:0 0 8px;font-size:16px;font-weight:700;line-height:1.3}
+.baro{display:flex;align-items:center;gap:8px;font:700 11px/1 var(--body);letter-spacing:.07em;text-transform:uppercase}
+.baro .bars{display:flex;gap:3px}
+.baro .bars i{width:16px;height:6px;border-radius:3px;background:var(--line)}
+.r-hoch .bars i{background:var(--win)} .r-hoch{color:var(--win)}
+.r-mittel .bars i:nth-child(-n+2){background:var(--draw)} .r-mittel{color:var(--draw)}
+.r-gering .bars i:first-child{background:var(--muted)} .r-gering{color:var(--muted)}
+.rumor .meta{margin-top:8px}
+.legend{font-size:13px;color:var(--muted);margin:0}
+
+/* Spiele */
+.mgroup{font:700 13px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 2px 8px}
+.mlist{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.match{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center;padding:12px 14px}
+.match+.match{border-top:1px solid var(--line)}
+.date{text-align:center;line-height:1}
+.date b{display:block;font:800 22px/1 var(--display);font-variant-numeric:tabular-nums}
+.date small{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.opp{display:flex;align-items:center;gap:10px;min-width:0}
+.opp .lg{width:30px;height:30px;flex:none;display:grid;place-items:center}
+.opp .lg img{width:100%;height:100%;object-fit:contain}
+.opp b{display:block;font:700 18px/1.1 var(--display);overflow-wrap:anywhere}
+.opp small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.ha{font:700 10px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;padding:2px 5px;border-radius:4px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);margin-right:6px;vertical-align:1px}
+.res{min-width:52px;text-align:center;padding:7px 8px;border-radius:10px;font:800 19px/1 var(--display);font-variant-numeric:tabular-nums;color:#fff}
+.res.w{background:var(--win)} .res.d{background:var(--draw)} .res.l{background:var(--loss)}
+.kick{font:800 18px/1 var(--display);font-variant-numeric:tabular-nums;text-align:right}
+
+/* Tabelle */
+.tbl{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 6px;text-align:right;white-space:nowrap}
+th{font:700 11px/1 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+td.pos{text-align:center;width:34px;position:relative;font-weight:700}
+td.pos::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 3px 3px 0;background:var(--z,transparent)}
+.z-cl{--z:var(--cl)} .z-el{--z:var(--el)} .z-ecl{--z:var(--ecl)} .z-rel{--z:var(--draw)} .z-down{--z:var(--rel)}
+td.team,th.team{text-align:left;white-space:normal}
+td.team{display:flex;align-items:center;gap:8px;min-width:120px}
+td.team img{width:20px;height:20px;object-fit:contain}
+td.pts{font-weight:800}
+tr+tr td{border-top:1px solid var(--line)}
+tr.me td{background:var(--soft);font-weight:700}
+.zones{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:10px}
+.zones span{display:inline-flex;align-items:center;gap:6px}
+.zones i{width:10px;height:10px;border-radius:3px;background:var(--z)}
+@media (max-width:440px){.c-tore{display:none} th,td{padding:9px 4px} td.team{min-width:0}}
+
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
+.foot{font-size:12.5px;color:var(--muted);margin:0}
+.foot a{color:var(--red)}
+
+/* Platzhalter beim ersten Laden */
+.sk{background:linear-gradient(90deg,var(--surface-2) 0 40%,var(--line) 50%,var(--surface-2) 60% 100%);background-size:300% 100%;animation:sh 1.3s linear infinite;border-radius:10px}
+@keyframes sh{from{background-position:100% 0}to{background-position:0 0}}
+
+/* Reiterleiste */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tabs button{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 10px;cursor:pointer;position:relative;font:700 12px/1 var(--body);letter-spacing:.02em}
+.tabs svg{width:24px;height:24px}
+.tabs button[aria-selected="true"]{color:var(--red)}
+.tabs button[aria-selected="true"] .ic{background:var(--soft)}
+.tabs .ic{width:52px;height:30px;border-radius:15px;display:grid;place-items:center;position:relative}
+.badge{position:absolute;top:-3px;right:4px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font:700 11px/17px var(--body);text-align:center}
+[data-view]{animation:fade .25s ease}
+@keyframes fade{from{opacity:.4;transform:translateY(4px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img class="crest" src="icon-192.png" alt="" aria-hidden="true">
+    <div class="brand"><b>Werks<span class="eleven">11</span></b><small id="stamp">Lade …</small></div>
+    <button class="iconbtn" id="refresh" type="button" aria-label="Aktualisieren" title="Aktualisieren">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+    </button>
+  </div>
+</header>
+<div id="ptr" aria-hidden="true"></div>
+
+<main>
+  <div class="wrap">
+    <div id="notice" class="notice" hidden></div>
+
+    <section data-view="news">
+      <div class="feed">
+        <div id="heroBox"></div>
+        <div id="formBox"></div>
+      </div>
+      <div style="margin-top:22px">
+        <div class="sec-h"><h2>Neueste Meldungen</h2></div>
+        <div class="filters" id="filters" role="group" aria-label="Nach Quelle filtern"></div>
+        <div class="feed" id="newsList">
+          <div class="sk" style="height:220px;border-radius:18px"></div><div class="sk" style="height:96px"></div><div class="sk" style="height:96px"></div>
+        </div>
+      </div>
+    </section>
+
+    <section data-view="rumors" hidden>
+      <div class="sec-h"><h2>Gerüchteküche</h2></div>
+      <div class="feed" id="rumorList"><div class="sk" style="height:96px"></div><div class="sk" style="height:96px"></div></div>
+      <p class="legend" style="margin-top:12px">Die Balken zeigen, wie verlässlich die Quelle meistens ist – drei grüne für Seiten wie kicker oder Sky, zwei gelbe etwa für BILD oder Sport1, einer für alle übrigen.</p>
+    </section>
+
+    <section data-view="games" hidden>
+      <div id="heroBox2"></div>
+      <div id="gamesBox"></div>
+    </section>
+
+    <section data-view="table" hidden>
+      <div class="sec-h"><h2>Bundesliga</h2><span class="legend" id="tableSeason"></span></div>
+      <div id="tableBox"><div class="sk" style="height:420px;border-radius:16px"></div></div>
+      <div class="zones">
+        <span class="z-cl"><i></i>Champions League</span><span class="z-el"><i></i>Europa League</span>
+        <span class="z-ecl"><i></i>Conference League</span><span class="z-rel"><i></i>Relegation</span><span class="z-down"><i></i>Abstieg</span>
+      </div>
+    </section>
+
+    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabelle von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>. Werks11 ist eine inoffizielle Fan-App.</p>
+  </div>
+</main>
+
+<nav class="tabs" role="tablist" aria-label="Bereiche">
+  <div class="in">
+    <button role="tab" data-tab="news" aria-selected="true"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h10M7 17h6"/></svg></span>News</button>
+    <button role="tab" data-tab="rumors" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/></svg><span class="badge" id="rumorBadge" hidden></span></span>Gerüchte</button>
+    <button role="tab" data-tab="games" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>Spiele</button>
+    <button role="tab" data-tab="table" aria-selected="false"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4"/></svg></span>Tabelle</button>
+  </div>
+</nav>
+
+<script>
+"use strict";
+const TEAM_ID = 6; // Bayer 04 Leverkusen bei OpenLigaDB
+const TZ = "Europe/Berlin";
+const NEWS_QUERIES = ["Bayer Leverkusen", "Bayer 04 Leverkusen", "Werkself"];
+const RUMOR_QUERIES = ["Bayer Leverkusen Transfer", "Leverkusen Gerücht Wechsel", "Bayer 04 Interesse Spieler"];
+/* Alle Nachrichtenquellen. team:true = Feed nur über Bayer 04, sonst wird nach Leverkusen gefiltert */
+const GN_SITES = [
+  ["transfermarkt.de","sport1.de","bild.de","express.de"],
+  ["ksta.de","sportschau.de","wdr.de","sky.de"],
+  ["90min.de","spox.com","t-online.de","fussballtransfers.com"],
+  ["ligainsider.de","fussballeuropa.com","ran.de","bayer04.de"]
+];
+const FEEDS = [
+  {name:"kicker", url:"https://newsfeed.kicker.de/team/bayer-04-leverkusen", team:true},
+  {name:"RP Online", url:"https://rp-online.de/sport/fussball/bayer-04/feed.rss", team:true},
+  {name:"Bulinews (engl.)", url:"https://bulinews.com/rss.xml?team=leverkusen", team:true},
+  {name:"Reddit-Fans", url:"https://www.reddit.com/r/bayerleverkusen/new/.rss", team:true},
+  {name:"Bing News", url:"https://www.bing.com/news/search?q=%22Bayer+Leverkusen%22&format=rss&setlang=de&cc=DE"},
+  {name:"Bing News", url:"https://www.bing.com/news/search?q=Leverkusen+Transfer&format=rss&setlang=de&cc=DE"},
+  {name:"Google News (engl.)", url:"https://news.google.com/rss/search?q=%22Bayer+Leverkusen%22+when:3d&hl=en-GB&gl=GB&ceid=GB:en"}
+].concat(GN_SITES.map(g=>({name:"Google News", url:"https://news.google.com/rss/search?q="+encodeURIComponent("Leverkusen ("+g.map(d=>"site:"+d).join(" OR ")+") when:7d")+"&hl=de&gl=DE&ceid=DE:de"})));
+const RUMOR_WORDS = /transfer|gerücht|interesse|wechsel|leihe|ausgeliehen|vertrag|verläng|ablöse|buhl|kandidat|im visier|angebot|abgang|neuzugang|winter|sommer|poker|beraten|scout|kaufoption|klausel/i;
+const RELIABLE = {
+  hoch: ["kicker","sky sport","sky","fabrizio romano","bayer04.de","bayer 04","wdr","sportschau","ksta","kölner stadt-anzeiger","rheinische post","rp online","the athletic","ligainsider"],
+  mittel: ["bild","sport bild","sport1","transfermarkt","90min","spox","goal","t-online","express","fussballtransfers","ran.de","n-tv","spiegel","faz","sz","welt","bulinews"]
+};
+const COMP = {bl1:"Bundesliga", dfb:"DFB-Pokal", uel:"Europa League", ucl:"Champions League", uecl:"Conference League"};
+const $ = id => document.getElementById(id);
+const state = { news:[], rumors:[], matches:[], table:[], ts:{} };
+
+/* ---------- Hilfen ---------- */
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function load(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}
+function ago(t){
+  const m=Math.round((Date.now()-t)/60000);
+  if(m<1) return "gerade eben"; if(m<60) return "vor "+m+" Min.";
+  const h=Math.round(m/60); if(h<24) return "vor "+h+" Std.";
+  const d=Math.round(h/24); return d===1?"gestern":"vor "+d+" Tagen";
+}
+function fmtDate(d,opts){return d.toLocaleString("de-DE",Object.assign({timeZone:TZ},opts))}
+function notice(t){const n=$("notice"); n.hidden=!t; n.textContent=t||"";}
+function compName(sc){sc=String(sc||"").toLowerCase(); for(const k in COMP){ if(sc.startsWith(k)) return COMP[k]; } return sc.toUpperCase();}
+function season(){const d=new Date(); return d.getMonth()>=6?d.getFullYear():d.getFullYear()-1;}
+function safeImg(u){ u=String(u||"").trim().replace(/&amp;/g,"&"); return /^https:\/\//i.test(u)?u:""; }
+function hue(str){let h=0; for(const c of String(str)) h=(h*31+c.charCodeAt(0))%360; return h;}
+function initials(s){ s=String(s||"?").replace(/\(.*?\)/g,"").trim(); const w=s.split(/\s+/); return (w.length>1?w[0][0]+w[1][0]:s.slice(0,2)).toUpperCase(); }
+function short(n){ return String(n||"").replace(/^(1\. FC|1\. FSV|FC|SC|SV|VfB|VfL|TSG|RB|SG|Bor\.|Borussia)\s+/,"").replace(/ 04$/,""); }
+
+async function fetchWithTimeout(url, ms=12000){
+  const c=new AbortController(); const t=setTimeout(()=>c.abort(),ms);
+  try{ const r=await fetch(url,{signal:c.signal,cache:"no-store"}); if(!r.ok) throw new Error("HTTP "+r.status); return r; }
+  finally{ clearTimeout(t); }
+}
+
+/* Android-App: Abruf direkt über das Handy (ohne Browser-Sperren), sonst normal per fetch */
+const NATIVE = typeof window.AndroidNet !== "undefined";
+const netCallbacks = {}; let netSeq = 0;
+window.__netCb = (id, ok, b64) => {
+  const cb = netCallbacks[id]; if(!cb) return; delete netCallbacks[id];
+  if(!ok) return cb.reject(new Error(b64||"Netzwerkfehler"));
+  const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+  cb.resolve(new TextDecoder("utf-8").decode(bytes));
+};
+function nativeGet(url, ms=15000){
+  return new Promise((resolve,reject)=>{
+    const id = ++netSeq; netCallbacks[id] = {resolve,reject};
+    setTimeout(()=>{ if(netCallbacks[id]){ delete netCallbacks[id]; reject(new Error("Zeitüberschreitung")); } }, ms);
+    window.AndroidNet.get(String(id), url);
+  });
+}
+async function getJson(url){ return NATIVE ? JSON.parse(await nativeGet(url)) : (await fetchWithTimeout(url)).json(); }
+
+/* ---------- Nachrichten ---------- */
+function gnUrl(q){return "https://news.google.com/rss/search?q="+encodeURIComponent(q+" when:7d")+"&hl=de&gl=DE&ceid=DE:de";}
+function txt(el,sel){const e=el.querySelector(sel); return e?e.textContent.trim():"";}
+function tagNS(el,name){ const e=el.getElementsByTagName(name)[0]; return e; }
+function findImg(it, rawDesc){
+  const enc=it.querySelector("enclosure"); if(enc && /image/i.test(enc.getAttribute("type")||"image")) { const u=safeImg(enc.getAttribute("url")); if(u) return u; }
+  for(const n of ["media:content","media:thumbnail"]){ const e=tagNS(it,n); if(e){ const u=safeImg(e.getAttribute("url")); if(u) return u; } }
+  const bing=tagNS(it,"News:Image"); if(bing){ let u=bing.textContent.trim(); if(u.startsWith("//")) u="https:"+u; u=safeImg(u); if(u) return u+(u.includes("bing.com/th")&&!/&w=/.test(u)?"&w=640&h=360&c=7":""); }
+  const m=String(rawDesc||"").match(/<img[^>]+src=["']([^"']+)["']/i); if(m) return safeImg(m[1]);
+  return "";
+}
+function parseRssXml(xml){
+  const doc=new DOMParser().parseFromString(xml,"text/xml");
+  if(doc.querySelector("parsererror")) throw new Error("XML fehlerhaft");
+  const items=[...doc.querySelectorAll("item")].map(it=>{
+    const raw=txt(it,"description");
+    return {
+      title: txt(it,"title"), link: txt(it,"link"), pubDate: txt(it,"pubDate")||txt(it,"date"),
+      source: txt(it,"source") || (tagNS(it,"News:Source")?.textContent||"").trim(),
+      desc: raw.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().slice(0,400),
+      cats: [...it.querySelectorAll("category")].map(c=>c.textContent).join(" "),
+      img: findImg(it, raw)
+    };
+  });
+  const entries=[...doc.querySelectorAll("entry")].map(en=>{ // Atom (z. B. Reddit)
+    const content=txt(en,"content");
+    const th=tagNS(en,"media:thumbnail");
+    return { title: txt(en,"title"), link: en.querySelector("link")?.getAttribute("href")||"",
+      pubDate: txt(en,"updated")||txt(en,"published"), source:"", desc:"", cats:"",
+      img: th?safeImg(th.getAttribute("url")):(()=>{const m=content.match(/<img[^>]+src=["']([^"']+)["']/i); return m?safeImg(m[1]):"";})() };
+  });
+  return items.concat(entries);
+}
+const BRIDGES = [
+  async u => { const r=await fetchWithTimeout("https://api.rss2json.com/v1/api.json?rss_url="+encodeURIComponent(u));
+               const j=await r.json(); if(j.status!=="ok") throw new Error(j.message||"rss2json");
+               return j.items.map(i=>({title:i.title,link:i.link,pubDate:i.pubDate,source:i.author||"",
+                 desc:String(i.description||"").replace(/<[^>]+>/g," ").slice(0,400),cats:(i.categories||[]).join(" "),
+                 img:safeImg(i.thumbnail||(i.enclosure&&i.enclosure.link)||"")})); },
+  async u => parseRssXml(await (await fetchWithTimeout("https://api.allorigins.win/raw?url="+encodeURIComponent(u))).text()),
+  async u => parseRssXml(await (await fetchWithTimeout("https://corsproxy.io/?url="+encodeURIComponent(u))).text()),
+  async u => parseRssXml(await (await fetchWithTimeout("https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u))).text())
+];
+let bridgeIdx = load("bridgeIdx") ?? 0;
+async function getFeed(url){
+  if(NATIVE){ try{ return parseRssXml(await nativeGet(url)); }catch(e){ /* weiter mit Brücken */ } }
+  let lastErr;
+  for(let k=0;k<BRIDGES.length;k++){
+    const i=(bridgeIdx+k)%BRIDGES.length;
+    try{ const items=await BRIDGES[i](url); if(i!==bridgeIdx){bridgeIdx=i; store("bridgeIdx",i);} return items; }
+    catch(e){ lastErr=e; }
+  }
+  throw lastErr||new Error("Feed nicht erreichbar");
+}
+function cleanItem(i, feed){
+  let title=(i.title||"").trim(), source=(i.source||"").trim();
+  const m=title.match(/^(.*)\s+-\s+([^-]{2,60})$/); // Google News: "Titel - Quelle"
+  if(m){ title=m[1].trim(); if(!source) source=m[2].trim(); }
+  const t=Date.parse(String(i.pubDate||"").replace(" ","T")+(/Z|GMT|[+-]\d\d:?\d\d$/.test(i.pubDate||"")?"":"Z"));
+  if(!source && feed) source=feed.name;
+  return {title, link:i.link, source, img:i.img||"", desc:(i.desc||"").slice(0,220), team:!!(feed&&feed.team),
+    hay:(title+" "+(i.desc||"")+" "+(i.cats||"")), t: isNaN(t)?Date.parse(i.pubDate)||0:t};
+}
+function reliability(src){
+  const s=(src||"").toLowerCase();
+  if(RELIABLE.hoch.some(x=>s.includes(x))) return "hoch";
+  if(RELIABLE.mittel.some(x=>s.includes(x))) return "mittel";
+  return "gering";
+}
+function relevant(it){
+  if(/frauen|u19|u17|u23|basketball|handball|elfen|giants/i.test(it.title)) return false;
+  if(Date.now()-it.t > 10*86400e3) return false;
+  return it.team || /leverkusen|bayer 04|werkself|\bb04\b/i.test(it.hay||it.title);
+}
+function dedupe(items){
+  const seen=new Map(), out=[];
+  for(const it of items.sort((a,b)=>b.t-a.t)){
+    const key=it.title.toLowerCase().replace(/[^a-zäöüß0-9]/g,"").slice(0,60);
+    if(seen.has(key)){ const prev=seen.get(key); if(!prev.img && it.img) prev.img=it.img; continue; }
+    seen.set(key,it); out.push(it);
+  }
+  return out;
+}
+async function loadNews(){
+  const jobs=[...NEWS_QUERIES.map(q=>({name:"Google News",url:gnUrl(q)})), ...RUMOR_QUERIES.map(q=>({name:"Google News",url:gnUrl(q)})), ...FEEDS];
+  const res=await Promise.allSettled(jobs.map(f=>getFeed(f.url).then(items=>items.map(i=>cleanItem(i,f)))));
+  const ok=res.filter(r=>r.status==="fulfilled");
+  if(!ok.length) throw new Error("news");
+  const all=dedupe(ok.flatMap(r=>r.value).filter(relevant));
+  state.feedsOk=ok.length; state.feedsAll=jobs.length;
+  state.news=all.slice(0,80);
+  state.rumors=all.filter(i=>RUMOR_WORDS.test(i.hay||i.title)).slice(0,40).map(i=>Object.assign({},i,{rel:reliability(i.source)}));
+}
+
+/* ---------- Spiele & Tabelle (OpenLigaDB) ---------- */
+async function loadMatches(){
+  const j=await getJson(`https://api.openligadb.de/getmatchesbyteamid/${TEAM_ID}/10/8`);
+  state.matches=j.map(m=>{
+    const fin=(m.matchResults||[]).find(x=>x.resultTypeID===2)||(m.matchResults||[]).slice(-1)[0];
+    return {
+      t: Date.parse(m.matchDateTimeUTC||m.matchDateTime),
+      comp: compName(m.leagueShortcut), round: m.group?.groupName||"",
+      home: m.team1?.teamId===TEAM_ID,
+      t1: m.team1?.teamName, t2: m.team2?.teamName, i1: safeImg(m.team1?.teamIconUrl), i2: safeImg(m.team2?.teamIconUrl),
+      stadium: m.location?.locationStadium||"", city: m.location?.locationCity||"",
+      finished: !!m.matchIsFinished, g1: fin?fin.pointsTeam1:null, g2: fin?fin.pointsTeam2:null
+    };
+  }).sort((a,b)=>a.t-b.t);
+}
+async function loadTable(){
+  const t=await getJson(`https://api.openligadb.de/getbltable/bl1/${season()}`);
+  state.table=t.map(x=>({id:x.teamInfoId,name:x.shortName||x.teamName,icon:safeImg(x.teamIconUrl),sp:x.matches,s:x.won,u:x.draw,n:x.lost,tore:(x.goals??"")+":"+(x.opponentGoals??""),diff:x.goalDiff,pkt:x.points}));
+}
+
+/* ---------- Bausteine ---------- */
+const SRC_COLORS=["#c8102e","#1d4ed8","#0f766e","#7c3aed","#b45309","#be185d","#0369a1","#4d7c0f","#475569"];
+function srcBadge(src){ const c=SRC_COLORS[hue(src)%SRC_COLORS.length]; return `<span class="src"><i style="background:${c}">${esc(initials(src))}</i>${esc(src||"Quelle")}</span>`; }
+function imgTag(u,cls){ return u?`<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('${cls}').classList.add('noimg');this.parentNode.remove()">`:""; }
+function storyCard(i){
+  return `<a class="story" href="${esc(i.link)}" target="_blank" rel="noopener">
+    ${i.img?`<div class="pic"><img src="${esc(i.img)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>`:""}
+    <div class="body"><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div>
+    <h3>${esc(i.title)}</h3>${i.desc&&!i.img?`<div class="meta" style="font-size:14px">${esc(i.desc.slice(0,160))}</div>`:""}</div></a>`;
+}
+function newsCard(i){
+  return `<a class="card${i.img?"":" noimg"}" href="${esc(i.link)}" target="_blank" rel="noopener">
+    <div style="min-width:0"><h3>${esc(i.title)}</h3><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div></div>
+    ${i.img?`<div class="thumb">${imgTag(i.img,".card")}</div>`:""}</a>`;
+}
+function rumorCard(i){
+  const label={hoch:"Quelle zuverlässig",mittel:"Quelle mittel",gering:"Quelle unsicher"}[i.rel];
+  return `<a class="rumor" href="${esc(i.link)}" target="_blank" rel="noopener">
+    <h3>${esc(i.title)}</h3>
+    <div class="baro r-${i.rel}"><span class="bars"><i></i><i></i><i></i></span>${label}</div>
+    <div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div></a>`;
+}
+function logo(url,name){ return `<div class="logo">${url?`<img src="${esc(url)}" alt="" onerror="this.outerHTML='<span class=mono>${esc(initials(name))}</span>'">`:`<span class="mono">${esc(initials(name))}</span>`}</div>`; }
+function outcome(m){ if(!m.finished||m.g1==null) return ""; const us=m.home?m.g1:m.g2, them=m.home?m.g2:m.g1; return us>them?"w":us<them?"l":"d"; }
+
+/* ---------- Anzeige ---------- */
+let srcFilter="Alle", newsLimit=20;
+function srcKey(src){ const x=(src||"").replace(/^www\./i,"").replace(/\.(de|com|net)$/i,"").trim(); return x||"Sonstige"; }
+function renderNews(){
+  if(!state.news.length && !state.ts.news) return; // erster Start: Platzhalter stehen lassen
+  const counts={};
+  state.news.forEach(i=>{const k=srcKey(i.source); counts[k]=(counts[k]||0)+1;});
+  const keys=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  if(srcFilter!=="Alle" && !counts[srcFilter]) srcFilter="Alle";
+  $("filters").innerHTML=[`<button type="button" data-src="Alle" aria-pressed="${srcFilter==="Alle"}">Alle<span>${state.news.length}</span></button>`]
+    .concat(keys.map(k=>`<button type="button" data-src="${esc(k)}" aria-pressed="${srcFilter===k}">${esc(k)}<span>${counts[k]}</span></button>`)).join("");
+  $("filters").hidden=!state.news.length;
+  const list=srcFilter==="Alle"?state.news:state.news.filter(i=>srcKey(i.source)===srcFilter);
+  if(!list.length){ $("newsList").innerHTML=`<div class="empty">Keine Meldungen gefunden. Tippe oben auf Aktualisieren.</div>`; return; }
+  const lead=list.find(i=>i.img)||list[0];
+  const rest=list.filter(i=>i!==lead).slice(0,newsLimit);
+  $("newsList").innerHTML = storyCard(lead) + rest.map(newsCard).join("") +
+    (list.length-1>newsLimit?`<button type="button" class="more" id="moreBtn">Weitere ${Math.min(20,list.length-1-newsLimit)} Meldungen</button>`:"");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#filters [data-src]"); if(b){ srcFilter=b.dataset.src; newsLimit=20; renderNews(); return; }
+  if(e.target.closest("#moreBtn")){ newsLimit+=20; renderNews(); }
+  const go=e.target.closest("[data-go]"); if(go) showTab(go.dataset.go);
+});
+function renderRumors(){
+  if(!state.rumors.length && !state.ts.news) return;
+  $("rumorList").innerHTML = state.rumors.length ? state.rumors.map(rumorCard).join("") : `<div class="empty">Gerade keine neuen Gerüchte.</div>`;
+  const seen=load("rumorsSeen")||0, fresh=state.rumors.filter(r=>r.t>seen).length;
+  const b=$("rumorBadge"); b.hidden=!fresh || current==="rumors"; b.textContent=fresh>9?"9+":fresh;
+}
+function nextMatch(){ const now=Date.now(); return state.matches.find(m=>!m.finished && m.t>now-2.5*3600e3); }
+function heroHTML(){
+  const n=nextMatch();
+  if(!n) return state.ts.matches?"":`<div class="sk" style="height:250px;border-radius:20px"></div>`;
+  const d=new Date(n.t), live=Date.now()>=n.t;
+  const today=fmtDate(new Date(),{day:"2-digit",month:"2-digit"})===fmtDate(d,{day:"2-digit",month:"2-digit"});
+  return `<div class="hero" data-t="${n.t}">
+    <div class="top"><span>${esc(n.comp)}${n.round?" · "+esc(n.round):""}</span>${live?`<span class="pill live">Live</span>`:`<span class="pill">${today?"Heute":esc(fmtDate(d,{weekday:"short"}))}</span>`}</div>
+    <div class="duel">
+      <div class="side">${logo(n.i1,n.t1)}<b>${esc(short(n.t1))}</b></div>
+      <div class="mid"><div class="clock">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</div><div class="vs">VS</div></div>
+      <div class="side">${logo(n.i2,n.t2)}<b>${esc(short(n.t2))}</b></div>
+    </div>
+    ${live?"":`<div class="countdown"></div>`}
+    <div class="when">${esc(fmtDate(d,{weekday:"long",day:"numeric",month:"long"}))}${n.stadium?" · "+esc(n.stadium):n.home?" · BayArena":""}</div>
+  </div>`;
+}
+function tickCountdown(){
+  document.querySelectorAll(".hero[data-t]").forEach(h=>{
+    const c=h.querySelector(".countdown"); if(!c) return;
+    const total=Math.max(0,Math.floor((+h.dataset.t-Date.now())/1000));
+    let s=total; const D=Math.floor(s/86400); s%=86400; const H=Math.floor(s/3600); s%=3600; const M=Math.floor(s/60);
+    const parts=D?[[D,D===1?"Tag":"Tage"],[H,"Std"],[M,"Min"]]:[[H,"Std"],[M,"Min"],[total%60,"Sek"]];
+    c.innerHTML=parts.map(([v,l])=>`<span>${String(v).padStart(2,"0")}<small>${l}</small></span>`).join("");
+  });
+}
+setInterval(tickCountdown,1000);
+function formHTML(){
+  const past=state.matches.filter(m=>m.finished&&m.g1!=null).slice(-5);
+  const me=state.table.findIndex(r=>r.id===TEAM_ID);
+  if(!past.length && me<0) return "";
+  const L={w:"S",d:"U",l:"N"};
+  return `<div class="formrow">
+    ${past.length?`<div><span class="lbl">Form</span><div class="form">${past.map(m=>{const o=outcome(m); return `<i class="f-${o}" title="${esc((m.home?m.t2:m.t1)+" "+m.g1+":"+m.g2)}">${L[o]}</i>`;}).join("")}</div></div>`:""}
+    ${me>=0?`<button type="button" data-go="table" class="place" style="border:0;background:none;cursor:pointer;padding:0"><span class="lbl" style="text-align:right">Bundesliga</span><b>${me+1}.</b><small>${state.table[me].pkt} Punkte · ${state.table[me].diff>0?"+":""}${state.table[me].diff} Tore</small></button>`:""}
+  </div>`;
+}
+function matchRow(m){
+  const d=new Date(m.t), opp=m.home?m.t2:m.t1, icon=m.home?m.i2:m.i1, o=outcome(m);
+  const us=m.home?m.g1:m.g2, them=m.home?m.g2:m.g1;
+  const right = o ? `<span class="res ${o}">${us}:${them}</span>` : `<span class="kick">${esc(fmtDate(d,{hour:"2-digit",minute:"2-digit"}))}</span>`;
+  return `<div class="match"><div class="date"><small>${esc(fmtDate(d,{weekday:"short"}))}</small><b>${esc(fmtDate(d,{day:"2-digit"}))}</b><small>${esc(fmtDate(d,{month:"short"}))}</small></div>
+    <div class="opp"><div class="lg">${icon?`<img src="${esc(icon)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>
+    <div style="min-width:0"><b>${esc(opp)}</b><small><span class="ha">${m.home?"Heim":"Ausw."}</span>${esc(m.comp)}${m.round?" · "+esc(m.round):""}</small></div></div>${right}</div>`;
+}
+function renderGames(){
+  const hero=heroHTML(); $("heroBox").innerHTML=hero; $("heroBox2").innerHTML=hero;
+  $("formBox").innerHTML=formHTML(); tickCountdown();
+  if(!state.matches.length){ if(state.ts.matches) $("gamesBox").innerHTML=`<div class="empty" style="margin-top:16px">Keine Spiele gefunden.</div>`; return; }
+  const n=nextMatch();
+  const up=state.matches.filter(m=>!m.finished && m!==n && m.t>Date.now()-2.5*3600e3), past=state.matches.filter(m=>m.finished).reverse();
+  let h="";
+  if(up.length) h+=`<div class="mgroup">Danach</div><div class="mlist">${up.map(matchRow).join("")}</div>`;
+  if(past.length) h+=`<div class="mgroup">Ergebnisse</div><div class="mlist">${past.map(matchRow).join("")}</div>`;
+  $("gamesBox").innerHTML=h;
+}
+function zone(i){ return i<4?"z-cl":i===4?"z-el":i===5?"z-ecl":i===15?"z-rel":i>=16?"z-down":""; }
+function renderTable(){
+  $("tableSeason").textContent="Saison "+season()+"/"+String(season()+1).slice(2);
+  if(!state.table.length){ if(state.ts.table||state.ts.news) $("tableBox").innerHTML=`<div class="empty">Tabelle gerade nicht verfügbar.</div>`; return; }
+  $("tableBox").innerHTML=`<div class="tbl"><div class="tbl-scroll"><table><thead><tr><th style="text-align:center">#</th><th class="team">Verein</th><th>Sp</th><th>S</th><th>U</th><th>N</th><th class="c-tore">Tore</th><th>Diff</th><th>Pkt</th></tr></thead><tbody>${
+    state.table.map((r,i)=>`<tr class="${r.id===TEAM_ID?"me":""}"><td class="pos ${zone(i)}">${i+1}</td><td class="team">${r.icon?`<img src="${esc(r.icon)}" alt="" loading="lazy" onerror="this.remove()">`:""}${esc(r.name)}</td><td>${r.sp}</td><td>${r.s}</td><td>${r.u}</td><td>${r.n}</td><td class="c-tore">${esc(r.tore)}</td><td>${r.diff>0?"+":""}${r.diff}</td><td class="pts">${r.pkt}</td></tr>`).join("")
+  }</tbody></table></div></div>`;
+}
+function renderStamp(){
+  const t=Math.max(0,...Object.values(state.ts));
+  const src = state.feedsAll ? " · "+state.feedsOk+" von "+state.feedsAll+" Quellen" : "";
+  $("stamp").textContent = t ? "Stand "+fmtDate(new Date(t),{hour:"2-digit",minute:"2-digit"})+" Uhr"+src : "Lade …";
+}
+function renderAll(){ renderGames(); renderNews(); renderRumors(); renderTable(); renderStamp(); }
+
+/* ---------- Reiter ---------- */
+let current="news";
+function showTab(name){
+  current=name;
+  document.querySelectorAll("[data-view]").forEach(s=>s.hidden=s.dataset.view!==name);
+  document.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===name)));
+  if(name==="rumors"){ store("rumorsSeen",Date.now()); $("rumorBadge").hidden=true; }
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+
+/* ---------- Laden ---------- */
+let busy=false;
+async function refresh(){
+  if(busy) return; busy=true;
+  const btn=$("refresh"); btn.disabled=true; btn.classList.add("busy");
+  if(!navigator.onLine){ notice("Kein Internet. Du siehst den zuletzt geladenen Stand."); }
+  const jobs={news:loadNews, matches:loadMatches, table:loadTable};
+  const failed=[];
+  await Promise.all(Object.entries(jobs).map(async([k,fn])=>{
+    try{ await fn(); state.ts[k]=Date.now(); }catch(e){ failed.push(k); }
+    renderAll(); // jeden Bereich zeigen, sobald er da ist
+  }));
+  store("cache",state);
+  if(navigator.onLine){
+    const names={news:"Nachrichten",matches:"Spiele",table:"Tabelle"};
+    notice(failed.length? failed.map(k=>names[k]).join(" und ")+" konnten gerade nicht geladen werden. Angezeigt wird der letzte Stand." : "");
+  }
+  btn.disabled=false; btn.classList.remove("busy"); busy=false;
+}
+$("refresh").addEventListener("click",refresh);
+
+/* Zum Aktualisieren nach unten ziehen */
+(function(){
+  let y0=null, dy=0; const ptr=$("ptr");
+  addEventListener("touchstart",e=>{ y0=(scrollY<=0)?e.touches[0].clientY:null; dy=0; },{passive:true});
+  addEventListener("touchmove",e=>{ if(y0==null) return; dy=e.touches[0].clientY-y0; if(dy>0){ const h=Math.min(64,dy/2.2); ptr.style.height=h+"px"; ptr.textContent=h>=56?"Loslassen zum Aktualisieren":"Zum Aktualisieren ziehen"; } },{passive:true});
+  addEventListener("touchend",()=>{ if(y0!=null && dy/2.2>=56) refresh(); ptr.style.height="0"; y0=null; });
+})();
+
+const cached=load("cache");
+if(cached){ Object.assign(state,cached); }
+renderAll();
+refresh();
+let lastAuto=Date.now();
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden && Date.now()-lastAuto>10*60e3){ lastAuto=Date.now(); refresh(); } });
+setInterval(()=>{ if(!document.hidden){ lastAuto=Date.now(); refresh(); } }, 15*60e3);
+
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+</script>
+</body>
+</html>

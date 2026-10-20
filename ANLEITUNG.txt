@@ -1,0 +1,26 @@
+WERKS11 – Android-App bauen lassen
+==================================
+
+Am einfachsten in einem NEUEN Repository bei GitHub (am PC):
+
+1) github.com → oben rechts "+" → "New repository" (Neues Repository)
+   Name: Werks11  →  Private  →  "Create repository"
+
+2) Auf der leeren Seite "uploading an existing file" anklicken.
+   Aus diesem Ordner hineinziehen (mit der Maus aufs Hochladefeld!):
+   den Ordner  app  und die Dateien  build.gradle, settings.gradle,
+   gradle.properties, ANLEITUNG.txt  →  "Commit changes"
+
+3) Bau-Datei anlegen (der Ordner .github wird beim Hochladen ausgelassen):
+   "Add file" → "Create new file"
+   Name:  .github/workflows/build-apk.yml
+   Inhalt: alles aus der Datei  .github/workflows/build-apk.yml  in diesem
+   Ordner hineinkopieren (mit dem Editor öffnen)  →  "Commit changes"
+
+4) Oben auf "Actions" (Aktionen): "APK bauen" läuft (ca. 5 Min.).
+   Grün = fertig → Lauf anklicken → unten unter "Artifacts" "Werks11-APK"
+   herunterladen → ZIP öffnen → Werks11.apk aufs Handy → installieren.
+
+Updates: Die App hat eine feste Unterschrift (app/werks11.keystore).
+Neue Versionen lassen sich deshalb einfach über die alte installieren.
+Den Schlüssel bitte nicht löschen – sonst klappen Updates nicht mehr.
