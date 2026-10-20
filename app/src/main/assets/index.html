@@ -105,6 +105,9 @@ h2{font:700 14px/1.2 var(--display);letter-spacing:.14em;text-transform:uppercas
 .filters::-webkit-scrollbar{display:none}
 .filters button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 13px;font:600 13px/1 var(--body);cursor:pointer;white-space:nowrap}
 .filters button[aria-pressed="true"]{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.filters .srcset{border-style:dashed;color:var(--red)}
+.hidebtn{margin-left:auto;border:0;background:none;color:var(--muted);font-size:14px;line-height:1;padding:4px 6px;border-radius:8px;cursor:pointer;opacity:.7}
+.hidebtn:active{background:var(--surface-2)}
 .filters button span{opacity:.6;margin-left:5px;font-variant-numeric:tabular-nums}
 
 /* Nachrichten */
@@ -960,13 +963,21 @@ function reliability(src){
 }
 const NOT_CLUB=/\bafd\b|weidel|\bpartei|wahlkampf|landtag|bundestag|stadtrat|bürgermeister|polizei|feuerwehr|chempark|bayer ag\b|bayer-konzern|\baktie|börse|glyphosat|wett ?tipps?|tipp & quoten|wettquoten|\bodds\b|betting|prediction|livestream kostenlos|watch .* online|kyivstar|free stream/i;
 const FOOTBALL=/fußball|fussball|bundesliga|bayarena|spiel(er|t|e)?\b|trainer|\btor(e|jäger)?\b|transfer|pokal|liga|kader|stürmer|abwehr|mittelfeld|keeper|torwart|verletz|sieg|niederlage|remis|elfmeter|champions|europa league|rolfes|carro|derby|fans?\b|aufstellung|startelf|vertrag|wechsel|leihe/i;
+const OTHER_SPORT=/frauen|damen|juniorinnen|\bu1[5-9]\b|\bu2[0-3]\b|nachwuchs|jugend|basketball|giants|handball|elfen|eishockey|hockey|volleyball|leichtathletik|schwimm|tennis|tischtennis|boxen|turnen|e-?sport|fifa ?\d|ea fc|american football|rugby|ringen|fechten/i;
+// Fußball-Begriffe nur aus der Überschrift (Deutsch und Englisch)
+const FOOTBALL_TITLE=/fußball|fussball|bundesliga|champions league|europa league|conference league|dfb|pokal|uefa|trainer|coach|transfer|wechsel|leihe|ablöse|vertrag|tor(e|jäger|wart|schütze)?\b|stürmer|verteidiger|abwehr|mittelfeld|keeper|kader|startelf|aufstellung|verletz|ausfall|fällt .*aus|elfmeter|tabelle|spieltag|derby|sieg|niederlage|remis|unentschieden|\b\d{1,2}\s?:\s?\d{1,2}\b|gegen (den |die )?(fc|sc|vfb|vfl|borussia|bayern|rb|eintracht|werder|union|tsg|hsv|1\.)|schick|xabi|rolfes|carro|martínez|martinez|football|soccer|striker|midfielder|defender|goalkeeper|match|goal|league|manager|signing|loan/i;
+const STRONG_CLUB=/bayer 04|bayer leverkusen|werkself|\bb04\b|bayarena|leverkusens? (trainer|coach|stürmer|keeper|kapitän|sportchef|boss|star|profi|neuzugang|talent|abwehr)/i;
 function relevant(it){
-  if(/frauen|u19|u17|u23|basketball|handball|elfen|giants/i.test(it.title)) return false;
-  if(NOT_CLUB.test(it.title) || NOT_CLUB.test(it.hay||"")) return false;
+  const t=it.title||"";
+  if(OTHER_SPORT.test(t)) return false;
+  if(NOT_CLUB.test(t) || NOT_CLUB.test(it.hay||"")) return false;
   if(Date.now()-it.t > 10*86400e3) return false;
-  if(it.team || /bayer 04|werkself|\bb04\b|bayer leverkusen/i.test(it.hay||it.title)) return true;
-  if(/leverkusen/i.test(it.hay||it.title) && FOOTBALL.test(it.hay||it.title)) return true;
-  return squadRe().test(norm(it.title)); // Meldungen, die einen Spieler aus dem Kader nennen
+  if(hiddenIds()[artKey(it)]) return false;
+  if(it.team) return !/^\s*$/.test(t);
+  if(STRONG_CLUB.test(t)) return true;                                     // Verein in der Überschrift
+  if(/leverkusen/i.test(t) && FOOTBALL_TITLE.test(t)) return true;          // Stadt + Fußball in der Überschrift
+  if(squadRe().test(norm(t)) && (FOOTBALL_TITLE.test(t) || /leverkusen|bayer/i.test(it.hay||""))) return true; // Spieler + Fußball-Bezug
+  return false;
 }
 let _sqRe=null, _sqN=0;
 function squadRe(){
@@ -1070,20 +1081,20 @@ async function loadTable(){
 
 /* ---------- Bausteine ---------- */
 const SRC_COLORS=["#c8102e","#1d4ed8","#0f766e","#7c3aed","#b45309","#be185d","#0369a1","#4d7c0f","#475569"];
-function srcBadge(src){ const c=SRC_COLORS[hue(src)%SRC_COLORS.length]; return `<span class="src"><i style="background:${c}">${esc(initials(src))}</i>${esc(src||"Quelle")}</span>`; }
+function srcBadge(src){ src=srcKey(src)==="Weitere Quellen"?src:srcKey(src); const c=SRC_COLORS[hue(src)%SRC_COLORS.length]; return `<span class="src"><i style="background:${c}">${esc(initials(src))}</i>${esc(src||"Quelle")}</span>`; }
 function imgTag(u,cls){ return u?`<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('${cls}').classList.add('noimg');this.parentNode.remove()">`:""; }
 function storyCard(i){
   if(spoilerHidden(i)) return spoilerCard();
   return `<a class="story" href="${esc(i.link)}" target="_blank" rel="noopener">
     ${i.img?`<div class="pic"><img src="${esc(i.img)}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></div>`:""}
-    <div class="body"><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div>
+    <div class="body"><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span>${hideBtn(i)}</div>
     <h3>${esc(i.title)}</h3>${i.desc&&!i.img?`<div class="meta" style="font-size:14px">${esc(i.desc.slice(0,160))}</div>`:""}</div></a>`;
 }
 function spoilerCard(){ return `<div class="card noimg"><div><h3 class="spoiler">Diese Meldung könnte das Ergebnis verraten</h3><div class="meta">🙈 Ausgeblendet, solange du das Spiel schaust</div></div></div>`; }
 function newsCard(i){
   if(spoilerHidden(i)) return spoilerCard();
   return `<a class="card${i.img?"":" noimg"}" href="${esc(i.link)}" target="_blank" rel="noopener">
-    <div style="min-width:0"><h3>${esc(i.title)}</h3><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div></div>
+    <div style="min-width:0"><h3>${esc(i.title)}</h3><div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span>${hideBtn(i)}</div></div>
     ${i.img?`<div class="thumb">${imgTag(i.img,".card")}</div>`:""}</a>`;
 }
 function rumorCard(i){
@@ -1091,25 +1102,57 @@ function rumorCard(i){
   return `<a class="rumor" href="${esc(i.link)}" target="_blank" rel="noopener">
     <h3>${esc(i.title)}</h3>
     <div class="baro r-${i.rel}"><span class="bars"><i></i><i></i><i></i></span>${label}</div>
-    <div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span></div></a>`;
+    <div class="meta">${srcBadge(i.source)}<span class="sep"></span><span>${esc(ago(i.t))}</span>${hideBtn(i)}</div></a>`;
 }
+function hideBtn(i){ return `<button type="button" class="hidebtn" data-hide="${esc(artKey(i))}" aria-label="Meldung ausblenden" title="Passt nicht – ausblenden">✕</button>`; }
 function logo(url,name){ return `<div class="logo">${url?`<img src="${esc(url)}" alt="" onerror="this.outerHTML='<span class=mono>${esc(initials(name))}</span>'">`:`<span class="mono">${esc(initials(name))}</span>`}</div>`; }
 function outcome(m){ if(!m.finished||m.g1==null) return ""; const us=m.home?m.g1:m.g2, them=m.home?m.g2:m.g1; return us>them?"w":us<them?"l":"d"; }
 
 /* ---------- Anzeige ---------- */
 let srcFilter="Alle", newsLimit=20;
-function srcKey(src){ const x=(src||"").replace(/^www\./i,"").replace(/\.(de|com|net)$/i,"").trim(); return x||"Sonstige"; }
+const SOURCES=[["kicker",/kicker/i],["Bayer 04 (offiziell)",/bayer04|bayer 04 leverkusen$|^bayer 04$/i],["RP Online",/rp[- ]online|rheinische post|^rp$/i],["Kölner Stadt-Anzeiger",/stadt-anzeiger|ksta/i],
+  ["Express",/express/i],["BILD",/\bbild\b|bild\.de|sport bild/i],["Sport1",/sport1/i],["Sky Sport",/\bsky\b/i],["WDR / Sportschau",/wdr|sportschau|ard/i],["ZDF",/zdf/i],
+  ["Transfermarkt",/transfermarkt/i],["LigaInsider",/ligainsider/i],["90min",/90min/i],["SPOX",/spox/i],["GOAL",/\bgoal\b/i],["t-online",/t-online/i],["Sportbuzzer",/sportbuzzer/i],
+  ["fussballtransfers",/fussballtransfers/i],["fussballeuropa",/fussballeuropa/i],["ran",/\bran\b|ran\.de/i],["n-tv",/n-tv|ntv/i],["Spiegel",/spiegel/i],["FAZ",/faz|frankfurter allgemeine/i],
+  ["Süddeutsche",/süddeutsche|sz\.de/i],["Welt",/\bwelt\b/i],["Bulinews (engl.)",/bulinews/i],["Reddit-Fans",/reddit/i],["Yahoo",/yahoo/i],["ESPN",/espn/i],["Get German Football News",/get german|getfootballnewsgermany/i]];
+function srcKey(src){ const x=(src||"").trim(); for(const [n,re] of SOURCES){ if(re.test(x)) return n; } return "Weitere Quellen"; }
+function srcPrefs(){ return Object.assign({off:[]},load("srcPrefs")||{}); }
+function srcOn(i){ return !srcPrefs().off.includes(srcKey(i.source)); }
+function artKey(i){ return (i.title||"").toLowerCase().replace(/[^a-zäöüß0-9]/g,"").slice(0,60); }
+function hiddenIds(){ return load("hiddenNews")||{}; }
+function visibleNews(list){ const h=hiddenIds(); return (list||[]).filter(i=>srcOn(i) && !h[artKey(i)]); }
+function openSources(){
+  const p=srcPrefs(), counts={}; (state.news||[]).forEach(i=>{ const k=srcKey(i.source); counts[k]=(counts[k]||0)+1; });
+  const names=[...new Set(SOURCES.map(x=>x[0]).concat(["Weitere Quellen"]))].sort((a,b)=>(counts[b]||0)-(counts[a]||0)||a.localeCompare(b));
+  const rel=n=>reliability(n);
+  openSheetRaw(`<p class="qq" id="sheetTitle" style="margin-top:6px">Nachrichtenquellen</p>
+    <p class="legend" style="margin:-6px 0 12px">Wähle, von welchen Kanälen du Meldungen sehen willst. Eingeschaltete Quellen stehen als eigener Filter neben „Alle“.</p>
+    <div class="btnrow" style="margin-bottom:12px"><button type="button" class="reveal" data-srcall="on">Alle an</button><button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" data-srcall="pro">Nur seriöse</button><button type="button" class="reveal" style="background:var(--surface-2);color:var(--fg)" data-srcall="off">Alle aus</button></div>
+    <div class="box">${names.map(n=>`<div class="set"><div><b>${esc(n)}</b><small>${counts[n]?counts[n]+(counts[n]===1?" aktuelle Meldung":" aktuelle Meldungen"):"gerade keine Meldungen"}${n!=="Weitere Quellen"?` · ${rel(n)==="hoch"?"sehr verlässlich":rel(n)==="mittel"?"verlässlich":"gemischt"}`:""}</small></div><label class="sw"><input type="checkbox" data-srcpref="${esc(n)}" ${p.off.includes(n)?"":"checked"}><span></span></label></div>`).join("")}</div>
+    ${Object.keys(hiddenIds()).length?`<button type="button" class="bigbtn sec" data-unhide>Ausgeblendete Meldungen wieder zeigen (${Object.keys(hiddenIds()).length})</button>`:""}`);
+}
+function setSrc(off){ store("srcPrefs",{off}); renderNews(); renderRumors(); }
+document.addEventListener("change",e=>{ const c=e.target.closest("[data-srcpref]"); if(!c) return; const p=srcPrefs(); const n=c.dataset.srcpref; p.off=p.off.filter(x=>x!==n); if(!c.checked) p.off.push(n); setSrc(p.off); });
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-srcall]"); if(a){ const all=[...new Set(SOURCES.map(x=>x[0]).concat(["Weitere Quellen"]))]; const m=a.dataset.srcall;
+    setSrc(m==="on"?[]:m==="off"?all:all.filter(n=>reliability(n)!=="hoch")); openSources(); return; }
+  if(e.target.closest("[data-unhide]")){ store("hiddenNews",{}); renderNews(); renderRumors(); openSources(); return; }
+  if(e.target.closest("#srcSettings")){ openSources(); return; }
+  const h=e.target.closest("[data-hide]"); if(h){ e.preventDefault(); e.stopImmediatePropagation(); const x=hiddenIds(); x[h.dataset.hide]=Date.now(); store("hiddenNews",x); renderNews(); renderRumors();
+    notice("Meldung ausgeblendet. Über „Quellen“ kannst du sie wiederherstellen."); setTimeout(()=>notice(""),4000); }
+},true);
 function renderNews(){
   if(!state.news.length && !state.ts.news) return; // erster Start: Platzhalter stehen lassen
-  const counts={};
-  state.news.forEach(i=>{const k=srcKey(i.source); counts[k]=(counts[k]||0)+1;});
-  const keys=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  const vis=visibleNews(state.news), counts={};
+  vis.forEach(i=>{const k=srcKey(i.source); counts[k]=(counts[k]||0)+1;});
+  const keys=Object.keys(counts).sort((a,b)=>(a==="Weitere Quellen")-(b==="Weitere Quellen")||counts[b]-counts[a]);
   if(srcFilter!=="Alle" && !counts[srcFilter]) srcFilter="Alle";
-  $("filters").innerHTML=[`<button type="button" data-src="Alle" aria-pressed="${srcFilter==="Alle"}">Alle<span>${state.news.length}</span></button>`]
-    .concat(keys.map(k=>`<button type="button" data-src="${esc(k)}" aria-pressed="${srcFilter===k}">${esc(k)}<span>${counts[k]}</span></button>`)).join("");
-  $("filters").hidden=!state.news.length;
-  const list=srcFilter==="Alle"?state.news:state.news.filter(i=>srcKey(i.source)===srcFilter);
-  if(!list.length){ $("newsList").innerHTML=`<div class="empty">Keine Meldungen gefunden. Tippe oben auf Aktualisieren.</div>`; return; }
+  $("filters").innerHTML=[`<button type="button" data-src="Alle" aria-pressed="${srcFilter==="Alle"}">Alle<span>${vis.length}</span></button>`]
+    .concat(keys.map(k=>`<button type="button" data-src="${esc(k)}" aria-pressed="${srcFilter===k}">${esc(k)}<span>${counts[k]}</span></button>`))
+    .concat([`<button type="button" id="srcSettings" class="srcset">⚙ Quellen</button>`]).join("");
+  $("filters").hidden=false;
+  const list=srcFilter==="Alle"?vis:vis.filter(i=>srcKey(i.source)===srcFilter);
+  if(!list.length){ $("newsList").innerHTML=`<div class="empty">${state.news.length?"Keine Meldungen aus den gewählten Quellen. Tippe auf „⚙ Quellen“, um weitere einzuschalten.":"Keine Meldungen gefunden. Tippe oben auf Aktualisieren."}</div>`; return; }
   const lead=list[0]; // streng nach Zeit: die neueste Meldung ist immer oben
   const rest=list.filter(i=>i!==lead).slice(0,newsLimit);
   $("newsList").innerHTML = storyCard(lead) + rest.map(newsCard).join("") +
@@ -1122,7 +1165,8 @@ document.addEventListener("click",e=>{
 });
 function renderRumors(){
   if(!state.rumors.length && !state.ts.news) return;
-  $("rumorList").innerHTML = state.rumors.length ? state.rumors.map(rumorCard).join("") : `<div class="empty">Gerade keine neuen Gerüchte.</div>`;
+  const rv=visibleNews(state.rumors);
+  $("rumorList").innerHTML = rv.length ? rv.map(rumorCard).join("") : `<div class="empty">Gerade keine neuen Gerüchte.</div>`;
   const seen=load("rumorsSeen")||0, fresh=state.rumors.filter(r=>r.t>seen).length;
   const b=$("rumorBadge"); b.hidden=!fresh || current==="rumors"; b.textContent=fresh>9?"9+":fresh;
 }
