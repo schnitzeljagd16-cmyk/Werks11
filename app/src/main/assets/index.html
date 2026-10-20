@@ -760,9 +760,11 @@ function mapMatch(m){
 async function loadMatches(){
   const j=await getJson(`https://api.openligadb.de/getmatchesbyteamid/${TEAM_ID}/52/30`);
   const all=j.map(mapMatch).sort((a,b)=>a.t-b.t);
-  const cur=Math.max(...all.map(m=>+m.season||0));
-  state.matches=all.filter(m=>(+m.season||0)===cur || m.t>Date.now()-200*86400e3);
-  state.season=cur||season();
+  // Nur echte Wettbewerbe (OpenLigaDB enthält auch Test-Ligen) und nur die laufende Saison (ab 1. Juli)
+  const REAL=/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i;
+  const ssn=season(), start=Date.UTC(ssn,6,1);
+  state.matches=all.filter(m=>REAL.test(m.sc) && m.t>=start);
+  state.season=ssn;
 }
 function scorersFrom(matches, teamIdx){
   const by={};
@@ -932,7 +934,7 @@ function tableHTML(c){
   }</tbody></table></div></div>`;
 }
 function cupHTML(c){
-  const ms=state.matches.filter(m=>m.sc===c.sc);
+  const ms=state.matches.filter(m=>m.sc===c.sc && m.t>=Date.UTC(state.season||season(),6,1));
   if(!ms.length) return `<div class="empty">Noch keine Pokalspiele.</div>`;
   const last=ms[ms.length-1], out=last.finished && outcome(last)==="l";
   return `<div class="box" style="margin-bottom:10px"><h4>Weg im ${esc(c.name)}</h4><p style="margin:0">${out?"Leider ausgeschieden in der Runde „"+esc(last.round)+"“.":"Bayer 04 ist noch dabei. Ein K.-o.-Wettbewerb hat keine Tabelle – hier siehst du jede Runde."}</p></div>
@@ -1373,7 +1375,7 @@ $("refresh").addEventListener("click",refresh);
 })();
 
 const cached=load("cache");
-if(cached){ Object.assign(state,cached); state.matches=(state.matches||[]).filter(m=>m.goals&&m.id); }
+if(cached){ Object.assign(state,cached); state.matches=(state.matches||[]).filter(m=>m.goals&&m.id&&/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i.test(m.sc||"")); state.comps=(state.comps||[]).filter(c=>/^(bl1|dfb\d*|uel\d*|ucl\d*|uecl\d*)$/i.test(c.sc||"")); }
 renderFact(); renderFan();
 renderAll();
 refresh();
