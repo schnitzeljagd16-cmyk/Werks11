@@ -30,13 +30,22 @@
         <receiver
             android:name=".NextMatchWidget"
             android:exported="false"
-            android:label="Werks11 – Nächstes Spiel">
+            android:label="Werks11 · Mittel">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_next_info" />
+        </receiver>
+
+        <receiver android:name=".SmallWidget" android:exported="false" android:label="Werks11 · Klein">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_small_info" />
+        </receiver>
+        <receiver android:name=".LargeWidget" android:exported="false" android:label="Werks11 · Groß">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_large_info" />
         </receiver>
 
         <service
