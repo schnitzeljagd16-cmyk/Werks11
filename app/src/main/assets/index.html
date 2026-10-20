@@ -689,8 +689,10 @@ async function getFeed(url){
 }
 function cleanItem(i, feed){
   let title=(i.title||"").trim(), source=(i.source||"").trim();
-  const m=title.match(/^(.*)\s+-\s+([^-]{2,60})$/); // Google News: "Titel - Quelle"
-  if(m){ title=m[1].trim(); if(!source) source=m[2].trim(); }
+  const m=title.match(/^(.*\S)\s+[-–|]\s+(\S(?:(?!\s[-–|]\s).){1,58})$/); // "Titel - Quelle"
+  if(m && (!source || norm(m[2]).includes(norm(source).slice(0,6)) || norm(source).includes(norm(m[2]).slice(0,6)) || /\.(de|com|net)$|online|anzeiger|zeitung|news|sport|kicker|bild|express|spiegel|welt|faz|ntv|n-tv|t-online/i.test(m[2]))){
+    title=m[1].trim(); if(!source) source=m[2].trim();
+  }
   const t=Date.parse(String(i.pubDate||"").replace(" ","T")+(/Z|GMT|[+-]\d\d:?\d\d$/.test(i.pubDate||"")?"":"Z"));
   if(!source && feed) source=feed.name;
   return {title, link:i.link, source, img:i.img||"", desc:(i.desc||"").slice(0,220), team:!!(feed&&feed.team),
@@ -702,10 +704,12 @@ function reliability(src){
   if(RELIABLE.mittel.some(x=>s.includes(x))) return "mittel";
   return "gering";
 }
+const FOOTBALL=/fußball|fussball|bundesliga|bayarena|bayer|spiel|trainer|\btor(e|jäger)?\b|transfer|pokal|liga|kader|stürmer|abwehr|mittelfeld|keeper|torwart|verletz|sieg|niederlage|remis|elfmeter|champions|europa league|rolfes|carro|derby|fans?\b|aufstellung|startelf|vertrag|wechsel|leihe/i;
 function relevant(it){
   if(/frauen|u19|u17|u23|basketball|handball|elfen|giants/i.test(it.title)) return false;
   if(Date.now()-it.t > 10*86400e3) return false;
-  if(it.team || /leverkusen|bayer 04|werkself|\bb04\b/i.test(it.hay||it.title)) return true;
+  if(it.team || /bayer 04|werkself|\bb04\b|bayer leverkusen/i.test(it.hay||it.title)) return true;
+  if(/leverkusen/i.test(it.hay||it.title) && FOOTBALL.test(it.hay||it.title)) return true;
   return squadRe().test(norm(it.title)); // Meldungen, die einen Spieler aus dem Kader nennen
 }
 let _sqRe=null, _sqN=0;
@@ -847,7 +851,7 @@ function renderNews(){
   $("filters").hidden=!state.news.length;
   const list=srcFilter==="Alle"?state.news:state.news.filter(i=>srcKey(i.source)===srcFilter);
   if(!list.length){ $("newsList").innerHTML=`<div class="empty">Keine Meldungen gefunden. Tippe oben auf Aktualisieren.</div>`; return; }
-  const lead=list.find(i=>i.img)||list[0];
+  const lead=list[0]; // streng nach Zeit: die neueste Meldung ist immer oben
   const rest=list.filter(i=>i!==lead).slice(0,newsLimit);
   $("newsList").innerHTML = storyCard(lead) + rest.map(newsCard).join("") +
     (list.length-1>newsLimit?`<button type="button" class="more" id="moreBtn">Weitere ${Math.min(20,list.length-1-newsLimit)} Meldungen</button>`:"");
