@@ -287,6 +287,33 @@ tr.me td{background:var(--soft);font-weight:700}
 .pos-h{font:700 13px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:14px 2px 8px}
 .pl{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;padding:9px 14px}
 .pl+.pl{border-top:1px solid var(--line)}
+.pl[data-pname],.inj[data-pname]{cursor:pointer}
+.pl[data-pname]:active,.inj[data-pname]:active{background:var(--surface-2)}
+.pl .chev{color:var(--muted);font-size:18px;margin-left:2px}
+/* Spielerprofil */
+.phero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;
+  background:radial-gradient(90% 80% at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(150deg,#d6001c,#5e000d)}
+.phero::after{content:attr(data-nr);position:absolute;right:-6px;bottom:-34px;font:italic 800 150px/1 var(--display);color:rgba(0,0,0,.18);pointer-events:none}
+.phero .ph{width:96px;height:96px;border-radius:50%;overflow:hidden;background:rgba(255,255,255,.15);border:3px solid rgba(255,255,255,.85);display:grid;place-items:center;font:800 34px/1 var(--display);position:relative;z-index:1}
+.phero .ph img{width:100%;height:100%;object-fit:cover;object-position:top}
+.phero h3{margin:0;font:800 28px/1.02 var(--display);text-wrap:balance;position:relative;z-index:1}
+.phero .sub{font-size:14px;opacity:.9;margin-top:6px;position:relative;z-index:1}
+.phero .pill{margin-top:8px;position:relative;z-index:1}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kv div{background:var(--surface-2);border-radius:12px;padding:10px 6px;text-align:center;min-width:0}
+.kv b{display:block;font:800 22px/1.05 var(--display);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.kv small{font-size:11.5px;color:var(--muted)}
+.glist{display:flex;flex-direction:column}
+.glist .gl{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;padding:8px 0;cursor:pointer}
+.glist .gl+.gl{border-top:1px solid var(--line)}
+.glist .min{text-align:center;font:800 14px/1 var(--display);background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:5px 0}
+.glist small{display:block;font-size:12px;color:var(--muted)}
+.wiki p{font-size:15px;line-height:1.5;color:var(--fg);margin:0}
+.wiki a{color:var(--red);font-weight:600;font-size:13px;text-decoration:none;display:inline-block;margin-top:8px}
+.plnews{display:flex;flex-direction:column}
+.plnews a{display:block;color:inherit;text-decoration:none;padding:9px 0}
+.plnews a+a{border-top:1px solid var(--line)}
+.plnews b{font-size:14.5px;line-height:1.3;display:block}
 .pl .nr{width:36px;height:36px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font:800 17px/1 var(--display);font-variant-numeric:tabular-nums}
 .pl b{font-size:15px;display:block}
 .pl small{font-size:12px;color:var(--muted)}
@@ -973,7 +1000,7 @@ function renderTable(){
 document.addEventListener("click",e=>{
   const c=e.target.closest("[data-comp]"); if(c){ compSel=c.dataset.comp; renderTable(); return; }
   const sc=e.target.closest("[data-scorer]"); if(sc){ scorerSel=sc.dataset.scorer; renderTable(); return; }
-  const mt=e.target.closest("[data-mid]"); if(mt && !e.target.closest("#sheet .panel")){ openMatch(+mt.dataset.mid); }
+  const mt=e.target.closest("[data-mid]"); if(mt && (!e.target.closest("#sheet .panel") || mt.classList.contains("gl"))){ openMatch(+mt.dataset.mid); }
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Enter"){ const mt=e.target.closest&&e.target.closest(".match[data-mid]"); if(mt) openMatch(+mt.dataset.mid); } if(e.key==="Escape") closeSheet(); });
 
@@ -1221,7 +1248,7 @@ function renderSquad(){
   const l=state.injuries;
   $("outStamp").textContent=state.injAt?"Quelle: "+(state.injSrc||"")+" · "+fmtDate(new Date(state.injAt),{hour:"2-digit",minute:"2-digit"})+" Uhr":"";
   if(l){
-    $("injBox").innerHTML=l.length?`<div class="mlist">${l.map(p=>`<div class="inj"><span class="ic2 ${p.kind}">${KIND[p.kind][0]}</span><div style="min-width:0">
+    $("injBox").innerHTML=l.length?`<div class="mlist">${l.map(p=>`<div class="inj" data-pname="${esc(p.name)}" role="button" tabindex="0"><span class="ic2 ${p.kind}">${KIND[p.kind][0]}</span><div style="min-width:0">
       <b>${esc(p.name)}</b><div class="why">${esc(p.reason||KIND[p.kind][1])}</div>
       <div class="meta"><span>${esc(KIND[p.kind][1])}</span>${p.since?`<span class="sep"></span><span>fehlt seit ${esc(p.since)}</span>`:""}</div>
       ${p.eta?`<span class="eta">Prognose: ${esc(p.eta)}</span><div class="meta" style="margin-top:4px">laut ${esc(p.etaSrc||"Medien")}, ${esc(ago(p.etaT))}</div>`:""}
@@ -1238,11 +1265,77 @@ function renderSquad(){
     const ps=sq.players.filter(p=>p[1]===k).sort((a,b)=>(a[0]??99)-(b[0]??99)); if(!ps.length) return "";
     return `<div class="pos-h">${label}</div><div class="mlist">${ps.map(p=>{
       const key=norm(surname(p[3].replace(/\(.*?\)/,""))), ij=injMap[key], g=goals[key];
-      return `<div class="pl${ij?" out":""}"><span class="nr">${p[0]??"–"}</span><div style="min-width:0"><b>${esc(p[3])}</b><small>${esc(p[2])}</small></div>
-        <span class="st">${g?`<span class="goals">⚽ ${g}</span>`:""}${ij?`<span class="hurt ${ij.kind==="reh"?"reh":""}">${ij.kind==="ban"?"Gesperrt":ij.kind==="reh"?"Reha":"Verletzt"}</span>`:""}</span></div>`;
+      return `<div class="pl${ij?" out":""}" data-pname="${esc(p[3].replace(/\(.*?\)/,"").trim())}" role="button" tabindex="0"><span class="nr">${p[0]??"–"}</span><div style="min-width:0"><b>${esc(p[3])}</b><small>${esc(p[2])}</small></div>
+        <span class="st">${g?`<span class="goals">⚽ ${g}</span>`:""}${ij?`<span class="hurt ${ij.kind==="reh"?"reh":""}">${ij.kind==="ban"?"Gesperrt":ij.kind==="reh"?"Reha":"Verletzt"}</span>`:""}<span class="chev">›</span></span></div>`;
     }).join("")}</div>`;
   }).join("");
 }
+
+
+/* ---------- Spielerprofil ---------- */
+const POS_FULL={TW:"Torwart",AB:"Abwehr",MF:"Mittelfeld",ST:"Sturm"};
+const NAT_FULL={NED:"Niederlande",ARG:"Argentinien",ESP:"Spanien",ENG:"England",FRA:"Frankreich",GER:"Deutschland",POR:"Portugal",USA:"USA",BFA:"Burkina Faso",BRA:"Brasilien",CZE:"Tschechien",NGA:"Nigeria",ALG:"Algerien",CMR:"Kamerun",MAR:"Marokko",SUI:"Schweiz",BEL:"Belgien",SEN:"Senegal",MLI:"Mali",UKR:"Ukraine",AUT:"Österreich",ECU:"Ecuador",COL:"Kolumbien",CRO:"Kroatien",POL:"Polen",CIV:"Elfenbeinküste",GHA:"Ghana",JPN:"Japan",DEN:"Dänemark",SWE:"Schweden",NOR:"Norwegen",ITA:"Italien",SCO:"Schottland",TUR:"Türkei",KOS:"Kosovo",SRB:"Serbien",SVK:"Slowakei",HUN:"Ungarn",MEX:"Mexiko",URU:"Uruguay",CAN:"Kanada",JAM:"Jamaika",TUN:"Tunesien",EGY:"Ägypten",KOR:"Südkorea",AUS:"Australien"};
+const MON={januar:0,februar:1,"märz":2,april:3,mai:4,juni:5,juli:6,august:7,september:8,oktober:9,november:10,dezember:11};
+async function wikiPlayer(name){
+  const key="wp_"+norm(name), c=load(key);
+  if(c && Date.now()-c.at<7*86400e3) return c.v;
+  const sn=norm(surname(name));
+  const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(name+" Fußballspieler")+"&srlimit=5&format=json&origin=*"));
+  const hit=(sj.query?.search||[]).find(r=>norm(r.title).includes(sn));
+  if(!hit){ store(key,{at:Date.now(),v:null}); return null; }
+  const sm=JSON.parse(await getText("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(hit.title.replace(/ /g,"_"))));
+  const v={title:sm.title, extract:sm.extract||"", img:safeImg(sm.thumbnail?.source||""), url:sm.content_urls?.mobile?.page||sm.content_urls?.desktop?.page||""};
+  const b=v.extract.match(/\(\*\s*(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s+(\d{4})(?:\s+in\s+([^)]+?))?\)/);
+  if(b && MON[b[2].toLowerCase()]!=null){
+    const d=new Date(+b[3],MON[b[2].toLowerCase()],+b[1]); v.born=d.getTime(); v.place=(b[4]||"").replace(/,.*$/,"").trim();
+  }
+  store(key,{at:Date.now(),v}); return v;
+}
+function ageOf(t){ const d=new Date(t), n=new Date(); let a=n.getFullYear()-d.getFullYear(); if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate())) a--; return a; }
+function playerGoals(name){
+  const sn=norm(surname(name)), out=[];
+  state.matches.forEach(m=>m.goals.forEach(g=>{ if(g.team===TEAM_ID && !g.og && norm(surname(g.name))===sn) out.push({m,g}); }));
+  return out.sort((a,b)=>b.m.t-a.m.t);
+}
+function openPlayer(name){
+  const sq=(state.squad?.players||SQUAD_FALLBACK.players).find(p=>norm(p[3]).startsWith(norm(name))||norm(surname(p[3].replace(/\(.*?\)/,"")))===norm(surname(name)));
+  const nr=sq?sq[0]:null, pos=sq?sq[1]:"", nat=sq?sq[2]:"", full=sq?sq[3]:name, cap=/Kapitän/.test(full);
+  const clean=full.replace(/\(.*?\)/,"").trim(), sn=norm(surname(clean));
+  const inj=(state.injuries||[]).find(p=>norm(surname(p.name))===sn);
+  const goals=playerGoals(clean);
+  const byComp={}; goals.forEach(x=>byComp[x.m.ck]=(byComp[x.m.ck]||0)+1);
+  const pens=goals.filter(x=>x.g.pen).length;
+  const games=new Set(goals.map(x=>x.m.id)).size;
+  const news=(state.news||[]).filter(n=>norm(n.title+" "+(n.desc||"")).match(new RegExp("\\b"+sn.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b"))).slice(0,6);
+  const rum=news.filter(n=>RUMOR_WORDS.test(n.title));
+  openSheetRaw(`
+    <div class="phero" data-nr="${nr??""}"><div class="ph" id="plPhoto">${esc(initials(clean))}</div>
+      <div style="min-width:0"><h3 id="sheetTitle">${esc(clean)}</h3><div class="sub">${nr!=null?"#"+nr+" · ":""}${esc(POS_FULL[pos]||pos)}${nat?" · "+esc(NAT_FULL[nat]||nat):""}</div>
+      ${cap?`<span class="pill">Kapitän</span>`:""}${inj?`<span class="pill" style="background:${inj.kind==="reh"?"var(--draw)":"#000"}">${esc(KIND[inj.kind][1])}</span>`:""}</div></div>
+    <div class="box"><h4>Steckbrief</h4><div class="kv" id="plKv">
+      <div><b id="plAge">–</b><small>Alter</small></div><div><b>${goals.length}</b><small>Saisontore</small></div><div><b>${games}</b><small>Spiele mit Tor</small></div>
+    </div><p id="plBorn" style="margin-top:10px"></p></div>
+    ${inj?`<div class="box"><h4>Ausfall</h4><p style="margin:0;color:var(--fg);font-size:15px"><b>${esc(inj.reason||KIND[inj.kind][1])}</b></p>
+      <p>${inj.since?"Fehlt seit "+esc(inj.since)+". ":""}${inj.eta?"Prognose: "+esc(inj.eta)+" (laut "+esc(inj.etaSrc||"Medien")+").":""}</p>
+      ${inj.etaLink||inj.link?`<a href="${esc(inj.etaLink||inj.link)}" target="_blank" rel="noopener" style="color:var(--red);font-weight:600;font-size:13px;text-decoration:none">Zur Meldung →</a>`:""}</div>`:""}
+    ${goals.length?`<div class="box"><h4>${ICON.ball}Tore diese Saison</h4>
+      <p style="margin:0 0 8px">${Object.entries(byComp).map(([k,v])=>v+" × "+esc(COMP_SHORT[k]||k)).join(" · ")}${pens?" · davon "+pens+" Elfmeter":""}</p>
+      <div class="glist">${goals.map(({m,g})=>`<div class="gl" data-mid="${m.id}"><span class="min">${g.min!=null?g.min+"'":"–"}</span>
+        <div style="min-width:0"><b style="font-size:14.5px">${m.home?"vs":"@"} ${esc(m.home?m.t2:m.t1)}${g.pen?" (Elfm.)":""}</b><small>${esc(fmtDate(new Date(m.t),{day:"numeric",month:"short"}))} · ${esc(m.comp)}</small></div>
+        <span class="res ${outcome(m)}">${m.home?m.g1:m.g2}:${m.home?m.g2:m.g1}</span></div>`).join("")}</div></div>`:""}
+    <div class="box wiki" id="plWiki"><h4>Über ${esc(surname(clean))}</h4><div class="sk" style="height:90px"></div></div>
+    ${news.length?`<div class="box"><h4>Aktuelle Meldungen</h4><div class="plnews">${news.map(n=>`<a href="${esc(n.link)}" target="_blank" rel="noopener"><b>${esc(n.title)}</b><div class="meta" style="margin-top:4px">${rum.includes(n)?'<span class="chip" style="color:var(--draw)">Gerücht</span>':""}${srcBadge(n.source)}<span class="sep"></span><span>${esc(ago(n.t))}</span></div></a>`).join("")}</div></div>`:""}
+  `);
+  wikiPlayer(clean).then(w=>{
+    const box=$("plWiki"); if(!box) return;
+    if(!w){ box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p style="color:var(--muted)">Keine weiteren Infos gefunden.</p>`; return; }
+    if(w.img){ const ph=$("plPhoto"); if(ph) ph.innerHTML=`<img src="${esc(w.img)}" alt="" onerror="this.remove()">`; }
+    if(w.born){ $("plAge").textContent=ageOf(w.born); $("plBorn").textContent="Geboren am "+fmtDate(new Date(w.born),{day:"numeric",month:"long",year:"numeric"})+(w.place?" in "+w.place:""); }
+    box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p>${esc(w.extract)}</p>${w.url?`<a href="${esc(w.url)}" target="_blank" rel="noopener">Weiterlesen bei Wikipedia →</a>`:""}`;
+  }).catch(()=>{ const box=$("plWiki"); if(box) box.innerHTML=`<h4>Über ${esc(surname(clean))}</h4><p style="color:var(--muted)">Infos konnten gerade nicht geladen werden.</p>`; });
+}
+document.addEventListener("click",e=>{ const p=e.target.closest("[data-pname]"); if(p && !e.target.closest("a")) openPlayer(p.dataset.pname); });
+document.addEventListener("keydown",e=>{ if(e.key==="Enter"){ const p=e.target.closest&&e.target.closest("[data-pname]"); if(p) openPlayer(p.dataset.pname); } });
 
 /* ---------- Quiz ---------- */
 let quiz=null, qTimer=null;
