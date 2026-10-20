@@ -669,7 +669,7 @@ const FACT_MORE = [
   ["Das Stadion wurde 1958 eröffnet und nach dem früheren Bayer-Generaldirektor Ulrich Haberland benannt. Bis 2009 wurde es grundlegend modernisiert und vergrößert.","BayArena"],
   ["Brian begleitet die Mannschaft bei den Heimspielen in der BayArena und ist bei vielen Aktionen für junge Fans im Einsatz.","Bayer 04 Leverkusen"],
   ["Im Vereinswappen steht das Bayer-Kreuz, das Logo des Unternehmens. Rot und Schwarz prägen auch die Heimtrikots.","Bayer 04 Leverkusen"],
-  ["Leverkusen und Köln liegen direkt nebeneinander am Rhein. Dass Florian Wirtz einst aus der Kölner Jugend nach Leverkusen wechselte, sorgt bis heute für zusätzliche Brisanz.","Rheinderby"],
+  ["Leverkusen und Köln liegen direkt nebeneinander am Rhein. Dass Florian Wirtz einst aus der Kölner Jugend nach Leverkusen wechselte, sorgt bis heute für zusätzliche Brisanz.","Bayer 04 Leverkusen"],
   ["Xhaka hatte zuvor schon für Borussia Mönchengladbach in der Bundesliga gespielt. Nach zwei Jahren und dem Double in Leverkusen wechselte er 2025 in die Premier League zum AFC Sunderland.","Granit Xhaka"],
   ["Den Spitznamen bekam Völler zu seiner Zeit bei Werder Bremen – seine früh ergrauten Locken erinnerten Mitspieler an die Frisur einer älteren Dame. Völler nahm es mit Humor.","Rudi Völler"],
   ["Vor Leverkusen hatte das in der Bundesliga niemand geschafft, auch der FC Bayern nicht. In Europas großen Ligen gelang es zuvor zum Beispiel dem FC Arsenal in der Premier League 2003/04.","Fußball-Bundesliga 2023/24"]
@@ -1747,12 +1747,28 @@ function openFact(i){
 
 /* ---------- Wikipedia-Artikel direkt in der App lesen ---------- */
 const articleCache={};
+// Nur Artikel über Fußball zulassen (kein Eishockey, Handball usw.)
+function footballArticle(pg){
+  if(!pg||!pg.extract||pg.missing!==undefined) return false;
+  const intro=pg.extract.slice(0,1500);
+  if(/eishockey|handball|basketball|volleyball|american football|rugby|tennis/i.test(intro) && !/fußball/i.test(intro.slice(0,400))) return false;
+  if(/steht für:|bezeichnet:|ist der name folgender|begriffsklärung/i.test(intro.slice(0,300))) return false;
+  return /fußball|bundesliga|uefa|leverkusen|bayer 04/i.test(intro);
+}
+async function wikiFetch(title){
+  const j=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=wiki&redirects=1&titles="+encodeURIComponent(title)+"&format=json&origin=*"));
+  return Object.values(j.query?.pages||{})[0];
+}
 async function wikiArticle(q){
   if(articleCache[q]) return articleCache[q];
-  const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q)+"&srlimit=1&format=json&origin=*"));
-  const title=sj.query?.search?.[0]?.title; if(!title) return null;
-  const j=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exsectionformat=wiki&redirects=1&titles="+encodeURIComponent(title)+"&format=json&origin=*"));
-  const pg=Object.values(j.query?.pages||{})[0]; if(!pg||!pg.extract) return null;
+  let pg=await wikiFetch(q); // 1) genauer Titel
+  if(!footballArticle(pg)){ // 2) Suche, aber nur Treffer mit Fußball-Bezug
+    const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(q+" Fußball Leverkusen")+"&srlimit=5&format=json&origin=*"));
+    pg=null;
+    for(const r of (sj.query?.search||[])){ const x=await wikiFetch(r.title); if(footballArticle(x)){ pg=x; break; } }
+  }
+  if(!pg) pg=await wikiFetch("Bayer 04 Leverkusen"); // 3) sicherer Rückfall
+  if(!footballArticle(pg)) return null;
   const parts=pg.extract.split(/\n*(={2,5})\s*(.+?)\s*\1\n/);
   const art={title:pg.title, intro:parts[0].trim(), sections:[]};
   for(let k=1;k<parts.length;k+=3) art.sections.push({lvl:parts[k].length, h:parts[k+1], text:(parts[k+2]||"").trim()});
@@ -1854,9 +1870,10 @@ async function wikiPlayer(name){
   if(c && Date.now()-c.at<7*86400e3) return c.v;
   const sn=norm(surname(name));
   const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(name+" Fußballspieler")+"&srlimit=5&format=json&origin=*"));
-  const hit=(sj.query?.search||[]).find(r=>norm(r.title).includes(sn));
+  const hit=(sj.query?.search||[]).find(r=>norm(r.title).includes(sn) && !/eishockey|handball|basketball/i.test(r.snippet||""));
   if(!hit){ store(key,{at:Date.now(),v:null}); return null; }
   const sm=JSON.parse(await getText("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(hit.title.replace(/ /g,"_"))));
+  if(!/fußball/i.test((sm.extract||"")+" "+(sm.description||""))){ store(key,{at:Date.now(),v:null}); return null; }
   const v={title:sm.title, extract:sm.extract||"", img:safeImg(sm.thumbnail?.source||""), url:sm.content_urls?.mobile?.page||sm.content_urls?.desktop?.page||""};
   const b=v.extract.match(/\(\*\s*(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s+(\d{4})(?:\s+in\s+([^)]+?))?\)/);
   if(b && MON[b[2].toLowerCase()]!=null){
