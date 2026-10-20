@@ -290,6 +290,8 @@ tr.me td{background:var(--soft);font-weight:700}
 .pl[data-pname],.inj[data-pname]{cursor:pointer}
 .pl[data-pname]:active,.inj[data-pname]:active{background:var(--surface-2)}
 .pl .chev{color:var(--muted);font-size:18px;margin-left:2px}
+.card-y,.card-r{display:inline-block;width:12px;height:16px;border-radius:2px;vertical-align:-3px;margin-right:4px}
+.card-y{background:#f2c200}.card-r{background:#d6001c}
 /* Spielerprofil */
 .phero{position:relative;overflow:hidden;border-radius:20px;color:#fff;padding:18px 16px;display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:center;
   background:radial-gradient(90% 80% at 0% 0%,rgba(255,255,255,.18),transparent 60%),linear-gradient(150deg,#d6001c,#5e000d)}
@@ -444,6 +446,10 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
       <div class="sec-h" style="margin-top:26px"><h2>Torjäger</h2></div>
       <div class="seg" id="scorerSeg" role="group" aria-label="Torjägerliste wählen"></div>
       <div id="scorerBox"><div class="sk" style="height:260px;border-radius:16px"></div></div>
+      <div class="sec-h" style="margin-top:26px"><h2>Werkself-Statistik</h2><span class="legend" id="statStamp"></span></div>
+      <div class="seg" id="statSeg" role="group" aria-label="Statistik wählen"></div>
+      <div class="seg" id="statComp" role="group" aria-label="Wettbewerb wählen" style="margin-top:-4px"></div>
+      <div id="statBox"><div class="sk" style="height:260px;border-radius:16px"></div></div>
     </section>
 
     <section data-view="squad" hidden>
@@ -717,7 +723,12 @@ async function getFeed(url){
 function cleanItem(i, feed){
   let title=(i.title||"").trim(), source=(i.source||"").trim();
   const m=title.match(/^(.*\S)\s+[-–|]\s+(\S(?:(?!\s[-–|]\s).){1,58})$/); // "Titel - Quelle"
-  if(m && (!source || norm(m[2]).includes(norm(source).slice(0,6)) || norm(source).includes(norm(m[2]).slice(0,6)) || /\.(de|com|net)$|online|anzeiger|zeitung|news|sport|kicker|bild|express|spiegel|welt|faz|ntv|n-tv|t-online/i.test(m[2]))){
+  const isGoogle=feed && /google news/i.test(feed.name);
+  const looksLikeSource=m && m[2].split(/\s+/).length<=4 && !/[„"“!?:]/.test(m[2]) && (
+    (source && (norm(m[2]).includes(norm(source).slice(0,6)) || norm(source).includes(norm(m[2]).slice(0,6)))) ||
+    /\.(de|com|net|org)$|online|anzeiger|zeitung|news|sport|kicker|bild|express|spiegel|welt|faz|ntv|n-tv|t-online|yahoo|msn|radio|wdr|ndr|sky|dazn|90min|goal|ran\b|tz\b|merkur|rundschau|post|blatt/i.test(m[2]) ||
+    (isGoogle && !source));
+  if(looksLikeSource){
     title=m[1].trim(); if(!source) source=m[2].trim();
   }
   const t=Date.parse(String(i.pubDate||"").replace(" ","T")+(/Z|GMT|[+-]\d\d:?\d\d$/.test(i.pubDate||"")?"":"Z"));
@@ -731,9 +742,11 @@ function reliability(src){
   if(RELIABLE.mittel.some(x=>s.includes(x))) return "mittel";
   return "gering";
 }
-const FOOTBALL=/fußball|fussball|bundesliga|bayarena|bayer|spiel|trainer|\btor(e|jäger)?\b|transfer|pokal|liga|kader|stürmer|abwehr|mittelfeld|keeper|torwart|verletz|sieg|niederlage|remis|elfmeter|champions|europa league|rolfes|carro|derby|fans?\b|aufstellung|startelf|vertrag|wechsel|leihe/i;
+const NOT_CLUB=/\bafd\b|weidel|\bpartei|wahlkampf|landtag|bundestag|stadtrat|bürgermeister|polizei|feuerwehr|chempark|bayer ag\b|bayer-konzern|\baktie|börse|glyphosat|wett ?tipps?|tipp & quoten|wettquoten|\bodds\b|betting|prediction|livestream kostenlos|watch .* online|kyivstar|free stream/i;
+const FOOTBALL=/fußball|fussball|bundesliga|bayarena|spiel(er|t|e)?\b|trainer|\btor(e|jäger)?\b|transfer|pokal|liga|kader|stürmer|abwehr|mittelfeld|keeper|torwart|verletz|sieg|niederlage|remis|elfmeter|champions|europa league|rolfes|carro|derby|fans?\b|aufstellung|startelf|vertrag|wechsel|leihe/i;
 function relevant(it){
   if(/frauen|u19|u17|u23|basketball|handball|elfen|giants/i.test(it.title)) return false;
+  if(NOT_CLUB.test(it.title) || NOT_CLUB.test(it.hay||"")) return false;
   if(Date.now()-it.t > 10*86400e3) return false;
   if(it.team || /bayer 04|werkself|\bb04\b|bayer leverkusen/i.test(it.hay||it.title)) return true;
   if(/leverkusen/i.test(it.hay||it.title) && FOOTBALL.test(it.hay||it.title)) return true;
@@ -816,8 +829,8 @@ async function loadTable(){
   const out=[];
   await Promise.all(comps.map(async c=>{
     const res={...c, kind:c.ck==="dfb"?"cup":"league", table:[], scorers:[], lastUpdate:Date.now()};
-    if(res.kind==="league"){
-      const [tbl,md]=await Promise.allSettled([getJson(`https://api.openligadb.de/getbltable/${c.sc}/${ssn}`), getJson(`https://api.openligadb.de/getmatchdata/${c.sc}/${ssn}`)]);
+    {
+      const [tbl,md]=await Promise.allSettled([res.kind==="league"?getJson(`https://api.openligadb.de/getbltable/${c.sc}/${ssn}`):Promise.reject(), getJson(`https://api.openligadb.de/getmatchdata/${c.sc}/${ssn}`)]);
       if(tbl.status==="fulfilled") res.table=tbl.value.map(x=>({id:x.teamInfoId,name:x.shortName||x.teamName,full:x.teamName,icon:safeImg(x.teamIconUrl),sp:x.matches,s:x.won,u:x.draw,n:x.lost,tore:(x.goals??"")+":"+(x.opponentGoals??""),diff:x.goalDiff,pkt:x.points}));
       if(md.status==="fulfilled"){
         const ms=md.value.map(mapMatch); const idx={};
@@ -830,7 +843,7 @@ async function loadTable(){
         });
         Object.keys(res.form).forEach(k=>res.form[k]=res.form[k].slice(-5));
       }
-      if(!res.table.length && !res.scorers.length) throw new Error("table");
+      if(res.kind==="league" && !res.table.length && !res.scorers.length) throw new Error("table");
     }
     out.push(res);
   }));
@@ -1004,6 +1017,86 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Enter"){ const mt=e.target.closest&&e.target.closest(".match[data-mid]"); if(mt) openMatch(+mt.dataset.mid); } if(e.key==="Escape") closeSheet(); });
 
+
+/* ---------- Werkself-Statistik (ESPN) ---------- */
+const ESPN_TEAM=131;
+const ESPN_LEAGUES=[["ger.1","bl1"],["ger.dfb_pokal","dfb"],["uefa.europa","uel"],["uefa.champions","ucl"],["uefa.europa.conf","uecl"]];
+function statOf(arr,names){ for(const st of (arr||[])){ if(names.includes(st.name)||names.includes(st.abbreviation)) return +st.value||+st.displayValue||0; } return 0; }
+function parseSummary(j){
+  const out={}; let ok=false;
+  const add=(id,name,k,v)=>{ if(!name) return; const p=out[id]||(out[id]={name,app:0,g:0,a:0,y:0,r:0}); p[k]+=v; };
+  (j.rosters||[]).forEach(r=>{
+    if(String(r.team?.id)!==String(ESPN_TEAM)) return; ok=true;
+    (r.roster||[]).forEach(e=>{
+      const a=e.athlete||{}, id=a.id||a.displayName, st=e.stats||[];
+      const played=e.starter||e.subbedIn===true||e.subbedIn?.didSub||statOf(st,["appearances","APP"])>0;
+      if(!played) return;
+      add(id,a.displayName,"app",1);
+      add(id,a.displayName,"g",statOf(st,["totalGoals","G"])); add(id,a.displayName,"a",statOf(st,["goalAssists","A"]));
+      add(id,a.displayName,"y",statOf(st,["yellowCards","YC"])); add(id,a.displayName,"r",statOf(st,["redCards","RC"]));
+    });
+  });
+  if(!ok){ // Notlösung: nur Tore und Vorlagen aus den Bestenlisten
+    (j.leaders||[]).filter(l=>String(l.team?.id)===String(ESPN_TEAM)).forEach(l=>(l.leaders||[]).forEach(cat=>(cat.leaders||[]).forEach(e=>{
+      const a=e.athlete||{}; const id=a.id||a.displayName;
+      if(/goal/i.test(cat.name)&&!/assist/i.test(cat.name)) add(id,a.displayName,"g",+e.value||0);
+      if(/assist/i.test(cat.name)) add(id,a.displayName,"a",+e.value||0);
+    })));
+  }
+  return {players:out, full:ok};
+}
+async function loadStats(){
+  const start=Date.UTC(season(),6,1);
+  const cache=load("espnCache")||{};
+  const evs=[];
+  await Promise.all(ESPN_LEAGUES.map(async([lg,ck])=>{
+    try{
+      const j=await getJson(`https://site.api.espn.com/apis/site/v2/sports/soccer/${lg}/teams/${ESPN_TEAM}/schedule?season=${season()}`);
+      (j.events||[]).forEach(e=>{ const done=e.competitions?.[0]?.status?.type?.completed; if(done && Date.parse(e.date)>=start) evs.push({id:e.id, lg, ck}); });
+    }catch(e){}
+  }));
+  if(!evs.length && !Object.keys(cache).length) throw new Error("stats");
+  for(const e of evs){
+    if(cache[e.id]) continue;
+    try{ const j=await getJson(`https://site.api.espn.com/apis/site/v2/sports/soccer/${e.lg}/summary?event=${e.id}`); cache[e.id]={ck:e.ck, ...parseSummary(j)}; }catch(err){}
+  }
+  store("espnCache",cache);
+  state.stats={games:evs.filter(e=>cache[e.id]).map(e=>cache[e.id]), at:Date.now()};
+}
+let statSel="g", statCompSel="all";
+const STATS=[["g","Tore"],["a","Vorlagen"],["s","Scorer"],["app","Einsätze"],["y","Gelb"],["r","Rot"]];
+function renderStats(){
+  const st=state.stats;
+  if(!st||!st.games.length){ if(state.ts.stats||state.ts.table) $("statBox").innerHTML=`<div class="empty">Statistik gerade nicht verfügbar.</div>`; $("statSeg").innerHTML=""; $("statComp").innerHTML=""; return; }
+  const comps=[...new Set(st.games.map(g=>g.ck))];
+  if(statCompSel!=="all" && !comps.includes(statCompSel)) statCompSel="all";
+  const full=st.games.every(g=>g.full);
+  const avail=full?STATS:STATS.filter(x=>["g","a","s"].includes(x[0]));
+  if(!avail.find(x=>x[0]===statSel)) statSel="g";
+  $("statSeg").innerHTML=avail.map(([k,l])=>`<button type="button" data-stat="${k}" aria-pressed="${k===statSel}">${l}</button>`).join("");
+  $("statComp").innerHTML=comps.length>1?[["all","Alle"]].concat(comps.map(c=>[c,COMP_SHORT[c]||c])).map(([k,l])=>`<button type="button" data-statcomp="${k}" aria-pressed="${k===statCompSel}">${esc(l)}</button>`).join(""):"";
+  $("statComp").hidden=comps.length<=1;
+  const agg={};
+  st.games.filter(g=>statCompSel==="all"||g.ck===statCompSel).forEach(g=>Object.entries(g.players).forEach(([id,p])=>{
+    const a=agg[id]||(agg[id]={name:p.name,app:0,g:0,a:0,y:0,r:0}); ["app","g","a","y","r"].forEach(k=>a[k]+=p[k]||0);
+  }));
+  const val=x=>statSel==="s"?x.g+x.a:x[statSel];
+  const arr=Object.values(agg).filter(x=>val(x)>0).sort((a,b)=>val(b)-val(a)||b.app-a.app||a.name.localeCompare(b.name)).slice(0,20);
+  const max=Math.max(1,...arr.map(val));
+  const unit={g:["Tor","Tore"],a:["Vorlage","Vorlagen"],s:["Scorerpunkt","Scorerpunkte"],app:["Einsatz","Einsätze"],y:["Gelbe","Gelbe"],r:["Rote","Rote"]}[statSel];
+  $("statStamp").textContent=st.games.length+" Spiele ausgewertet";
+  $("statBox").innerHTML=arr.length?`<div class="mlist">${arr.map((x,i)=>{
+    const sub=statSel==="s"?`${x.g} Tore · ${x.a} Vorlagen`:statSel==="app"?`${x.g} Tore · ${x.a} Vorlagen`:statSel==="y"||statSel==="r"?`${x.app} Einsätze`:`${x.app} Einsätze`;
+    return `<div class="scorer${i<3?" top":""}" data-pname="${esc(x.name)}" role="button" tabindex="0" style="cursor:pointer"><span class="rk">${i+1}</span>
+      <div class="who"><div style="min-width:0;flex:1"><b>${statSel==="y"?'<i class="card-y"></i>':statSel==="r"?'<i class="card-r"></i>':""}${esc(x.name)}</b><small>${esc(sub)}</small><div class="goalbar"><i style="width:${Math.round(val(x)/max*100)}%"></i></div></div></div>
+      <span class="g">${val(x)}<small>${val(x)===1?unit[0]:unit[1]}</small></span></div>`;}).join("")}</div>`
+    :`<div class="empty">Noch keine Einträge.</div>`;
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-stat]"); if(b){ statSel=b.dataset.stat; renderStats(); return; }
+  const c=e.target.closest("[data-statcomp]"); if(c){ statCompSel=c.dataset.statcomp; renderStats(); }
+});
+
 /* ---------- TV-Sender (laut Rechteverteilung in Deutschland) ---------- */
 function tvInfo(m){
   const d=new Date(m.t);
@@ -1116,7 +1209,7 @@ function renderStamp(){
   const src = state.feedsAll ? " · "+state.feedsOk+" von "+state.feedsAll+" Quellen" : "";
   $("stamp").textContent = t ? "Stand "+fmtDate(new Date(t),{hour:"2-digit",minute:"2-digit"})+" Uhr"+src : "Lade …";
 }
-function renderAll(){ renderGames(); renderNews(); renderRumors(); renderTable(); renderOut(); renderSquad(); renderStamp(); }
+function renderAll(){ renderGames(); renderNews(); renderRumors(); renderTable(); renderStats(); renderOut(); renderSquad(); renderStamp(); }
 
 
 /* ---------- Text-Abruf (HTML-Seiten) ---------- */
@@ -1308,12 +1401,15 @@ function openPlayer(name){
   const games=new Set(goals.map(x=>x.m.id)).size;
   const news=(state.news||[]).filter(n=>norm(n.title+" "+(n.desc||"")).match(new RegExp("\\b"+sn.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b"))).slice(0,6);
   const rum=news.filter(n=>RUMOR_WORDS.test(n.title));
+  let es=null; (state.stats?.games||[]).forEach(g=>Object.values(g.players).forEach(p=>{ if(norm(surname(p.name))===sn){ es=es||{app:0,g:0,a:0,y:0,r:0}; ["app","g","a","y","r"].forEach(k=>es[k]+=p[k]||0); } }));
+  if(es && !(state.stats.games.every(g=>g.full))) es=null;
   openSheetRaw(`
     <div class="phero" data-nr="${nr??""}"><div class="ph" id="plPhoto">${esc(initials(clean))}</div>
       <div style="min-width:0"><h3 id="sheetTitle">${esc(clean)}</h3><div class="sub">${nr!=null?"#"+nr+" · ":""}${esc(POS_FULL[pos]||pos)}${nat?" · "+esc(NAT_FULL[nat]||nat):""}</div>
       ${cap?`<span class="pill">Kapitän</span>`:""}${inj?`<span class="pill" style="background:${inj.kind==="reh"?"var(--draw)":"#000"}">${esc(KIND[inj.kind][1])}</span>`:""}</div></div>
     <div class="box"><h4>Steckbrief</h4><div class="kv" id="plKv">
-      <div><b id="plAge">–</b><small>Alter</small></div><div><b>${goals.length}</b><small>Saisontore</small></div><div><b>${games}</b><small>Spiele mit Tor</small></div>
+      <div><b id="plAge">–</b><small>Alter</small></div><div><b>${goals.length}</b><small>Saisontore</small></div><div><b>${es?es.app:games}</b><small>${es?"Einsätze":"Spiele mit Tor"}</small></div>
+      ${es?`<div><b>${es.a}</b><small>Vorlagen</small></div><div><b>${es.g+es.a}</b><small>Scorerpunkte</small></div><div><b>${es.y?`<i class="card-y"></i>${es.y}`:"0"}${es.r?` <i class="card-r"></i>${es.r}`:""}</b><small>Karten</small></div>`:""}
     </div><p id="plBorn" style="margin-top:10px"></p></div>
     ${inj?`<div class="box"><h4>Ausfall</h4><p style="margin:0;color:var(--fg);font-size:15px"><b>${esc(inj.reason||KIND[inj.kind][1])}</b></p>
       <p>${inj.since?"Fehlt seit "+esc(inj.since)+". ":""}${inj.eta?"Prognose: "+esc(inj.eta)+" (laut "+esc(inj.etaSrc||"Medien")+").":""}</p>
@@ -1453,10 +1549,10 @@ async function refresh(){
   if(!navigator.onLine){ notice("Kein Internet. Du siehst den zuletzt geladenen Stand."); }
   const failed=[];
   const run=async(k,fn)=>{ try{ await fn(); state.ts[k]=Date.now(); }catch(e){ failed.push(k); } renderAll(); };
-  await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)) ]);
+  await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)), run("stats",loadStats) ]);
   store("cache",state);
   if(navigator.onLine){
-    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle"};
+    const names={news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle",stats:"Statistik"};
     notice(failed.length? failed.map(k=>names[k]).join(" und ")+" konnten gerade nicht geladen werden. Angezeigt wird der letzte Stand." : "");
   }
   btn.disabled=false; btn.classList.remove("busy"); busy=false;
