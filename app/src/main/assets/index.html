@@ -1195,12 +1195,20 @@ const netCallbacks = {}; let netSeq = 0;
 window.__netCb = (id, ok, b64) => {
   const cb = netCallbacks[id]; if(!cb) return; delete netCallbacks[id];
   if(!ok) return cb.reject(new Error(b64||"Netzwerkfehler"));
+  if(cb.raw) return cb.resolve(b64);
   const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
   cb.resolve(new TextDecoder("utf-8").decode(bytes));
 };
 function nativeGet(url, ms=15000){
   return new Promise((resolve,reject)=>{
     const id = ++netSeq; netCallbacks[id] = {resolve,reject};
+    setTimeout(()=>{ if(netCallbacks[id]){ delete netCallbacks[id]; reject(new Error("Zeitüberschreitung")); } }, ms);
+    window.AndroidNet.get(String(id), url);
+  });
+}
+function nativeGetB64(url, ms=20000){ // Binärdaten (z. B. Bilder) als Base64
+  return new Promise((resolve,reject)=>{
+    const id = ++netSeq; netCallbacks[id] = {resolve,reject,raw:true};
     setTimeout(()=>{ if(netCallbacks[id]){ delete netCallbacks[id]; reject(new Error("Zeitüberschreitung")); } }, ms);
     window.AndroidNet.get(String(id), url);
   });
@@ -2569,6 +2577,20 @@ function renderSquad(){
 const POS_FULL={TW:"Torwart",AB:"Abwehr",MF:"Mittelfeld",ST:"Sturm"};
 const NAT_FULL={NED:"Niederlande",ARG:"Argentinien",ESP:"Spanien",ENG:"England",FRA:"Frankreich",GER:"Deutschland",POR:"Portugal",USA:"USA",BFA:"Burkina Faso",BRA:"Brasilien",CZE:"Tschechien",NGA:"Nigeria",ALG:"Algerien",CMR:"Kamerun",MAR:"Marokko",SUI:"Schweiz",BEL:"Belgien",SEN:"Senegal",MLI:"Mali",UKR:"Ukraine",AUT:"Österreich",ECU:"Ecuador",COL:"Kolumbien",CRO:"Kroatien",POL:"Polen",CIV:"Elfenbeinküste",GHA:"Ghana",JPN:"Japan",DEN:"Dänemark",SWE:"Schweden",NOR:"Norwegen",ITA:"Italien",SCO:"Schottland",TUR:"Türkei",KOS:"Kosovo",SRB:"Serbien",SVK:"Slowakei",HUN:"Ungarn",MEX:"Mexiko",URU:"Uruguay",CAN:"Kanada",JAM:"Jamaika",TUN:"Tunesien",EGY:"Ägypten",KOR:"Südkorea",AUS:"Australien"};
 const MON={januar:0,februar:1,"märz":2,april:3,mai:4,juni:5,juli:6,august:7,september:8,oktober:9,november:10,dezember:11};
+// Kurzinfo zu einem Wikipedia-Artikel (Text, Bild, Wikidata-ID) – über die normale Wikipedia-API
+async function wikiInfo(title){
+  try{
+    const j=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|pageprops|description&exintro=1&explaintext=1&exsentences=6&piprop=thumbnail|original&pithumbsize=500&ppprop=wikibase_item|disambiguation&redirects=1&format=json&origin=*&titles="+encodeURIComponent(title)));
+    const pg=Object.values(j.query?.pages||{})[0];
+    if(pg && pg.missing===undefined){
+      return {title:pg.title, extract:pg.extract||"", description:pg.description||"", type:pg.pageprops&&pg.pageprops.disambiguation!==undefined?"disambiguation":"standard",
+        wikibase_item:pg.pageprops?.wikibase_item||"", thumbnail:pg.thumbnail?{source:pg.thumbnail.source}:null,
+        originalimage:pg.original?{source:pg.original.source,width:pg.original.width}:null,
+        content_urls:{mobile:{page:"https://de.m.wikipedia.org/wiki/"+encodeURIComponent(pg.title.replace(/ /g,"_"))}}};
+    }
+  }catch(e){}
+  return JSON.parse(await getText("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title.replace(/ /g,"_"))));
+}
 async function wikiPlayer(name){
   const key="wp_"+norm(name), c=load(key);
   if(c && Date.now()-c.at<7*86400e3) return c.v;
@@ -2576,7 +2598,7 @@ async function wikiPlayer(name){
   const sj=JSON.parse(await getText("https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch="+encodeURIComponent(name+" Fußballspieler")+"&srlimit=5&format=json&origin=*"));
   const hit=(sj.query?.search||[]).find(r=>norm(r.title).includes(sn) && !/eishockey|handball|basketball/i.test(r.snippet||""));
   if(!hit){ store(key,{at:Date.now(),v:null}); return null; }
-  const sm=JSON.parse(await getText("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(hit.title.replace(/ /g,"_"))));
+  const sm=await wikiInfo(hit.title);
   if(!/fußball/i.test((sm.extract||"")+" "+(sm.description||""))){ store(key,{at:Date.now(),v:null}); return null; }
   const v={title:sm.title, extract:sm.extract||"", img:safeImg(sm.thumbnail?.source||""), url:sm.content_urls?.mobile?.page||sm.content_urls?.desktop?.page||""};
   const b=v.extract.match(/\(\*\s*(\d{1,2})\.\s*([A-Za-zäöüÄÖÜ]+)\s+(\d{4})(?:\s+in\s+([^)]+?))?\)/);
@@ -2928,7 +2950,7 @@ document.addEventListener("click",e=>{
 const CLUB_WIKI={"TSG Hoffenheim":"TSG 1899 Hoffenheim","TSG 1899 Hoffenheim":"TSG 1899 Hoffenheim","1. FC Heidenheim 1846":"1. FC Heidenheim 1846","Bor. Mönchengladbach":"Borussia Mönchengladbach","Borussia M'gladbach":"Borussia Mönchengladbach","FC St. Pauli":"FC St. Pauli","Werder Bremen":"SV Werder Bremen","FC Bayern":"FC Bayern München","Bayern München":"FC Bayern München","1. FC Union Berlin":"1. FC Union Berlin","RB Leipzig":"RB Leipzig"};
 const clubCache={};
 function clubIsFootball(j){ const t=((j.description||"")+" "+(j.extract||"")).toLowerCase(); return /fußball|fussball|football/.test(t) && !/eishockey|basketball|handball/.test((j.description||"").toLowerCase()); }
-async function wikiSummary(title){ return getJson("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(title.replace(/ /g,"_"))); }
+async function wikiSummary(title){ return wikiInfo(title); }
 async function clubWiki(name){
   const tries=[CLUB_WIKI[name], name, name.replace(/^(FC|SC|SV|VfL|VfB)\s+/,""), name+" (Fußballverein)"].filter(Boolean);
   for(const t of [...new Set(tries)]){ try{ const j=await wikiSummary(t); if(j && j.type!=="disambiguation" && clubIsFootball(j)) return j; }catch(e){} }
@@ -3234,10 +3256,20 @@ const PUZZLE_PICS=[{t:"Butti im Stadion",src:"puzzle_lion.jpg"},{t:"BayArena",wi
 const picCache={};
 async function puzzlePic(p){
   if(p.src) return p.src; if(picCache[p.wiki]) return picCache[p.wiki];
-  const j=await getJson("https://de.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(p.wiki.replace(/ /g,"_")));
-  let u=(j.thumbnail&&j.thumbnail.source)||(j.originalimage&&j.originalimage.source)||""; if(!u) throw new Error("bild");
-  u=u.replace(/\/(\d+)px-/,"/640px-"); picCache[p.wiki]=u; return u;
+  const j=await wikiInfo(p.wiki);
+  const cands=[j.thumbnail&&j.thumbnail.source, j.originalimage&&(j.originalimage.width||0)<=2400&&j.originalimage.source].filter(Boolean);
+  if(!cands.length) throw new Error("bild");
+  for(const u of cands){
+    try{
+      if(!NATIVE){ await loadImg(u); picCache[p.wiki]=u; return u; }
+      const b64=await nativeGetB64(u);
+      const mime=/\.png($|\?)/i.test(u)?"image/png":/\.webp($|\?)/i.test(u)?"image/webp":/\.gif($|\?)/i.test(u)?"image/gif":"image/jpeg";
+      const d="data:"+mime+";base64,"+b64; await loadImg(d); picCache[p.wiki]=d; return d;
+    }catch(e){}
+  }
+  throw new Error("bild");
 }
+function loadImg(src,ms){ return new Promise((res,rej)=>{ const i=new Image(); const t=setTimeout(()=>rej(new Error("timeout")),ms||12000); i.onload=()=>{ clearTimeout(t); i.naturalWidth?res(i):rej(new Error("leer")); }; i.onerror=()=>{ clearTimeout(t); rej(new Error("bild")); }; i.src=src; }); }
 let puz=null;
 function startPuzzle(){
   if(puz&&puz.timer) clearInterval(puz.timer);
@@ -3246,14 +3278,13 @@ function startPuzzle(){
     <div class="seg" style="margin:6px 0 10px" id="puzSize"><button type="button" data-puzn="3" aria-pressed="${puz.n===3}">Leicht · 3×3</button><button type="button" data-puzn="4" aria-pressed="${puz.n===4}">Profi · 4×4</button></div>
     <p class="legend" style="margin:0 0 10px">Wähle ein Foto. Schiebe die Teile, bis das Bild wieder stimmt.</p>
     <div class="picgrid">${PUZZLE_PICS.map((p,i)=>`<button type="button" class="pic" data-pic="${i}"><span class="ph" id="ph${i}"></span><b>${esc(p.t)}</b></button>`).join("")}</div>`);
-  PUZZLE_PICS.forEach((p,i)=>puzzlePic(p).then(u=>{ const e=$("ph"+i); if(e) e.style.backgroundImage=`url("${u}")`; }).catch(()=>{ const e=$("ph"+i); if(e){ e.closest(".pic").disabled=true; e.textContent="offline"; } }));
+  PUZZLE_PICS.forEach((p,i)=>puzzlePic(p).then(u=>{ const e=$("ph"+i); if(e) e.style.backgroundImage=`url("${u}")`; }).catch(()=>{ const e=$("ph"+i); if(e){ e.closest(".pic").disabled=true; e.textContent="nicht verfügbar"; } }));
 }
 function puzBest(n){ const b=load("hsPuz"+n); return b?fmtSec(b):"–"; }
 function fmtSec(s){ return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
 async function puzzleGo(i){
   const p=PUZZLE_PICS[i]; let url; try{ url=await puzzlePic(p); }catch(e){ return; }
-  const img=new Image(); img.src=url;
-  try{ await img.decode(); }catch(e){ await new Promise(r=>{ img.onload=r; img.onerror=r; }); }
+  let img; try{ img=await loadImg(url); }catch(e){ const ph=document.querySelector(`[data-pic="${i}"]`); if(ph){ ph.disabled=true; } return; }
   const n=puz?puz.n:3;
   openSheetRaw(`<div class="qhead"><span id="sheetTitle">${esc(p.t)}</span><span><span id="puzMoves">0</span> Züge · <span id="puzTime">0:00</span></span></div>
     <div class="puz" id="puz" style="--n:${n}"><div class="puzdone" id="puzDone"></div></div>
