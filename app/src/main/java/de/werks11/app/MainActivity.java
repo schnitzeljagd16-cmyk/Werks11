@@ -212,6 +212,14 @@ public class MainActivity extends Activity {
         }
 
         @JavascriptInterface
+        public void setAdblock(boolean on, boolean cookies) {
+            Notifier.prefs(getApplicationContext()).edit().putBoolean("adblock", on).putBoolean("hidecookies", cookies).apply();
+        }
+
+        @JavascriptInterface
+        public int adsBlocked() { return Notifier.prefs(getApplicationContext()).getInt("adsBlocked", 0); }
+
+        @JavascriptInterface
         public int versionCode() { return Updater.versionCode(getApplicationContext()); }
 
         @JavascriptInterface

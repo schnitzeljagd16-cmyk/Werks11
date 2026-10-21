@@ -21,6 +21,10 @@ import android.widget.TextView;
 public class ReaderActivity extends Activity {
 
     private WebView web;
+    private boolean block = true;
+    private int blocked = 0;
+    private TextView shield;
+    private String pageHost = null;
 
     private int dp(int v) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
@@ -57,6 +61,25 @@ public class ReaderActivity extends Activity {
         title.setSingleLine(true);
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         bar.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+        block = AdBlock.on(this);
+        shield = new TextView(this);
+        shield.setTextColor(Color.WHITE);
+        shield.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        shield.setTypeface(Typeface.DEFAULT_BOLD);
+        shield.setGravity(Gravity.CENTER);
+        shield.setPadding(dp(10), dp(4), dp(10), dp(4));
+        android.graphics.drawable.GradientDrawable pill = new android.graphics.drawable.GradientDrawable();
+        pill.setColor(0x33000000); pill.setCornerRadius(dp(14));
+        shield.setBackground(pill);
+        shield.setContentDescription("Werbeblocker");
+        shield.setOnClickListener(v -> { // Seite kaputt? Blocker für diese Seite aus- bzw. wieder einschalten
+            block = !block; blocked = 0; updateShield();
+            android.widget.Toast.makeText(this, block ? "Werbeblocker an" : "Werbeblocker für diese Seite aus", android.widget.Toast.LENGTH_SHORT).show();
+            web.reload();
+        });
+        updateShield();
+        bar.addView(shield, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(30)));
         root.addView(bar, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(52)));
 
         final ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
@@ -70,6 +93,27 @@ public class ReaderActivity extends Activity {
         s.setLoadWithOverviewMode(true);
         s.setUseWideViewPort(true);
         web.setWebViewClient(new WebViewClient() {
+            @Override
+            public android.webkit.WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                if (block && !request.isForMainFrame() && AdBlock.shouldBlock(request.getUrl(), pageHost)) {
+                    blocked++;
+                    if (blocked % 3 == 1) runOnUiThread(() -> updateShield());
+                    return AdBlock.empty();
+                }
+                return super.shouldInterceptRequest(view, request);
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String u, android.graphics.Bitmap favicon) {
+                try { pageHost = android.net.Uri.parse(u).getHost(); } catch (Exception ignored) { }
+            }
+
+            @Override
+            public void onPageCommitVisible(WebView view, String u) { inject(); }
+
+            @Override
+            public void onPageFinished(WebView view, String u) { inject(); updateShield(); }
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String sc = request.getUrl().getScheme();
@@ -93,6 +137,16 @@ public class ReaderActivity extends Activity {
         if (url != null) web.loadUrl(url);
     }
 
+    private void inject() {
+        if (block && web != null) web.evaluateJavascript(AdBlock.cosmeticJs(AdBlock.cookies(this)), null);
+    }
+
+    private void updateShield() {
+        if (shield == null) return;
+        shield.setText(block ? "🛡 " + blocked : "🛡 aus");
+        shield.setAlpha(block ? 1f : .6f);
+    }
+
     @Override
     public void onBackPressed() {
         if (web != null && web.canGoBack()) web.goBack();
@@ -101,6 +155,7 @@ public class ReaderActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        if (blocked > 0) { android.content.SharedPreferences p = Notifier.prefs(this); p.edit().putInt("adsBlocked", p.getInt("adsBlocked", 0) + blocked).apply(); }
         if (web != null) web.destroy();
         super.onDestroy();
     }

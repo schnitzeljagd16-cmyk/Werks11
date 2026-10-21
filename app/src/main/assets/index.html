@@ -3885,6 +3885,9 @@ function openNoti(){
       <b style="font-size:15px">Schriftgröße</b><div class="seg" style="margin:8px 0 0">${lb("size","s","Klein")}${lb("size","m","Normal")}${lb("size","l","Groß")}${lb("size","xl","Sehr groß")}</div></div>
     <div class="mgroup">Nachrichten</div>
     <button type="button" class="bigbtn sec" id="srcSettings2">⚙ Quellen auswählen</button>
+    <div class="box">${(()=>{ const r=readPrefs(); let n=0; try{ n=native&&window.AndroidNet.adsBlocked?window.AndroidNet.adsBlocked():0; }catch(e){}
+      const sw=(k,t,d)=>`<div class="set"><div><b>${t}</b><small>${d}</small></div><label class="sw"><input type="checkbox" data-rpref="${k}" ${r[k]?"checked":""} ${native?"":"disabled"}><span></span></label></div>`;
+      return sw("adblock","🛡 Werbeblocker","Blockiert Werbung und Tracker, wenn du eine Webseite in der App öffnest")+sw("cookies","Cookie-Banner ausblenden","Versteckt die meisten Zustimmungs-Fenster auf Nachrichtenseiten")+`<p class="legend" style="margin:8px 0 0">${n?`Bisher ${n.toLocaleString("de-DE")} Werbe- und Tracking-Elemente blockiert. `:""}Lädt eine Seite falsch, tippe oben im Lesebereich auf 🛡 – dann wird sie ohne Blocker neu geladen.</p>`; })()}</div>
     <div class="mgroup">Benachrichtigungen</div>
     ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
     ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
@@ -3922,6 +3925,9 @@ document.addEventListener("click",e=>{
   if(e.target.closest("#testDaily")&&window.AndroidNet.testDaily){ pushNoti(); window.AndroidNet.testDaily(); }
 });
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden) renderNotiStatus(); });
+function readPrefs(){ return Object.assign({adblock:true,cookies:true},load("reading")||{}); }
+function pushRead(){ const r=readPrefs(); if(NATIVE&&window.AndroidNet.setAdblock){ try{ window.AndroidNet.setAdblock(!!r.adblock,!!r.cookies); }catch(e){} } }
+document.addEventListener("change",e=>{ const c=e.target.closest("input[data-rpref]"); if(!c) return; const r=readPrefs(); r[c.dataset.rpref]=c.checked; store("reading",r); pushRead(); });
 function pushNoti(){
   const s=notiSettings(); store("noti",s); s.watch=Object.keys(watchList()).map(Number);
   if(NATIVE && typeof window.AndroidNet.setNotify==="function"){ try{ window.AndroidNet.setNotify(JSON.stringify(s)); }catch(e){} }
@@ -3978,7 +3984,7 @@ if(cached){ Object.assign(state,cached); state.matches=(state.matches||[]).filte
 renderFact(); renderDay(); renderFan(); renderUpdate(); setTimeout(()=>checkUpdate(false),4000);
 renderAll();
 refresh();
-pushNoti();
+pushNoti(); pushRead();
 let lastAuto=Date.now();
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden && Date.now()-lastAuto>10*60e3){ lastAuto=Date.now(); refresh(); } });
 setInterval(()=>{ if(!document.hidden){ lastAuto=Date.now(); refresh(); } }, 15*60e3);
