@@ -761,7 +761,7 @@ dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
 .game.h{background:linear-gradient(150deg,#0f766e,#053b37)}
 .game.z{background:linear-gradient(150deg,#7c3aed,#2e1065)}
 .game.g{background:linear-gradient(150deg,#be185d,#4a0623)}
-.game.x{background:linear-gradient(150deg,#475569,#0f172a)}
+.game.nr{background:linear-gradient(150deg,#475569,#0f172a)}
 .game.l{background:linear-gradient(150deg,#15803d,#052e16)}
 .game .today{position:absolute;right:10px;top:10px;font:700 11px/1 var(--body);font-style:normal;background:#fff;color:var(--red);padding:5px 8px;border-radius:999px;animation:pulse 1.6s infinite}
 .daily{margin-top:14px;background:linear-gradient(135deg,var(--surface),var(--soft));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow);animation:rise .4s both}
@@ -3479,7 +3479,7 @@ const GAMES=[
   ["hilo","h","Höher oder tiefer?","Wer hat mehr Punkte, Tore, Spiele?",()=>`Rekord ${hs("hsHilo")}`,'<path d="M7 14l5-5 5 5M7 20l5-5 5 5"/>'],
   ["time","z","Zeitstrahl","Bring die Vereinsgeschichte in Ordnung",()=>`Rekord ${hs("hsTime")}/15`,'<path d="M3 12h18M7 8v8M12 6v12M17 9v6"/>'],
   ["result","g","Wie ging's aus?","Rate Ergebnisse legendärer Spiele",()=>`Rekord ${hs("hsResult")} Pkt.`,'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M12 6v12M8 10v4M16 10v4"/>'],
-  ["hang","x","Namen raten","Errate Spieler Buchstabe für Buchstabe",()=>`Rekord ${hs("hsHang")}`,'<path d="M4 20h16M7 20V4h8v3M15 10a2 2 0 1 0 0 .01"/>'],
+  ["hang","nr","Namen raten","Errate Spieler Buchstabe für Buchstabe",()=>`Rekord ${hs("hsHang")}`,'<path d="M4 20h16M7 20V4h8v3M15 10a2 2 0 1 0 0 .01"/>'],
   ["elf","l","Elf des Tages","Wer stand zuletzt in der Startelf?",()=>`Rekord ${hs("hsElf")}/11`,'<path d="M4 4h16v16H4zM4 12h16M12 4v16"/><circle cx="12" cy="12" r="3"/>'],
   ["puzzle","p","Foto-Puzzle","Schieb die Teile zurecht",()=>`Bestzeit ${puzBest(3)}`,'<path d="M4 4h6v3a2 2 0 1 0 4 0V4h6v6h-3a2 2 0 1 0 0 4h3v6h-6v-3a2 2 0 1 0-4 0v3H4z"/>'],
   ["memory","m","Wappen-Memory","Finde alle Vereinspaare",()=>`Rekord ${hs("hsMem")||"–"} Züge`,'<rect x="3" y="4" width="8" height="11" rx="2"/><rect x="13" y="9" width="8" height="11" rx="2"/>'],
