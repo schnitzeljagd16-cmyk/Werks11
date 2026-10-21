@@ -871,6 +871,7 @@ dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
   </div>
 </nav>
 
+<script src="pz/pics.js"></script>
 <script>
 "use strict";
 const TEAM_ID = 6; // Bayer 04 Leverkusen bei OpenLigaDB
@@ -3252,7 +3253,11 @@ function penOver(why){
 }
 
 /* ---------- Foto-Puzzle ---------- */
-const PUZZLE_PICS=[{t:"Butti im Stadion",src:"puzzle_lion.jpg"},{t:"BayArena",wiki:"BayArena"},{t:"Ulf Kirsten",wiki:"Ulf Kirsten"},{t:"Stefan Kießling",wiki:"Stefan Kießling"},{t:"Rudi Völler",wiki:"Rudi Völler"},{t:"Xabi Alonso",wiki:"Xabi Alonso"},{t:"Florian Wirtz",wiki:"Florian Wirtz"},{t:"Patrik Schick",wiki:"Patrik Schick"},{t:"Michael Ballack",wiki:"Michael Ballack"}];
+const PUZZLE_ONLINE=[{t:"BayArena",wiki:"BayArena"},{t:"Ulf Kirsten",wiki:"Ulf Kirsten"},{t:"Stefan Kießling",wiki:"Stefan Kießling"},{t:"Rudi Völler",wiki:"Rudi Völler"},{t:"Xabi Alonso",wiki:"Xabi Alonso"},{t:"Florian Wirtz",wiki:"Florian Wirtz"},{t:"Patrik Schick",wiki:"Patrik Schick"},{t:"Michael Ballack",wiki:"Michael Ballack"}];
+// Fest eingebaute Fotos (beim Bauen der App von Wikimedia Commons geladen) zuerst, online nur als Ersatz
+const PUZZLE_PICS=[{t:"Butti im Stadion",src:"puzzle_lion.jpg"},{t:"Torwart Butti",src:"puzzle_keeper.jpg"}]
+  .concat((window.PZ_PICS||[]).map(p=>({t:p.t,src:"pz/"+p.file,credit:[p.artist,p.license].filter(Boolean).join(" · ")})))
+  .concat(PUZZLE_ONLINE.filter(o=>!(window.PZ_PICS||[]).some(p=>p.t===o.t)));
 const picCache={};
 async function puzzlePic(p){
   if(p.src) return p.src; if(picCache[p.wiki]) return picCache[p.wiki];
@@ -3288,6 +3293,7 @@ async function puzzleGo(i){
   const n=puz?puz.n:3;
   openSheetRaw(`<div class="qhead"><span id="sheetTitle">${esc(p.t)}</span><span><span id="puzMoves">0</span> Züge · <span id="puzTime">0:00</span></span></div>
     <div class="puz" id="puz" style="--n:${n}"><div class="puzdone" id="puzDone"></div></div>
+    ${p.credit?`<p class="legend" style="margin:8px 0 0">Foto: ${esc(p.credit)} · Wikimedia Commons</p>`:p.wiki?`<p class="legend" style="margin:8px 0 0">Foto: Wikipedia / Wikimedia Commons</p>`:""}
     <div class="btnrow" style="margin-top:12px"><button type="button" class="reveal" id="puzPeek" style="background:var(--surface-2);color:var(--fg)">👁 Vorschau halten</button><button type="button" class="reveal" data-game="puzzle" style="background:var(--surface-2);color:var(--fg)">Anderes Foto</button></div>
     <canvas class="pk-fx" id="puzFx" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:60"></canvas>`);
   const box=$("puz"), S=box.clientWidth, ts=S/n;
