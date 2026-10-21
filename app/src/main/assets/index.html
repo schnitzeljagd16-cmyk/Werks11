@@ -755,6 +755,86 @@ dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
 .crest{transition:transform .5s}
 .newrec{animation:msgPop .7s cubic-bezier(.2,1.4,.4,1) both}
 .stale{color:var(--loss);font-weight:700}
+
+/* ===== 2.4: Tages-Challenge, Glücksrad, neue Spiele ===== */
+.game.r{background:linear-gradient(150deg,#e85d04,#7a2400)}
+.game.h{background:linear-gradient(150deg,#0f766e,#053b37)}
+.game.z{background:linear-gradient(150deg,#7c3aed,#2e1065)}
+.game.g{background:linear-gradient(150deg,#be185d,#4a0623)}
+.game.x{background:linear-gradient(150deg,#475569,#0f172a)}
+.game.l{background:linear-gradient(150deg,#15803d,#052e16)}
+.game .today{position:absolute;right:10px;top:10px;font:700 11px/1 var(--body);font-style:normal;background:#fff;color:var(--red);padding:5px 8px;border-radius:999px;animation:pulse 1.6s infinite}
+.daily{margin-top:14px;background:linear-gradient(135deg,var(--surface),var(--soft));border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--shadow);animation:rise .4s both}
+.daily .dh{display:flex;justify-content:space-between;align-items:center}
+.daily .streak{font:800 15px/1 var(--display)}
+.daily p{margin:10px 0;font:600 17px/1.3 var(--display)}
+.daily .dr{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.daily.done{border-color:var(--win)}
+.wheelcard{margin-top:10px;width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);background:var(--surface);color:inherit;border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;position:relative}
+.wheelcard b{display:block;font:italic 800 20px/1 var(--display);text-transform:uppercase}
+.wheelcard small{color:var(--muted);font-size:13px}
+.wheelcard i{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-style:normal;background:var(--red);color:#fff;font:800 14px/26px var(--body);min-width:26px;text-align:center;border-radius:13px}
+.wheelcard.on{border-color:var(--red);box-shadow:0 0 0 2px var(--red),var(--shadow)}
+.wmini{width:44px;height:44px;border-radius:50%;flex:none;background:conic-gradient(#d6001c 0 45deg,#1a1a1a 45deg 90deg,#d6001c 90deg 135deg,#1a1a1a 135deg 180deg,#d6001c 180deg 225deg,#c58a00 225deg 270deg,#d6001c 270deg 315deg,#1a1a1a 315deg);box-shadow:0 0 0 3px #fff,0 0 0 4px var(--line)}
+.wheelcard.on .wmini{animation:rot 3s linear infinite}
+.wheelwrap{position:relative;width:min(84vw,320px);aspect-ratio:1;margin:4px auto 14px}
+.wheel{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 6px #fff,0 0 0 8px #d6001c,0 10px 30px rgba(0,0,0,.3)}
+.wheel span{position:absolute;left:50%;top:0;width:0;height:50%;transform-origin:50% 100%}
+.wheel span b{position:absolute;top:12%;left:0;transform:translateX(-50%);color:#fff;font:italic 800 18px/1 var(--display);text-shadow:0 1px 3px rgba(0,0,0,.5);white-space:nowrap}
+.wptr{position:absolute;left:50%;top:-10px;width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:26px solid #f2c200;transform:translateX(-50%);z-index:2;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
+.whub{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.35);overflow:hidden;display:grid;place-items:center}
+.whub img{width:100%;height:100%;object-fit:cover}
+.wfact{display:block;font-size:14.5px;line-height:1.5;color:var(--fg)}
+.rn{position:relative;aspect-ratio:4/3;border-radius:18px;overflow:hidden;touch-action:none;user-select:none;background:#2f8d4c}
+.rn canvas{position:absolute;inset:0;width:100%;height:100%}
+.rn-hud{position:absolute;left:10px;right:10px;top:8px;display:flex;justify-content:space-between;color:#fff;font:800 20px/1 var(--display);text-shadow:0 2px 6px rgba(0,0,0,.6);pointer-events:none}
+.rn .kp-hint{bottom:auto;top:46%}
+.hlrow{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:stretch}
+.hlrow .vs{align-self:center;font:italic 800 20px/1 var(--display);color:var(--muted)}
+.hl{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 10px;text-align:center;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:6px;animation:rise .35s both;transition:box-shadow .2s}
+.hl img,.hl .mono{width:52px;height:52px;object-fit:contain;display:grid;place-items:center;border-radius:12px;background:var(--surface-2);font:800 18px/1 var(--display)}
+.hl b{font-size:15px;line-height:1.2}
+.hl small{color:var(--muted);font-size:12px}
+.hl em{font:italic 800 32px/1 var(--display);font-style:normal;margin-top:4px}
+.hl em span{font:600 12px/1 var(--body);color:var(--muted)}
+.hl.ok{box-shadow:0 0 0 3px var(--win)}.hl.bad{box-shadow:0 0 0 3px var(--loss);animation:nope .35s}
+.btnrow2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btnrow2 .bigbtn{margin:0}
+.tlist{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.tli{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--surface);color:inherit;border-radius:14px;padding:10px 12px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.tli i{flex:none;width:28px;height:28px;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;font:800 15px/1 var(--display);font-style:normal}
+.tli.sel i{background:var(--red);border:0;color:#fff}
+.tli b{display:block;font-size:14.5px}.tli small{color:var(--muted);font-size:13px;line-height:1.35}
+.tli.ok{border-color:var(--win);box-shadow:0 0 0 2px var(--win)}.tli.bad{border-color:var(--loss);box-shadow:0 0 0 2px var(--loss)}
+.tli .yr{font-style:normal;font-weight:800;color:var(--fg)}
+.rsgrid{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}
+.rsgrid .vs{font:800 34px/1 var(--display)}
+.rsteam{text-align:center}.rsteam b{display:block;min-height:2.6em;font-size:14px;line-height:1.25}
+.stepper{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
+.stepper button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);font:800 22px/1 var(--body);cursor:pointer}
+.stepper span{font:800 44px/1 var(--display);min-width:32px}
+.rsres{margin-top:12px;text-align:center;animation:bubbleIn .35s both}
+.rsres.ok{border-color:var(--win)}.rsres.bad{border-color:var(--loss)}
+.hgtop{display:flex;gap:12px;align-items:center;margin:8px 0}
+.hgl{position:relative;width:76px;height:76px;flex:none;transition:filter .3s}
+.hgl img{width:100%;height:100%;object-fit:contain}
+.hgl i{position:absolute;width:9px;height:13px;background:#5ab4ff;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:drip 1.2s ease-in infinite}
+.hgl i:nth-child(2){left:4px;top:20px}.hgl i:nth-child(3){right:2px;top:14px;animation-delay:.3s}.hgl i:nth-child(4){left:10px;top:4px;animation-delay:.6s}.hgl i:nth-child(5){right:12px;top:2px;animation-delay:.2s}.hgl i:nth-child(6){left:0;top:42px;animation-delay:.8s}.hgl i:nth-child(7){right:0;top:40px;animation-delay:.5s}
+@keyframes drip{0%{transform:translateY(0);opacity:1}100%{transform:translateY(16px);opacity:0}}
+.hgl.s3,.hgl.s4{filter:hue-rotate(-12deg) saturate(1.3)}.hgl.s5,.hgl.s6{filter:hue-rotate(-20deg) saturate(1.6);animation:nope .5s infinite}.hgl.s7{filter:grayscale(1);transform:rotate(-20deg)}
+.hgword{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin:14px 0}
+.hgword .lt{width:26px;height:36px;border-bottom:3px solid var(--fg);display:grid;place-items:center;font:800 24px/1 var(--display);text-transform:uppercase}
+.hgword .lt.on{animation:msgPop .3s}
+.hgword .sp{width:14px}
+.kb{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.kb button{height:42px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:800 17px/1 var(--display);cursor:pointer}
+.kb button.hit{background:var(--win);color:#fff;border-color:var(--win)}.kb button.miss{background:var(--surface-2);color:var(--muted);text-decoration:line-through}
+.elfchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.elfchips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 12px;font:600 14px/1 var(--body);cursor:pointer;transition:transform .12s}
+.elfchips button.sel{background:var(--red);color:#fff;border-color:var(--red)}
+.elfchips button.ok{background:var(--win);color:#fff;border-color:var(--win)}
+.elfchips button.bad{background:var(--loss);color:#fff;border-color:var(--loss);text-decoration:line-through}
+.elfchips button.missed{border:2px dashed var(--win)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -2742,7 +2822,13 @@ const BADGES=[
   ["puzzle","Puzzle-Profi","Ein Foto-Puzzle gelöst","🧩",()=>stats().puzzle||0,1],
   ["memory","Gedächtnis-Ass","Wappen-Memory geschafft","🃏",()=>stats().memory||0,1],
   ["keep","Ballzauberer","20 Ballkontakte beim Jonglieren","🤹",()=>hs("hsKeep"),20],
-  ["club","Gegner-Experte","5 Vereinsporträts angeschaut","🔎",()=>stats().club||0,5]
+  ["club","Gegner-Experte","5 Vereinsporträts angeschaut","🔎",()=>stats().club||0,5],
+  ["run","Sprinter","1.000 Meter im Butti-Sprint","🏃",()=>hs("hsRun"),1000],
+  ["hilo","Statistik-Profi","10 richtig in Folge bei „Höher oder tiefer?“","📊",()=>hs("hsHilo"),10],
+  ["time","Zeitreisender","12 Punkte beim Zeitstrahl","⏳",()=>hs("hsTime"),12],
+  ["hang","Namensfuchs","5 Namen in Folge erraten","🔤",()=>hs("hsHang"),5],
+  ["lucky","Glückspilz","3 Glückssterne am Glücksrad","🍀",()=>load("stars")||0,3],
+  ["daily","Tages-Held","7 Tage in Folge die Tages-Challenge","🔥",()=>dailyState().streak||0,7]
 ];
 function badge(){
   const got=load("badgesGot")||{}; let fresh=null;
@@ -2834,6 +2920,7 @@ function endQuiz(){
   openSheetRaw(`<p class="qq" id="sheetTitle" style="text-align:center;margin-top:10px">${msg}</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
     <div class="qscore"><div><b>${quiz.score}</b><small>Punkte</small></div><div><b>${quiz.correct}/${n}</b><small>richtig</small></div><div><b>${Math.max(best,quiz.score)}</b><small>Rekord</small></div></div>
     <button type="button" class="bigbtn" data-game="${quiz.week?"week":"quiz"}">Nochmal spielen</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
+  if(!quiz.week) dailyProgress("quiz",quiz.correct);
   quiz=null; renderFan(); badge();
 }
 document.addEventListener("click",e=>{ const a=e.target.closest("[data-ans]"); if(a&&!a.disabled&&quiz) answer(a.dataset.ans); });
@@ -2867,28 +2954,6 @@ window.openDailyFact=(i,text)=>{ i=+i; if(i>=0 && B04_FACTS[i]){ factIdx=i; stor
 window.openTabNative=(t)=>{ if(document.querySelector(`[data-tab="${t}"]`)){ closeSheet(); showTab(t); } };
 
 /* ---------- Fanzone (eigener Reiter) ---------- */
-const GAMES=[
-  ["pen","e","Elfer-König","Schieß gegen Torwart Butti",()=>`Rekord ${hs("hsPen")}`,'<circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>'],
-  ["puzzle","p","Foto-Puzzle","Schieb die Teile zurecht",()=>`Bestzeit ${puzBest(3)}`,'<path d="M4 4h6v3a2 2 0 1 0 4 0V4h6v6h-3a2 2 0 1 0 0 4h3v6h-6v-3a2 2 0 1 0-4 0v3H4z"/>'],
-  ["memory","m","Wappen-Memory","Finde alle Vereinspaare",()=>`Rekord ${hs("hsMem")||"–"} Züge`,'<rect x="3" y="4" width="8" height="11" rx="2"/><rect x="13" y="9" width="8" height="11" rx="2"/>'],
-  ["keep","j","Jonglieren","Halte den Ball in der Luft",()=>`Rekord ${hs("hsKeep")}`,'<circle cx="12" cy="7" r="4"/><path d="M6 21c1-3 3-5 6-5s5 2 6 5"/>'],
-  ["quiz","q","Werkself-Quiz","10 Fragen, schnell sein lohnt sich",()=>`Rekord ${hs("hsQuiz")}`,'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>'],
-  ["week","k","Wochenquiz","Fragen zum aktuellen Geschehen",()=>`Diese Woche ${hs("hsWeek_"+weekKey())}`,'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
-  ["who","w","Wer ist das?","Erkenne Spieler an Hinweisen",()=>`Rekord ${hs("hsWho")}`,'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'],
-  ["tipp","t","Tippspiel","Tippe die Ergebnisse der Werkself",()=>`${tipTotal().p} Punkte`,'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'],
-  ["badges","b","Meine Saison","Abzeichen und Spieler des Spiels",()=>`${Object.keys(load("badgesGot")||{}).length}/${BADGES.length} Abzeichen`,'<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-2 7 5.5-3 5.5 3-2-7"/>']
-];
-function renderFan(){
-  if($("fanBox")) $("fanBox").innerHTML="";
-  const box=$("funBox"); if(!box) return;
-  const h=new Date().getHours(); const hi=h<11?"Guten Morgen":h<18?"Servus":"N'Abend";
-  const pen=hs("hsPen"), tips=tipTotal().p;
-  const line=pen?`Dein Elfer-Rekord gegen mich: ${pen} in Folge. Schaffst du mehr?`:"Traust du dich gegen mich ins Elfmeterschießen?";
-  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(line)}${tips?` Im Tippspiel hast du schon ${tips} Punkte.`:""}</p></div><img class="lion" src="lion_keeper.webp" alt="Butti im Torwarttrikot" width="369" height="450" data-game="pen"></div>
-    <div class="sec-h" style="margin:18px 0 8px"><h2>Minispiele</h2></div>
-    <div class="fan">${GAMES.map(([k,c,t,d,hsF,ic],i)=>`<button type="button" class="game ${c}" data-game="${k}" style="--i:${i}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg><span class="hs">${esc(hsF())}</span><span><b>${esc(t)}</b><br><small>${esc(d)}</small></span></button>`).join("")}</div>`;
-}
-
 /* ---------- Social Media ---------- */
 const SOCIAL_PLAT={reddit:["Reddit","#ff4500"],bluesky:["Bluesky","#1185fe"],mastodon:["Mastodon","#6364ff"],youtube:["YouTube","#e00000"],web:["Im Netz","#6e6164"]};
 const SOCIAL_REL=/leverkusen|werkself|bayer ?04|#b04\b|\bb04\b|bayarena|xabi|schick|hjulmand|rolfes|tapsoba|grimaldo|andrich/i;
@@ -3210,7 +3275,7 @@ function penShoot(u,v,zone){
   bs.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:.45},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${(Gr.bottom-Pk.top)-sy}px)) scale(.45)`,opacity:.15}],{duration:flight,easing:"ease-out",fill:"forwards"});
   setTimeout(()=>penKeeperAnim(pose,620),40);
   const end=(ok,text,cls)=>{
-    if(ok){ pen.streak++; $("pkStreak").textContent=pen.streak; setTimeout(()=>{ penReset(); pen&&(pen.busy=false); },1300); }
+    if(ok){ pen.streak++; $("pkStreak").textContent=pen.streak; dailyProgress("pen",pen.streak); setTimeout(()=>{ penReset(); pen&&(pen.busy=false); },1300); }
     else setTimeout(()=>penOver(text),1900);
   };
   setTimeout(()=>{
@@ -3318,7 +3383,7 @@ function puzzleMove(tile){
   $("puzMoves").textContent=puz.moves; sfx("slide");
   if(order.every((t,i)=>t===i)){
     puz.done=true; clearInterval(puz.timer); const sec=Math.max(1,Math.round((Date.now()-puz.t0)/1000));
-    const k="hsPuz"+n, best=load(k), rec=!best||sec<best; if(rec) store(k,sec); bump("puzzle");
+    const k="hsPuz"+n, best=load(k), rec=!best||sec<best; if(rec) store(k,sec); bump("puzzle"); dailyProgress("puzzle",1);
     setTimeout(()=>{ $("puzDone").classList.add("peek","won"); sfx("win"); confetti($("puzFx"),120); },250);
     setTimeout(()=>{ if(!$("puz")) return; $("puz").insertAdjacentHTML("afterend",`<div class="box" style="margin-top:12px;text-align:center"><p class="qq" style="margin:0">Geschafft in ${fmtSec(sec)} mit ${puz.moves} Zügen!</p>${rec?'<div class="newrec" style="margin-top:8px">Neue Bestzeit!</div>':""}</div>`); renderFan(); },900);
   }
@@ -3350,7 +3415,7 @@ function memFlip(i){
   mem.moves++; $("memMoves").textContent=mem.moves;
   const [a,b]=mem.open.map(k=>mem.cards.find(c=>c.i===k)); const ea=document.querySelector(`[data-mc="${a.i}"]`), eb=el;
   if(a.k===b.k){ mem.open=[]; mem.found++; setTimeout(()=>{ ea.classList.add("ok"); eb.classList.add("ok"); sfx("pair"); },250);
-    if(mem.found===mem.cards.length/2){ const best=hs("hsMem"), rec=!best||mem.moves<best; if(rec) store("hsMem",mem.moves); bump("memory");
+    if(mem.found===mem.cards.length/2){ const best=hs("hsMem"), rec=!best||mem.moves<best; if(rec) store("hsMem",mem.moves); bump("memory"); dailyProgress("memory",1);
       setTimeout(()=>{ sfx("win"); confetti($("memFx"),120); $("mem").insertAdjacentHTML("afterend",`<div class="box" style="margin-top:12px;text-align:center"><p class="qq" style="margin:0">Alle Paare in ${mem.moves} Zügen!</p>${rec?'<div class="newrec" style="margin-top:8px">Neuer Rekord!</div>':""}<button type="button" class="bigbtn" data-game="memory" style="margin-top:12px">Nochmal</button></div>`); renderFan(); },600); }
   } else { mem.lock=true; setTimeout(()=>{ ea.classList.remove("up"); eb.classList.remove("up"); mem.open=[]; mem.lock=false; },850); }
 }
@@ -3393,7 +3458,7 @@ function keepLoop(now){
   if(!k.over) requestAnimationFrame(keepLoop);
 }
 function keepOver(){
-  const n=keep.n, best=hs("hsKeep"), rec=n>best; if(rec) store("hsKeep",n); bump("keep"); sfx(n>=10?"win":"miss");
+  const n=keep.n, best=hs("hsKeep"), rec=n>best; if(rec) store("hsKeep",n); bump("keep"); dailyProgress("keep",n); sfx(n>=10?"win":"miss");
   setTimeout(()=>{ if(!keep) return; keep=null;
     const say=n<5?"Der Ball ist rund – probier's gleich nochmal!":n<15?"Gute Ballkontrolle!":n<30?"Wow, du jonglierst wie ein Profi!":"Weltklasse! Das schafft nicht mal Butti.";
     openSheetRaw(`<div class="mascot-end"><img src="lion_run.webp" alt="" class="${rec?"cheer":"nod"}"><div class="bubble"><p>${esc(say)}</p></div></div>
@@ -3405,10 +3470,405 @@ document.addEventListener("click",e=>{
   const z=e.target.closest("[data-pkz]"); if(z){ penZone(+z.dataset.pkz); return; }
   const m=e.target.closest("[data-penmode]"); if(m&&pen&&!pen.busy){ store("penMode",m.dataset.penmode); startPen(); }
 });
-window.__stopGames=()=>{ pen=null; keep=null; mem=null; if(puz&&puz.timer) clearInterval(puz.timer); puz=null; };
+window.__stopGames=()=>{ pen=null; keep=null; mem=null; try{ run=null; hilo=null; tl=null; rs=null; hg=null; elf=null; }catch(e){} if(puz&&puz.timer) clearInterval(puz.timer); puz=null; };
+
+/* ---------- Fanzone: Spieleliste, Fan-Punkte, Tages-Challenge ---------- */
+const GAMES=[
+  ["run","r","Butti-Sprint","Spring über Grätschen, sammle Bälle",()=>`Rekord ${hs("hsRun")} m`,'<path d="M13 4a2 2 0 1 0 0 .01M8 21l3-6 3 2v5M6 12l3-3 4 1 3 3 3 1"/>'],
+  ["pen","e","Elfer-König","Schieß gegen Torwart Butti",()=>`Rekord ${hs("hsPen")}`,'<circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>'],
+  ["hilo","h","Höher oder tiefer?","Wer hat mehr Punkte, Tore, Spiele?",()=>`Rekord ${hs("hsHilo")}`,'<path d="M7 14l5-5 5 5M7 20l5-5 5 5"/>'],
+  ["time","z","Zeitstrahl","Bring die Vereinsgeschichte in Ordnung",()=>`Rekord ${hs("hsTime")}/15`,'<path d="M3 12h18M7 8v8M12 6v12M17 9v6"/>'],
+  ["result","g","Wie ging's aus?","Rate Ergebnisse legendärer Spiele",()=>`Rekord ${hs("hsResult")} Pkt.`,'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M12 6v12M8 10v4M16 10v4"/>'],
+  ["hang","x","Namen raten","Errate Spieler Buchstabe für Buchstabe",()=>`Rekord ${hs("hsHang")}`,'<path d="M4 20h16M7 20V4h8v3M15 10a2 2 0 1 0 0 .01"/>'],
+  ["elf","l","Elf des Tages","Wer stand zuletzt in der Startelf?",()=>`Rekord ${hs("hsElf")}/11`,'<path d="M4 4h16v16H4zM4 12h16M12 4v16"/><circle cx="12" cy="12" r="3"/>'],
+  ["puzzle","p","Foto-Puzzle","Schieb die Teile zurecht",()=>`Bestzeit ${puzBest(3)}`,'<path d="M4 4h6v3a2 2 0 1 0 4 0V4h6v6h-3a2 2 0 1 0 0 4h3v6h-6v-3a2 2 0 1 0-4 0v3H4z"/>'],
+  ["memory","m","Wappen-Memory","Finde alle Vereinspaare",()=>`Rekord ${hs("hsMem")||"–"} Züge`,'<rect x="3" y="4" width="8" height="11" rx="2"/><rect x="13" y="9" width="8" height="11" rx="2"/>'],
+  ["keep","j","Jonglieren","Halte den Ball in der Luft",()=>`Rekord ${hs("hsKeep")}`,'<circle cx="12" cy="7" r="4"/><path d="M6 21c1-3 3-5 6-5s5 2 6 5"/>'],
+  ["quiz","q","Werkself-Quiz","10 Fragen, schnell sein lohnt sich",()=>`Rekord ${hs("hsQuiz")}`,'<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/>'],
+  ["week","k","Wochenquiz","Fragen zum aktuellen Geschehen",()=>`Diese Woche ${hs("hsWeek_"+weekKey())}`,'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  ["who","w","Wer ist das?","Erkenne Spieler an Hinweisen",()=>`Rekord ${hs("hsWho")}`,'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'],
+  ["tipp","t","Tippspiel","Tippe die Ergebnisse der Werkself",()=>`${tipTotal().p} Punkte`,'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'],
+  ["badges","b","Meine Saison","Abzeichen und Spieler des Spiels",()=>`${Object.keys(load("badgesGot")||{}).length}/${BADGES.length} Abzeichen`,'<circle cx="12" cy="9" r="6"/><path d="M8.5 14l-2 7 5.5-3 5.5 3-2-7"/>']
+];
+const DAILY_TASKS=[
+  ["pen",5,"Verwandle 5 Elfmeter in Folge","pen"],
+  ["run",500,"Lauf 500 Meter im Butti-Sprint","run"],
+  ["keep",15,"Schaffe 15 Ballkontakte beim Jonglieren","keep"],
+  ["hilo",5,"Schaffe 5 richtige Antworten in Folge bei „Höher oder tiefer?“","hilo"],
+  ["time",1,"Bring einen Zeitstrahl komplett richtig in Ordnung","time"],
+  ["result",6,"Hol 6 Punkte bei „Wie ging's aus?“","result"],
+  ["hang",2,"Errate 2 Namen beim Namenraten","hang"],
+  ["puzzle",1,"Löse ein Foto-Puzzle","puzzle"],
+  ["elf",8,"Finde mindestens 8 Spieler der Startelf","elf"],
+  ["memory",1,"Schaffe ein Wappen-Memory","memory"],
+  ["quiz",7,"Beantworte im Werkself-Quiz 7 Fragen richtig","quiz"]
+];
+function dayNum(d){ d=d||new Date(); return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/86400e3); }
+function todayTask(){ return DAILY_TASKS[dayNum()%DAILY_TASKS.length]; }
+function dailyState(){ const s=load("dailyCh")||{}; return Object.assign({day:0,done:false,streak:0,last:0},s); }
+function fanPts(){ return load("fanPts")||0; }
+function addFanPts(n){ store("fanPts",fanPts()+n); }
+function toast(t){ notice(t); clearTimeout(toast._t); toast._t=setTimeout(()=>notice(""),4500); }
+function dailyProgress(kind,val){
+  const [k,goal]=todayTask(); if(k!==kind||val<goal) return;
+  const s=dailyState(), d=dayNum(); if(s.day===d&&s.done) return;
+  s.streak=(s.last===d-1)?s.streak+1:1; s.last=d; s.day=d; s.done=true; store("dailyCh",s);
+  addFanPts(20); sfx("win"); toast(`🔥 Tages-Challenge geschafft! +20 Fan-Punkte · ${s.streak} ${s.streak===1?"Tag":"Tage"} in Folge`); setTimeout(badge,300); renderFan();
+}
+function wheelWins(){ const spun=load("wheelSpun")||[]; return (state.matches||[]).filter(m=>outcome(m)==="w" && !spun.includes(m.id) && Date.now()-m.t<14*86400e3).sort((a,b)=>b.t-a.t); }
+function renderFan(){
+  if($("fanBox")) $("fanBox").innerHTML="";
+  const box=$("funBox"); if(!box) return;
+  const h=new Date().getHours(); const hi=h<11?"Guten Morgen":h<18?"Servus":"N'Abend";
+  const pen=hs("hsPen"), tips=tipTotal().p;
+  const line=pen?`Dein Elfer-Rekord gegen mich: ${pen} in Folge. Schaffst du mehr?`:"Traust du dich gegen mich ins Elfmeterschießen?";
+  const [tk,tgoal,ttxt,tgame]=todayTask(), ds=dailyState(), done=ds.day===dayNum()&&ds.done, streak=(ds.last>=dayNum()-1)?ds.streak:0;
+  const ww=wheelWins();
+  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(line)}${tips?` Im Tippspiel hast du schon ${tips} Punkte.`:""}</p></div><img class="lion" src="lion_keeper.webp" alt="Butti im Torwarttrikot" width="369" height="450" data-game="pen"></div>
+    <div class="daily${done?" done":""}"><div class="dh"><span class="chipc">Tages-Challenge</span><span class="streak">🔥 ${streak} ${streak===1?"Tag":"Tage"}</span></div>
+      <p>${done?"✅ Geschafft! Morgen wartet eine neue Aufgabe.":esc(ttxt)}</p>
+      <div class="dr"><span>⭐ ${fanPts()} Fan-Punkte</span>${done?"":`<button type="button" class="reveal" data-game="${tgame}">Los geht's</button>`}</div></div>
+    <button type="button" class="wheelcard${ww.length?" on":""}" data-game="wheel"><span class="wmini"></span><span><b>Glücksrad</b><small>${ww.length?`Sieg gegen ${esc(short(ww[0].home?ww[0].t2:ww[0].t1))} – du darfst ${ww.length>1?ww.length+"× ":""}drehen!`:"Nach jedem Sieg der Werkself darfst du drehen."}</small></span>${ww.length?`<i>${ww.length}</i>`:""}</button>
+    <div class="sec-h" style="margin:18px 0 8px"><h2>Minispiele</h2></div>
+    <div class="fan">${GAMES.map(([k,c,t,d,hsF,ic],i)=>`<button type="button" class="game ${c}" data-game="${k}" style="--i:${i}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg><span class="hs">${esc(hsF())}</span><span><b>${esc(t)}</b><br><small>${esc(d)}</small></span>${k===tgame&&!done?'<em class="today">Heute</em>':""}</button>`).join("")}</div>`;
+}
+function endScreen(img,say,title,rec,stats,again){
+  openSheetRaw(`<div class="mascot-end"><img src="${img}" alt="" class="${rec?"cheer":"nod"}"><div class="bubble"><p>${esc(say)}</p></div></div>
+    <p class="qq" id="sheetTitle" style="text-align:center;margin-top:4px">${esc(title)}</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
+    <div class="qscore">${stats.map(([v,l])=>`<div><b>${esc(String(v))}</b><small>${esc(l)}</small></div>`).join("")}</div>
+    <button type="button" class="bigbtn" data-game="${again}">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`);
+  renderFan();
+}
+function setHs(k,v){ const best=hs(k), rec=v>best; if(rec) store(k,v); return {best:Math.max(best,v),rec}; }
+
+/* ---------- Butti-Sprint ---------- */
+let run=null;
+function startRun(){
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Butti-Sprint</span><span>Rekord ${hs("hsRun")} m</span></div>
+    <p class="legend" style="margin:6px 0 10px">Tippe zum Springen – in der Luft noch einmal tippen für einen Doppelsprung. Weich Grätschen und Hütchen aus und sammle Bälle (+5) und Pokale (+25).</p>
+    <div class="rn" id="rn"><canvas id="rnCv"></canvas><div class="rn-hud"><span id="rnM">0 m</span><span id="rnP">⚽ 0</span></div><div class="kp-hint" id="rnHint">Tippe zum Starten</div></div>`);
+  const cv=$("rnCv"), r=cv.getBoundingClientRect(), dpr=Math.min(2,devicePixelRatio||1); cv.width=r.width*dpr; cv.height=r.height*dpr;
+  const W=r.width,H=r.height, img=new Image(); img.src="lion_run.webp";
+  const ball=new Image(); ball.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(BALL_SVG.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" '));
+  run={W,H,dpr,img,ball,ground:H*.84,bh:H*.34,y:0,vy:0,jumps:0,speed:W*.56,dist:0,pts:0,obs:[],items:[],next:W*.9,nextI:W*.6,t:0,started:false,over:false,last:performance.now(),flash:0};
+  run.y=run.ground;
+  cv.addEventListener("pointerdown",runTap);
+  requestAnimationFrame(runLoop);
+}
+function runTap(){
+  const k=run; if(!k||k.over) return;
+  if(!k.started){ k.started=true; $("rnHint").classList.add("off"); }
+  if(k.jumps<2){ k.vy=-k.H*(k.jumps?2.05:2.45); k.jumps++; sfx("tap"); }
+}
+function runSpawn(k){
+  const r=Math.random(), s=k.speed/k.W;
+  if(r<.42) k.obs.push({type:"cone",x:k.W+20,w:k.H*.07,h:k.H*.1});
+  else if(r<.8) k.obs.push({type:"slide",x:k.W+20,w:k.H*.24,h:k.H*.085,ph:Math.random()*6});
+  else k.obs.push({type:"wall",x:k.W+20,w:k.H*.09,h:k.H*.17});
+  k.next=k.W*(.55+Math.random()*.7)+k.speed*.25+(s>1.2?-k.W*.1:0);
+}
+function runLoop(now){
+  const k=run, cv=$("rnCv"); if(!k||!cv) return; const c=cv.getContext("2d");
+  const dt=Math.min(.033,(now-k.last)/1000); k.last=now; k.t+=dt;
+  if(k.started&&!k.over){
+    k.speed=Math.min(k.W*1.6,k.speed+k.W*.016*dt);
+    const dx=k.speed*dt; k.dist+=dx;
+    k.vy+=k.H*7.2*dt; k.y+=k.vy*dt; if(k.y>=k.ground){ k.y=k.ground; k.vy=0; k.jumps=0; }
+    k.next-=dx; if(k.next<=0) runSpawn(k);
+    k.nextI-=dx; if(k.nextI<=0){ const tro=Math.random()<.12; k.items.push({x:k.W+20,y:k.ground-k.H*(.12+Math.random()*.42),tro,got:false}); k.nextI=k.W*(.35+Math.random()*.8); }
+    k.obs.forEach(o=>o.x-=dx); k.items.forEach(o=>o.x-=dx);
+    k.obs=k.obs.filter(o=>o.x>-o.w-20); k.items=k.items.filter(o=>o.x>-30&&!o.gone);
+    // Kollision (Körper etwas kleiner als das Bild)
+    const bw=k.bh*.5, bx=k.W*.14+k.bh*.2, by=k.y-k.bh*.82;
+    for(const o of k.obs){ const ox=o.x+o.w*.2, ow=o.w*.6, oy=k.ground-o.h*.85;
+      if(bx<ox+ow && bx+bw>ox && k.y>oy+4 && by<k.ground){ k.over=true; break; } }
+    k.items.forEach(o=>{ if(!o.got && Math.abs(o.x-(bx+bw/2))<k.H*.09 && o.y>by-k.H*.04 && o.y<k.y){ o.got=true; o.gt=k.t; k.pts+=o.tro?25:5; sfx(o.tro?"pair":"flip"); } if(o.got&&k.t-o.gt>.35) o.gone=true; });
+    $("rnM").textContent=Math.floor(k.dist/(k.W*.08))+" m"; $("rnP").textContent="⚽ "+k.pts;
+    if(k.over){ k.flash=1; sfx("miss"); if(navigator.vibrate) navigator.vibrate([60,40,60]); setTimeout(runOver,900); }
+  }
+  // Zeichnen
+  c.setTransform(k.dpr,0,0,k.dpr,0,0);
+  const W=k.W,H=k.H,G=k.ground;
+  let g=c.createLinearGradient(0,0,0,H*.35); g.addColorStop(0,"#0e1630"); g.addColorStop(1,"#27324f"); c.fillStyle=g; c.fillRect(0,0,W,H*.35);
+  // Tribüne mit Fans (Parallaxe)
+  const off1=(k.dist*.15)%24; c.fillStyle="#2a1d22"; c.fillRect(0,H*.12,W,H*.25);
+  for(let y=H*.14;y<H*.36;y+=7) for(let x=-off1;x<W;x+=8){ const v=((Math.floor((x+k.dist*.15)/8)*7+Math.floor(y))%5); c.fillStyle=v===0?"#d6001c":v===1?"#f0f0f0":v===2?"#111":v===3?"#8a1020":"#3a2a2e"; c.fillRect(x,y,4,4); }
+  // Bandenwerbung
+  const off2=(k.dist*.6)%160; c.fillStyle="#111"; c.fillRect(0,H*.37,W,H*.07);
+  c.font=`italic 800 ${Math.round(H*.045)}px "Barlow Condensed",Arial`; c.textBaseline="middle";
+  for(let x=-off2;x<W;x+=160){ c.fillStyle=(Math.floor((x+k.dist*.6)/160)%2)?"#d6001c":"#111"; c.fillRect(x,H*.37,158,H*.07); c.fillStyle="#fff"; c.fillText(Math.floor((x+k.dist*.6)/160)%2?"BAYER 04":"WERKS11",x+18,H*.405); }
+  // Rasen
+  const off3=(k.dist)%60; for(let x=-off3;x<W;x+=60){ c.fillStyle="#2f8d4c"; c.fillRect(x,H*.44,30,H*.56); c.fillStyle="#287f43"; c.fillRect(x+30,H*.44,30,H*.56); }
+  c.fillStyle="rgba(255,255,255,.7)"; c.fillRect(0,G+2,W,2);
+  // Hindernisse
+  k.obs.forEach(o=>{ const x=o.x, y=G;
+    if(o.type==="cone"){ c.fillStyle="#ff7a00"; c.beginPath(); c.moveTo(x+o.w/2,y-o.h); c.lineTo(x+o.w,y); c.lineTo(x,y); c.fill(); c.fillStyle="#fff"; c.fillRect(x+o.w*.28,y-o.h*.55,o.w*.44,o.h*.14); }
+    else if(o.type==="slide"){ // grätschender Gegenspieler
+      c.fillStyle="#1d4ed8"; c.beginPath(); c.ellipse(x+o.w*.45,y-o.h*.45,o.w*.33,o.h*.33,-.1,0,7); c.fill();
+      c.fillStyle="#f1c27d"; c.beginPath(); c.arc(x+o.w*.85,y-o.h*.62,o.h*.28,0,7); c.fill();
+      c.strokeStyle="#0b1d5c"; c.lineWidth=o.h*.22; c.lineCap="round"; c.beginPath(); c.moveTo(x+o.w*.25,y-o.h*.35); c.lineTo(x-o.w*.02,y-o.h*.12); c.stroke();
+      c.fillStyle="#111"; c.fillRect(x-o.w*.1,y-o.h*.22,o.w*.16,o.h*.2); c.fillStyle="rgba(255,255,255,.5)"; for(let i=0;i<3;i++) c.fillRect(x+o.w+i*8+((k.t*60)%8),y-4-i*3,6,2); }
+    else { // zwei Verteidiger als Mauer
+      ["#1d4ed8","#1e40af"].forEach((col,i)=>{ const xx=x+i*o.w*.45; c.fillStyle=col; c.fillRect(xx,y-o.h*.8,o.w*.5,o.h*.55); c.fillStyle="#111"; c.fillRect(xx+o.w*.05,y-o.h*.25,o.w*.15,o.h*.25); c.fillRect(xx+o.w*.3,y-o.h*.25,o.w*.15,o.h*.25); c.fillStyle="#f1c27d"; c.beginPath(); c.arc(xx+o.w*.25,y-o.h*.9,o.w*.2,0,7); c.fill(); }); }
+  });
+  // Sammelobjekte
+  k.items.forEach(o=>{ const s=o.got?1+(k.t-o.gt)*3:1; c.save(); c.globalAlpha=o.got?Math.max(0,1-(k.t-o.gt)*3):1; c.translate(o.x,o.y-(o.got?(k.t-o.gt)*60:Math.sin(k.t*4+o.x*.05)*4)); c.scale(s,s);
+    if(o.tro){ c.font=`${Math.round(H*.09)}px serif`; c.textAlign="center"; c.textBaseline="middle"; c.fillText("🏆",0,0); }
+    else if(k.ball.complete) c.drawImage(k.ball,-H*.035,-H*.035,H*.07,H*.07);
+    c.restore(); });
+  // Butti
+  const air=k.y<G-1, bob=air?0:Math.abs(Math.sin(k.t*14))*k.H*.018, iw=k.bh*543/629;
+  c.fillStyle="rgba(0,0,0,.25)"; c.beginPath(); c.ellipse(W*.14+iw*.5,G+3,iw*.32*(air?.7:1),5,0,0,7); c.fill();
+  c.save(); c.translate(W*.14+iw*.5,k.y-bob); c.rotate(k.over?-.5:air?(k.vy<0?-.12:.08):Math.sin(k.t*14)*.03);
+  if(k.img.complete) c.drawImage(k.img,-iw*.5,-k.bh,iw,k.bh);
+  c.restore();
+  if(k.flash>0){ c.fillStyle=`rgba(214,0,28,${k.flash*.35})`; c.fillRect(0,0,W,H); k.flash=Math.max(0,k.flash-dt*1.5); }
+  if(run===k && (!k.over||k.flash>0)) requestAnimationFrame(runLoop);
+}
+function runOver(){
+  const k=run; if(!k) return; run=null;
+  const m=Math.floor(k.dist/(k.W*.08)), tot=m+k.pts; const r=setHs("hsRun",m); bump("run"); dailyProgress("run",m);
+  const say=m<150?"Autsch! Die Grätsche hab ich nicht kommen sehen.":m<500?"Gut gelaufen – aber da geht noch mehr!":m<1000?"Stark, du rennst wie Frimpong auf rechts!":"Wahnsinn – du bist ja nicht zu stoppen!";
+  endScreen("lion_run.webp",say,`${m} Meter gelaufen`,r.rec,[[m+" m","Strecke"],[k.pts,"Bonus"],[r.best+" m","Rekord"]],"run");
+}
+
+/* ---------- Höher oder tiefer? ---------- */
+let hilo=null;
+function hiloPool(){
+  const cats=[];
+  const bl=(state.comps||[]).find(c=>c.ck==="bl1");
+  if(bl&&bl.table&&bl.table.length>5) cats.push({q:"Welcher Verein hat mehr Punkte in der Bundesliga?",unit:"Punkte",items:bl.table.map(r=>({n:r.name,v:r.pkt,img:r.icon}))});
+  if(bl&&bl.table&&bl.table.length>5) cats.push({q:"Welcher Verein hat mehr Tore geschossen?",unit:"Tore",items:bl.table.map(r=>({n:r.name,v:+String(r.tore).split(":")[0]||0,img:r.icon}))});
+  (state.comps||[]).forEach(c=>{ if((c.scorers||[]).length>5) cats.push({q:`Wer hat mehr Tore in: ${COMP_SHORT[c.ck]||c.name}?`,unit:"Tore",items:c.scorers.slice(0,25).map(x=>({n:x.name,v:x.goals,sub:x.tname,img:x.icon}))}); });
+  const st=state.stats; if(st&&st.games&&st.games.length){ const agg={}; st.games.forEach(g=>Object.entries(g.players).forEach(([id,p])=>{ const a=agg[id]||(agg[id]={n:p.name,app:0,g:0,a:0}); a.app+=p.app||0; a.g+=p.g||0; a.a+=p.a||0; }));
+    const arr=Object.values(agg).filter(x=>x.app>0);
+    if(arr.length>5){ cats.push({q:"Wer hat mehr Einsätze für Bayer 04 in dieser Saison?",unit:"Einsätze",items:arr.map(x=>({n:x.n,v:x.app,sub:"Bayer 04"}))});
+      const sc=arr.filter(x=>x.g+x.a>0); if(sc.length>4) cats.push({q:"Wer hat mehr Scorerpunkte (Tore + Vorlagen) für Bayer 04?",unit:"Scorerpunkte",items:sc.map(x=>({n:x.n,v:x.g+x.a,sub:"Bayer 04"}))}); } }
+  return cats;
+}
+function startHilo(){
+  const cats=hiloPool();
+  if(!cats.length){ openSheetRaw(`<p class="qq" id="sheetTitle">Höher oder tiefer?</p><div class="empty">Für dieses Spiel braucht die App aktuelle Tabellen und Statistiken. Tippe oben auf Aktualisieren und versuch es gleich nochmal.</div>`); return; }
+  hilo={cats,streak:0}; hiloRound();
+}
+function hiloRound(){
+  const h=hilo; const cat=h.cats[Math.floor(Math.random()*h.cats.length)];
+  let a,b,tries=0; do{ a=cat.items[Math.floor(Math.random()*cat.items.length)]; b=cat.items[Math.floor(Math.random()*cat.items.length)]; tries++; }while((a===b||a.n===b.n||(a.v===b.v&&tries<20))&&tries<40);
+  h.cur={cat,a,b,busy:false};
+  const card=(x,show,id)=>`<div class="hl" id="${id}">${x.img?`<img src="${esc(x.img)}" alt="" onerror="this.remove()">`:`<span class="mono">${esc(initials(x.n))}</span>`}<b>${esc(x.n)}</b>${x.sub?`<small>${esc(x.sub)}</small>`:""}<em>${show?`${x.v} <span>${esc(cat.unit)}</span>`:"?"}</em></div>`;
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Höher oder tiefer?</span><span>Serie ${h.streak} · Rekord ${hs("hsHilo")}</span></div>
+    <p class="qq" style="margin:8px 0 12px">${esc(cat.q)}</p>
+    <div class="hlrow">${card(a,true,"hlA")}<span class="vs">VS</span>${card(b,false,"hlB")}</div>
+    <p class="legend" style="text-align:center;margin:12px 0 8px">Hat <b>${esc(b.n)}</b> mehr oder weniger als ${esc(a.n)}?</p>
+    <div class="btnrow2"><button type="button" class="bigbtn" data-hl="up">▲ Mehr</button><button type="button" class="bigbtn sec" data-hl="down">▼ Weniger</button></div>`);
+}
+function hiloAnswer(dir){
+  const h=hilo; if(!h||!h.cur||h.cur.busy) return; h.cur.busy=true;
+  const {a,b,cat}=h.cur, ok=b.v===a.v||(dir==="up"?b.v>a.v:b.v<a.v);
+  const e=$("hlB").querySelector("em"); let v=0; const step=Math.max(1,Math.ceil(b.v/18));
+  const tick=setInterval(()=>{ v=Math.min(b.v,v+step); e.innerHTML=`${v} <span>${esc(cat.unit)}</span>`; if(v>=b.v){ clearInterval(tick); $("hlB").classList.add(ok?"ok":"bad"); sfx(ok?"pair":"miss");
+    if(ok){ h.streak++; setTimeout(()=>{ if(hilo) hiloRound(); },900); }
+    else setTimeout(()=>{ const r=setHs("hsHilo",h.streak); dailyProgress("hilo",h.streak); bump("hilo"); const n=h.streak; hilo=null;
+      endScreen("lion_run.webp",n<3?"Knifflig, oder? Probier's gleich nochmal!":n<8?"Ordentliche Serie – du kennst dich aus!":"Du bist ein wandelndes Statistik-Lexikon!",`${n} richtig in Folge`,r.rec,[[n,"Serie"],[r.best,"Rekord"]],"hilo"); },1200); } },40);
+  if(navigator.vibrate) navigator.vibrate(15);
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-hl]"); if(b) hiloAnswer(b.dataset.hl); });
+
+/* ---------- Zeitstrahl ---------- */
+let tl=null;
+function timelinePool(){
+  const ev=CHRONIK.map(([y,t,d])=>({y:+y,t,d}));
+  ON_THIS_DAY.forEach(([iso,txt])=>{ const y=+iso.slice(0,4); if(!ev.some(x=>x.y===y)) ev.push({y,t:txt.split(/[:–!]/)[0].slice(0,40),d:txt}); });
+  return ev;
+}
+function startTimeline(){ tl={round:0,score:0,pool:timelinePool()}; tlRound(); }
+function tlRound(){
+  const t=tl; const pool=shuffle(t.pool); const pick=[]; for(const e of pool){ if(!pick.some(x=>x.y===e.y)) pick.push(e); if(pick.length===5) break; }
+  t.cur={items:shuffle(pick),order:[],done:false};
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Zeitstrahl · Runde ${t.round+1}/3</span><span>${t.score} Punkte</span></div>
+    <p class="legend" style="margin:8px 0 12px">Tippe die Ereignisse <b>vom ältesten zum neuesten</b> an. Antippen nimmt sie wieder raus.</p>
+    <div class="tlist" id="tlist">${t.cur.items.map((e,i)=>`<button type="button" class="tli" data-tl="${i}"><i></i><span><b>${esc(e.t)}</b><small>${esc(e.d)}</small></span></button>`).join("")}</div>
+    <button type="button" class="bigbtn" id="tlCheck" disabled>Prüfen</button>`);
+}
+function tlTap(i){
+  const c=tl&&tl.cur; if(!c||c.done) return; const k=c.order.indexOf(i);
+  if(k>=0) c.order.splice(k,1); else c.order.push(i);
+  document.querySelectorAll("[data-tl]").forEach(b=>{ const p=c.order.indexOf(+b.dataset.tl); b.classList.toggle("sel",p>=0); b.querySelector("i").textContent=p>=0?p+1:""; });
+  $("tlCheck").disabled=c.order.length!==c.items.length; sfx("flip");
+}
+function tlCheck(){
+  const t=tl, c=t.cur; if(!c||c.done) return; c.done=true;
+  const right=c.items.map((e,i)=>i).sort((a,b)=>c.items[a].y-c.items[b].y);
+  let pts=0; c.order.forEach((i,p)=>{ const ok=right[p]===i; if(ok) pts++; const b=document.querySelector(`[data-tl="${i}"]`); b.classList.add(ok?"ok":"bad"); b.querySelector("small").insertAdjacentHTML("afterbegin",`<em class="yr">${c.items[i].y}</em> `); });
+  t.score+=pts; if(pts===5){ sfx("win"); dailyProgress("time",1); } else sfx(pts>=3?"pair":"miss");
+  const list=$("tlist"); right.forEach(i=>list.appendChild(document.querySelector(`[data-tl="${i}"]`))); // richtige Reihenfolge zeigen
+  const btn=$("tlCheck"); btn.disabled=false; btn.id="tlNext"; btn.textContent=t.round<2?`${pts}/5 richtig – weiter`:`${pts}/5 richtig – Ergebnis`;
+}
+function tlNext(){
+  const t=tl; t.round++;
+  if(t.round<3) return tlRound();
+  const r=setHs("hsTime",t.score); bump("timeline"); tl=null;
+  endScreen("lion_run.webp",t.score===15?"Perfekt! Du bist ein echter Vereinshistoriker.":t.score>=10?"Stark – die Geschichte der Werkself sitzt!":"In der Historie unter „Verein“ kannst du nachlesen und es gleich nochmal versuchen.",`${t.score} von 15 Punkten`,r.rec,[[t.score,"Punkte"],[r.best,"Rekord"]],"time");
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-tl]"); if(b){ tlTap(+b.dataset.tl); return; } if(e.target.closest("#tlCheck")) tlCheck(); else if(e.target.closest("#tlNext")) tlNext(); });
+
+/* ---------- Wie ging's aus? ---------- */
+const CLASSIC_GAMES=[
+  ["18. Mai 1988","UEFA-Pokal-Finale, Rückspiel","Bayer 04 Leverkusen","Espanyol Barcelona",3,0,"Nach dem 0:3 im Hinspiel ging es ins Elfmeterschießen – Bayer gewann 3:2 und holte den Pokal."],
+  ["1988","UEFA-Pokal-Finale, Hinspiel","Espanyol Barcelona","Bayer 04 Leverkusen",3,0,"Eine schwere Hypothek – die Bayer im Rückspiel noch drehte."],
+  ["12. Juni 1993","DFB-Pokal-Finale","Bayer 04 Leverkusen","Hertha BSC Amateure",1,0,"Ulf Kirsten traf zum ersten Pokalsieg."],
+  ["20. Mai 2000","Bundesliga, letzter Spieltag","SpVgg Unterhaching","Bayer 04 Leverkusen",2,0,"Ein Punkt hätte zur Meisterschaft gereicht."],
+  ["15. Mai 2002","Champions-League-Finale","Real Madrid","Bayer 04 Leverkusen",2,1,"Zinédine Zidanes Volleytor entschied das Finale."],
+  ["2002","DFB-Pokal-Finale","FC Schalke 04","Bayer 04 Leverkusen",4,2,"Eines der drei verlorenen Endspiele der Vizekusen-Saison."],
+  ["2009","DFB-Pokal-Finale","SV Werder Bremen","Bayer 04 Leverkusen",1,0,"Mesut Özil erzielte das Tor des Tages."],
+  ["18. Oktober 2013","Bundesliga – das Phantomtor","TSG Hoffenheim","Bayer 04 Leverkusen",1,2,"Kießlings Kopfball ging durchs Seitennetz – und zählte."],
+  ["Juni 2020","Bundesliga","Bayer 04 Leverkusen","FC Bayern München",2,4,"Florian Wirtz wurde mit 17 Jahren jüngster Torschütze der Bundesliga."],
+  ["2020","DFB-Pokal-Finale","FC Bayern München","Bayer 04 Leverkusen",4,2,"Das Finale fand wegen Corona vor leeren Rängen statt."],
+  ["Februar 2024","Bundesliga – Spitzenspiel","Bayer 04 Leverkusen","FC Bayern München",3,0,"Leihspieler Josip Stanišić traf ausgerechnet gegen seinen Stammverein."],
+  ["14. April 2024","Bundesliga – der Meistertag","Bayer 04 Leverkusen","SV Werder Bremen",5,0,"Florian Wirtz traf dreimal – Leverkusen war zum ersten Mal Deutscher Meister."],
+  ["22. Mai 2024","Europa-League-Finale","Atalanta Bergamo","Bayer 04 Leverkusen",3,0,"Die erste Niederlage nach 51 Pflichtspielen ohne Pleite."],
+  ["25. Mai 2024","DFB-Pokal-Finale","Bayer 04 Leverkusen","1. FC Kaiserslautern",1,0,"Granit Xhaka traf aus der Distanz, Bayer holte das Double."],
+  ["2024","DFL-Supercup","Bayer 04 Leverkusen","VfB Stuttgart",2,2,"Leverkusen gewann das Elfmeterschießen mit 4:3."]
+];
+let rs=null;
+function startResult(){
+  const season=(state.matches||[]).filter(m=>m.finished&&m.g1!=null&&!isWatching(m)).map(m=>[fmtDate(new Date(m.t),{day:"numeric",month:"long",year:"numeric"}),m.comp+(m.round?" · "+m.round:""),m.t1,m.t2,m.g1,m.g2,"Aus dieser Saison."]);
+  const pool=shuffle(CLASSIC_GAMES).slice(0,3).concat(shuffle(season).slice(0,2));
+  rs={list:shuffle(pool.length>=5?pool:shuffle(CLASSIC_GAMES).slice(0,5)),i:0,pts:0,h:0,a:0}; rsRound();
+}
+function rsRound(){
+  const r=rs, [d,comp,t1,t2]=r.list[r.i]; r.h=0; r.a=0; r.done=false;
+  const team=(n,k)=>`<div class="rsteam"><b>${esc(n)}</b><div class="stepper"><button type="button" data-rs="${k}-">−</button><span id="rs_${k}">0</span><button type="button" data-rs="${k}+">+</button></div></div>`;
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Wie ging's aus? · ${r.i+1}/${r.list.length}</span><span>${r.pts} Punkte</span></div>
+    <div class="box" style="text-align:center"><span class="chipc">${esc(comp)}</span><p style="margin:8px 0 0">${esc(d)}</p></div>
+    <div class="rsgrid">${team(t1,"h")}<span class="vs">:</span>${team(t2,"a")}</div>
+    <div id="rsOut"></div>
+    <button type="button" class="bigbtn" id="rsGo">Tipp abgeben</button>
+    <p class="legend">Genaues Ergebnis 3 Punkte, richtige Tordifferenz 2, richtiger Sieger oder Remis 1.</p>`);
+}
+function rsStep(k){ if(!rs||rs.done) return; const t=k[0], up=k[1]==="+"; rs[t]=Math.max(0,Math.min(9,rs[t]+(up?1:-1))); $("rs_"+t).textContent=rs[t]; sfx("flip"); }
+function rsGo(){
+  const r=rs; if(!r) return;
+  if(r.done){ r.i++; if(r.i<r.list.length) return rsRound();
+    const res=setHs("hsResult",r.pts); bump("results"); dailyProgress("result",r.pts); const p=r.pts; rs=null;
+    return endScreen("lion_run.webp",p>=10?"Unglaublich – du hast die Spiele wohl alle live gesehen!":p>=6?"Starkes Gedächtnis für Ergebnisse!":"Gar nicht so einfach, oder?",`${p} Punkte`,res.rec,[[p,"Punkte"],[res.best,"Rekord"]],"result"); }
+  const [d,comp,t1,t2,g1,g2,info]=r.list[r.i]; r.done=true;
+  const sg=Math.sign(g1-g2), st=Math.sign(r.h-r.a); const p=(r.h===g1&&r.a===g2)?3:(r.h-r.a===g1-g2)?2:(sg===st)?1:0; r.pts+=p;
+  sfx(p===3?"win":p?"pair":"miss");
+  $("rsOut").innerHTML=`<div class="box rsres ${p?"ok":"bad"}"><p class="qq" style="margin:0">${g1}:${g2}</p><p>${p===3?"Volltreffer! +3":p===2?"Richtige Tordifferenz: +2":p===1?"Richtige Tendenz: +1":"Leider daneben."}</p><p style="color:var(--fg)">${esc(info)}</p></div>`;
+  $("rsGo").textContent=r.i<r.list.length-1?"Nächstes Spiel":"Ergebnis zeigen";
+}
+document.addEventListener("click",e=>{ const s=e.target.closest("[data-rs]"); if(s){ rsStep(s.dataset.rs); return; } if(e.target.closest("#rsGo")) rsGo(); });
+
+/* ---------- Namen raten ---------- */
+let hg=null;
+function hangPool(){
+  const out=[];
+  (state.squad?.players||SQUAD_FALLBACK.players).forEach(p=>{ const n=String(p[3]).replace(/\(.*?\)/,"").trim(); if(n.split(" ").length<=3) out.push({n,hint:`Aktueller Spieler · ${POS_FULL[p[1]]||""}`}); });
+  LEGENDS.forEach(l=>out.push({n:l[0],hint:`Legende · ${l[1]} · ${l[2]}`}));
+  LEGEND_COACHES.forEach(l=>out.push({n:l[0],hint:`Trainer · ${l[2]}`}));
+  return out.filter(x=>x.n.length>=4);
+}
+function startHang(){ hg={pool:shuffle(hangPool()),solved:0}; hgRound(); }
+function hgRound(){
+  const h=hg; const w=h.pool.pop()||hangPool()[0]; h.cur={w,guessed:new Set(),wrong:0,done:false};
+  hgRender();
+}
+const HG_MAX=7;
+function hgRender(){
+  const h=hg, c=h.cur; const letters=[...c.w.n.normalize("NFC")];
+  const shown=letters.map(ch=>{ const b=norm(ch).replace(/[^a-z]/g,""); if(!b) return `<span class="sp">${ch===" "?"&nbsp;":esc(ch)}</span>`; return `<span class="lt${c.guessed.has(b)||c.done?" on":""}">${c.guessed.has(b)||c.done?esc(ch):""}</span>`; }).join("");
+  const sweat=c.wrong;
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Namen raten</span><span>Geschafft ${h.solved} · Rekord ${hs("hsHang")}</span></div>
+    <div class="hgtop"><div class="hgl s${sweat}"><img src="lion_head.webp" alt="">${"<i></i>".repeat(Math.min(sweat,6))}</div><div><span class="chipc">${esc(c.w.hint)}</span><p class="legend" style="margin:8px 0 0">${HG_MAX-c.wrong} Fehlversuche übrig – bei jedem Fehler kommt Butti mehr ins Schwitzen.</p></div></div>
+    <div class="hgword">${shown}</div>
+    <div class="kb">${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(L=>{ const l=L.toLowerCase(); const used=c.guessed.has(l); const inW=norm(c.w.n).includes(l); return `<button type="button" data-hg="${l}" ${used||c.done?"disabled":""} class="${used?(inW?"hit":"miss"):""}">${L}</button>`; }).join("")}</div>
+    <div id="hgOut"></div>`);
+}
+function hgGuess(l){
+  const h=hg, c=h&&h.cur; if(!c||c.done||c.guessed.has(l)) return; c.guessed.add(l);
+  const n=norm(c.w.n); if(!n.includes(l)){ c.wrong++; sfx("miss"); if(navigator.vibrate) navigator.vibrate(30); } else sfx("tap");
+  const need=new Set(n.replace(/[^a-z]/g,"").split("")); const won=[...need].every(x=>c.guessed.has(x)), lost=c.wrong>=HG_MAX;
+  if(won||lost) c.done=true;
+  hgRender();
+  if(won){ h.solved++; dailyProgress("hang",h.solved); sfx("win"); $("hgOut").innerHTML=`<div class="box rsres ok"><p class="qq" style="margin:0">Richtig: ${esc(c.w.n)}!</p></div><button type="button" class="bigbtn" id="hgNext">Nächster Name</button>`; }
+  if(lost){ const r=setHs("hsHang",h.solved); bump("hang"); const s=h.solved;
+    $("hgOut").innerHTML=`<div class="box rsres bad"><p class="qq" style="margin:0">Gesucht war: ${esc(c.w.n)}</p><p>Du hast ${s} ${s===1?"Namen":"Namen"} erraten${r.rec?" – neuer Rekord!":"."}</p></div><button type="button" class="bigbtn" data-game="hang">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`; hg=null; renderFan(); }
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-hg]"); if(b&&!b.disabled){ hgGuess(b.dataset.hg); return; } if(e.target.closest("#hgNext")&&hg) hgRound(); });
+
+/* ---------- Elf des Tages ---------- */
+let elf=null;
+async function startElf(){
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elf des Tages</span><span>Rekord ${hs("hsElf")}/11</span></div><div class="sk" style="height:300px;border-radius:16px"></div>`);
+  const evs=(state.espnEvents||[]).filter(e=>e.done).sort((a,b)=>b.t-a.t);
+  let L=null, ev=null;
+  for(const e of evs.slice(0,4)){ try{ L=parseLineup(await getJson(`https://site.api.espn.com/apis/site/v2/sports/soccer/${e.lg}/summary?event=${e.id}`)); if(L){ ev=e; break; } }catch(err){} }
+  if(!L){ openSheetRaw(`<p class="qq" id="sheetTitle">Elf des Tages</p><div class="empty">Die Aufstellung des letzten Spiels konnte gerade nicht geladen werden. Prüfe deine Internetverbindung und versuch es gleich nochmal.</div>`); return; }
+  const m=(state.matches||[]).find(x=>Math.abs(x.t-ev.t)<4*3600e3);
+  const starters=L.starters.map(p=>p.name), sn=new Set(starters.map(n=>norm(surname(n))));
+  const others=[...new Set(L.bench.map(p=>p.name).concat((state.squad?.players||SQUAD_FALLBACK.players).map(p=>String(p[3]).replace(/\(.*?\)/,"").trim())))].filter(n=>!sn.has(norm(surname(n))));
+  const chips=shuffle(starters.concat(shuffle(others).slice(0,8)));
+  elf={starters:new Set(starters),chips,sel:new Set(),done:false};
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elf des Tages</span><span>Rekord ${hs("hsElf")}/11</span></div>
+    <div class="box" style="text-align:center"><p style="margin:0">Wer stand in der Startelf?</p><p class="qq" style="margin:6px 0 0">${m?esc(m.t1)+" – "+esc(m.t2):"Letztes Spiel"}</p><p style="margin:4px 0 0">${m?esc(m.comp)+" · "+esc(fmtDate(new Date(m.t),{day:"numeric",month:"long"})):""}</p></div>
+    <p class="legend" style="margin:10px 0">Wähle genau 11 Spieler aus. <b id="elfN">0</b>/11 gewählt.</p>
+    <div class="elfchips">${chips.map((n,i)=>`<button type="button" data-elf="${i}">${esc(n)}</button>`).join("")}</div>
+    <div id="elfOut"></div><button type="button" class="bigbtn" id="elfGo" disabled>Aufstellung prüfen</button>`);
+}
+function elfTap(i){
+  const e=elf; if(!e||e.done) return; if(e.sel.has(i)) e.sel.delete(i); else if(e.sel.size<11) e.sel.add(i); else return;
+  document.querySelectorAll("[data-elf]").forEach(b=>b.classList.toggle("sel",e.sel.has(+b.dataset.elf)));
+  $("elfN").textContent=e.sel.size; $("elfGo").disabled=e.sel.size!==11; sfx("flip");
+}
+function elfGo(){
+  const e=elf; if(!e) return;
+  if(e.done){ return; }
+  e.done=true; let n=0;
+  document.querySelectorAll("[data-elf]").forEach(b=>{ const i=+b.dataset.elf, name=e.chips[i], st=e.starters.has(name), sel=e.sel.has(i);
+    if(sel&&st){ n++; b.className="ok"; } else if(sel) b.className="bad"; else if(st) b.className="missed"; b.disabled=true; });
+  const r=setHs("hsElf",n); bump("elf"); dailyProgress("elf",n); sfx(n>=9?"win":n>=6?"pair":"miss");
+  $("elfOut").innerHTML=`<div class="box rsres ${n>=8?"ok":"bad"}"><p class="qq" style="margin:0">${n} von 11 richtig${r.rec?" – neuer Rekord!":""}</p><p>Grün: richtig gewählt · Rot: saß nicht in der Startelf · Gestrichelt: hast du übersehen.</p></div>`;
+  const g=$("elfGo"); g.textContent="Fertig"; g.disabled=false; g.removeAttribute("id"); g.setAttribute("data-close",""); elf=null; renderFan();
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-elf]"); if(b&&!b.disabled){ elfTap(+b.dataset.elf); return; } if(e.target.closest("#elfGo")) elfGo(); });
+
+/* ---------- Glücksrad nach Siegen ---------- */
+const WHEEL=[["+10","⭐ +10 Fan-Punkte","#d6001c",{pts:10}],["Fakt","📜 Seltener Fakt","#1a1a1a",{fact:1}],["+25","⭐ +25 Fan-Punkte","#d6001c",{pts:25}],["Jubel","🦁 Butti-Jubel (+5)","#1a1a1a",{pts:5,cheer:1}],
+  ["+10","⭐ +10 Fan-Punkte","#d6001c",{pts:10}],["Stern","🌟 Glücksstern","#c58a00",{star:1}],["+50","💎 +50 Fan-Punkte","#1a1a1a",{pts:50}],["Fakt","📜 Seltener Fakt","#d6001c",{fact:1}]];
+let wheel=null;
+function startWheel(){
+  const ww=wheelWins(); const m=ww[0];
+  const seg=360/WHEEL.length;
+  const grad=WHEEL.map((w,i)=>`${w[2]} ${i*seg}deg ${(i+1)*seg}deg`).join(",");
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Glücksrad</span><span>⭐ ${fanPts()} · 🌟 ${load("stars")||0}</span></div>
+    <p class="legend" style="margin:6px 0 12px">${m?`Bayer 04 hat gegen ${esc(short(m.home?m.t2:m.t1))} gewonnen (${m.home?m.g1:m.g2}:${m.home?m.g2:m.g1}) – dafür darfst du drehen! Sammle Fan-Punkte, seltene Fakten und Glückssterne (3 Sterne = Abzeichen).`:"Nach jedem Sieg der Werkself darfst du hier einmal drehen. Der nächste Sieg kommt bestimmt!"}</p>
+    <div class="wheelwrap"><div class="wptr"></div><div class="wheel" id="wheel" style="background:conic-gradient(${grad})">${WHEEL.map((w,i)=>`<span style="transform:rotate(${i*seg+seg/2}deg)"><b>${esc(w[0])}</b></span>`).join("")}</div><div class="whub"><img src="lion_head.webp" alt=""></div></div>
+    <div id="wheelOut"></div>
+    <button type="button" class="bigbtn" id="wheelGo" ${m?"":"disabled"}>${m?(ww.length>1?`Drehen (${ww.length}× übrig)`:"Drehen"):"Kein Dreh verfügbar"}</button>`);
+  wheel={rot:0,busy:false};
+}
+function wheelGo(){
+  const ww=wheelWins(); if(!wheel||wheel.busy||!ww.length) return; wheel.busy=true;
+  const m=ww[0]; const spun=load("wheelSpun")||[]; spun.push(m.id); store("wheelSpun",spun);
+  const k=Math.floor(Math.random()*WHEEL.length), seg=360/WHEEL.length;
+  const target=360*6+(360-(k*seg+seg/2))+(Math.random()-.5)*seg*.6; wheel.rot=(wheel.rot-wheel.rot%360)+target;
+  const el=$("wheel"); el.style.transition="transform 4.2s cubic-bezier(.12,.75,.15,1)"; el.style.transform=`rotate(${wheel.rot}deg)`;
+  let ticks=0; const tk=setInterval(()=>{ if(++ticks>28) return clearInterval(tk); sfx("flip"); },100+ticks*6);
+  setTimeout(()=>{ clearInterval(tk); const w=WHEEL[k], p=w[3]; let extra="";
+    if(p.pts) addFanPts(p.pts);
+    if(p.star){ const s=(load("stars")||0)+1; store("stars",s); extra=s>=3?" Du hast jetzt "+s+" Glückssterne!":` Noch ${3-s} bis zum Abzeichen.`; }
+    if(p.fact){ const i=Math.floor(Math.random()*B04_FACTS.length), more=(FACT_MORE[i]||[""])[0]; extra=`<span class="wfact"><b>${esc(B04_FACTS[i][1])}</b>${more?" "+esc(more):""}</span>`; }
+    sfx("win"); confetti($("wheelFx")||null,60); badge();
+    $("wheelOut").innerHTML=`<div class="box rsres ok"><p class="qq" style="margin:0">${esc(w[1])}</p><p style="color:var(--fg)">${extra}</p></div>`;
+    const left=wheelWins().length, g=$("wheelGo"); g.textContent=left?`Nochmal drehen (${left}× übrig)`:"Fertig"; if(!left){ g.removeAttribute("id"); g.setAttribute("data-close",""); }
+    wheel.busy=false; renderFan();
+  },4300);
+}
+document.addEventListener("click",e=>{ if(e.target.closest("#wheelGo")) wheelGo(); });
 
 document.addEventListener("click",e=>{
-  const g=e.target.closest("[data-game]"); if(g){ window.__stopGames(); ({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges,puzzle:startPuzzle,memory:startMemory,keep:startKeep})[g.dataset.game](); return; }
+  const g=e.target.closest("[data-game]"); if(g){ window.__stopGames(); const f=({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges,puzzle:startPuzzle,memory:startMemory,keep:startKeep,run:startRun,hilo:startHilo,time:startTimeline,result:startResult,hang:startHang,elf:startElf,wheel:startWheel})[g.dataset.game]; if(f) f(); return; }
 });
 
 /* ---------- Benachrichtigungen (nur Android-App) ---------- */
