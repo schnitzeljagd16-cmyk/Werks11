@@ -1,7 +1,7 @@
 """Baut beim Erstellen der App Trikotbilder der Werkself aus den Saison-Artikeln
 der englischen Wikipedia (Vorlage „Football kit“). Ergebnis: app/src/main/assets/kits/*.png
 und kits.js. Fehler werden protokolliert (kits/log.txt) und übersprungen."""
-import json, os, re, io, time, urllib.parse, urllib.request, datetime
+import json, os, re, io, time, urllib.parse, urllib.request, urllib.error, datetime
 
 OUT = "app/src/main/assets/kits"
 UA = "Werks11-FanApp/2.6 (https://github.com/schnitzeljagd16-cmyk/Werks11; build script)"
@@ -11,10 +11,17 @@ def L(*a):
     log.append(" ".join(str(x) for x in a)); print(*a)
 
 def get(url, binary=False):
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=40) as r:
-        d = r.read()
-    return d if binary else json.loads(d.decode("utf-8"))
+    for attempt in range(6):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=40) as r:
+                d = r.read()
+            time.sleep(0.6)
+            return d if binary else json.loads(d.decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 5:
+                time.sleep(8 * (attempt + 1)); continue
+            raise
 
 try:
     from PIL import Image
@@ -71,7 +78,7 @@ def main():
         pg = next(iter(get(API + q)["query"]["pages"].values()))
         ii = pg.get("imageinfo")
         if not ii: img_cache[key] = None; return None
-        url = ii[0].get("thumburl") or ii[0]["url"]
+        url = ii[0]["url"] if fname.lower().endswith(".png") else (ii[0].get("thumburl") or ii[0]["url"])
         im = Image.open(io.BytesIO(get(url, True))).convert("RGBA")
         img_cache[key] = im
         time.sleep(0.15)
