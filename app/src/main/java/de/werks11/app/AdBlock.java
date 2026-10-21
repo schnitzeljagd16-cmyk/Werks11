@@ -51,6 +51,36 @@ public class AdBlock {
             Pattern.CASE_INSENSITIVE);
 
     static boolean on(Context c) { return Notifier.prefs(c).getBoolean("adblock", true); }
+
+    // Seiten, die mit Werbeblocker gar keine Inhalte zeigen (Adblock-Sperre) – dort bleibt der Blocker aus
+    static final String[] WALLS = {"bild.de", "welt.de", "businessinsider.de", "computerbild.de", "autobild.de"};
+
+    static java.util.Set<String> allowSet(Context c) {
+        return new HashSet<>(Notifier.prefs(c).getStringSet("abAllow", new HashSet<>()));
+    }
+
+    /** Darf auf dieser Seite geblockt werden? */
+    static boolean blockOn(Context c, String host) {
+        if (!on(c)) return false;
+        if (host == null) return true;
+        String base = baseDomain(host.toLowerCase(Locale.ROOT));
+        if (allowSet(c).contains(base)) return false;
+        if (Notifier.prefs(c).getStringSet("abForce", new HashSet<>()).contains(base)) return true;
+        for (String w : WALLS) if (base.equals(w)) return false;
+        return true;
+    }
+
+    /** Merkt sich, ob der Blocker auf dieser Seite an oder aus sein soll. */
+    static void remember(Context c, String host, boolean blockIt) {
+        if (host == null) return;
+        String base = baseDomain(host.toLowerCase(Locale.ROOT));
+        Set<String> allow = allowSet(c), force = new HashSet<>(Notifier.prefs(c).getStringSet("abForce", new HashSet<>()));
+        if (blockIt) { allow.remove(base); force.add(base); } else { allow.add(base); force.remove(base); }
+        Notifier.prefs(c).edit().putStringSet("abAllow", allow).putStringSet("abForce", force).apply();
+    }
+
+    static final String WALL_JS = "(function(){try{var t=(document.title+' '+(document.body?document.body.innerText.slice(0,4000):''));"
+            + "return /adblockwall|aufgrund ihres blockers|werbeblocker (deaktivieren|ausschalten)|adblocker (deaktivieren|ausschalten)|ad ?blocker detected|disable your ad ?blocker|turn off your ad ?blocker/i.test(t);}catch(e){return false}})()";
     static boolean cookies(Context c) { return Notifier.prefs(c).getBoolean("hidecookies", true); }
 
     static boolean blockedHost(String host) {

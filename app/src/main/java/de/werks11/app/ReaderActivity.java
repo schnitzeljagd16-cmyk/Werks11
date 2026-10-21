@@ -21,10 +21,11 @@ import android.widget.TextView;
 public class ReaderActivity extends Activity {
 
     private WebView web;
-    private boolean block = true;
+    private volatile boolean block = true;
     private int blocked = 0;
     private TextView shield;
-    private String pageHost = null;
+    private volatile String pageHost = null;
+    private boolean wallHandled = false;
 
     private int dp(int v) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v, getResources().getDisplayMetrics());
@@ -62,7 +63,7 @@ public class ReaderActivity extends Activity {
         title.setEllipsize(android.text.TextUtils.TruncateAt.END);
         bar.addView(title, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-        block = AdBlock.on(this);
+        try { block = AdBlock.blockOn(this, android.net.Uri.parse(url).getHost()); } catch (Exception e) { block = AdBlock.on(this); }
         shield = new TextView(this);
         shield.setTextColor(Color.WHITE);
         shield.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
@@ -75,7 +76,8 @@ public class ReaderActivity extends Activity {
         shield.setContentDescription("Werbeblocker");
         shield.setOnClickListener(v -> { // Seite kaputt? Blocker für diese Seite aus- bzw. wieder einschalten
             block = !block; blocked = 0; updateShield();
-            android.widget.Toast.makeText(this, block ? "Werbeblocker an" : "Werbeblocker für diese Seite aus", android.widget.Toast.LENGTH_SHORT).show();
+            AdBlock.remember(this, pageHost, block);
+            android.widget.Toast.makeText(this, block ? "Werbeblocker auf dieser Seite an" : "Werbeblocker auf dieser Seite aus – Werks11 merkt sich das", android.widget.Toast.LENGTH_SHORT).show();
             web.reload();
         });
         updateShield();
@@ -105,14 +107,20 @@ public class ReaderActivity extends Activity {
 
             @Override
             public void onPageStarted(WebView view, String u, android.graphics.Bitmap favicon) {
-                try { pageHost = android.net.Uri.parse(u).getHost(); } catch (Exception ignored) { }
+                try {
+                    String h = android.net.Uri.parse(u).getHost();
+                    if (h != null && !h.equals(pageHost)) { pageHost = h; block = AdBlock.blockOn(ReaderActivity.this, h); updateShield(); }
+                } catch (Exception ignored) { }
             }
 
             @Override
             public void onPageCommitVisible(WebView view, String u) { inject(); }
 
             @Override
-            public void onPageFinished(WebView view, String u) { inject(); updateShield(); }
+            public void onPageFinished(WebView view, String u) {
+                inject(); updateShield();
+                if (block && !wallHandled) view.evaluateJavascript(AdBlock.WALL_JS, r -> { if ("true".equals(r)) wallDetected(); });
+            }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -130,11 +138,21 @@ public class ReaderActivity extends Activity {
             @Override
             public void onReceivedTitle(WebView view, String t) {
                 if (t != null && !t.isEmpty()) title.setText(t);
+                if (block && !wallHandled && t != null && t.toLowerCase().matches(".*(adblock|werbeblocker|ad-blocker).*")) wallDetected();
             }
         });
         root.addView(web, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
         setContentView(root);
         if (url != null) web.loadUrl(url);
+    }
+
+    /** Seite sperrt Werbeblocker: für diese Seite ausschalten und ohne Blocker neu laden. */
+    private void wallDetected() {
+        wallHandled = true; block = false; blocked = 0;
+        AdBlock.remember(this, pageHost, false);
+        updateShield();
+        android.widget.Toast.makeText(this, "Diese Seite zeigt mit Werbeblocker nichts an – sie wird ohne Blocker geladen.", android.widget.Toast.LENGTH_LONG).show();
+        web.reload();
     }
 
     private void inject() {
