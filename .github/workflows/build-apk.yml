@@ -25,9 +25,6 @@ jobs:
       - name: Puzzle-Fotos fest einbauen
         run: python3 tools/fetch_puzzle_pics.py || true
 
-      - name: Trikots aus Wikipedia erzeugen
-        run: python3 tools/fetch_kits.py || true
-
       - name: APK bauen
         run: gradle assembleDebug --no-daemon
 

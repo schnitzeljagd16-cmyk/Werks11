@@ -829,6 +829,12 @@ dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
 .kb{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .kb button{height:42px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font:800 17px/1 var(--display);cursor:pointer}
 .kb button.hit{background:var(--win);color:#fff;border-color:var(--win)}.kb button.miss{background:var(--surface-2);color:var(--muted);text-decoration:line-through}
+.game.t2{background:linear-gradient(150deg,#9f1239,#1a1a1a)}
+.kitbox{position:relative;display:grid;place-items:center;padding:18px 0 8px;border-radius:18px;background:radial-gradient(circle at 50% 40%,var(--surface),var(--surface-2));border:1px solid var(--line)}
+.kitbox img{width:min(42vw,170px);height:auto;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25));animation:lionHop .5s both;image-rendering:auto}
+.kitbox .chipc{position:absolute;left:12px;top:12px}
+.kitopts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kitopts button.ok{background:var(--win);color:#fff;border-color:var(--win)}.kitopts button.bad{background:var(--loss);color:#fff;border-color:var(--loss)}
 .elfchips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .elfchips button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 12px;font:600 14px/1 var(--body);cursor:pointer;transition:transform .12s}
 .elfchips button.sel{background:var(--red);color:#fff;border-color:var(--red)}
@@ -927,7 +933,7 @@ dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
 
     <section data-view="fun" hidden><div id="funBox"></div></section>
 
-    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabellen von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>, Social Media von Reddit, Bluesky und Mastodon, Ausfälle von <a href="https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/" target="_blank" rel="noopener">LigaInsider</a>, Kader von Wikipedia. Werks11 ist eine inoffizielle Fan-App.</p>
+    <p class="foot">Nachrichten aus kicker, RP Online, Kölner Stadt-Anzeiger, BILD, Express, Sport1, Sky, Transfermarkt, WDR, Sportschau und vielen weiteren Seiten. Spiele und Tabellen von <a href="https://www.openligadb.de" target="_blank" rel="noopener">OpenLigaDB</a>, Social Media von Reddit, Bluesky und Mastodon, Trikotbilder aus Wikipedia (Vorlage „Football kit“), Ausfälle von <a href="https://www.ligainsider.de/bundesliga/verletzte-und-gesperrte-spieler/" target="_blank" rel="noopener">LigaInsider</a>, Kader von Wikipedia. Werks11 ist eine inoffizielle Fan-App.</p>
   </div>
 </main>
 
@@ -952,6 +958,7 @@ dl.kv dd{margin:0;font-weight:600;font-size:14.5px}
 </nav>
 
 <script src="pz/pics.js"></script>
+<script src="kits/kits.js"></script>
 <script>
 "use strict";
 const TEAM_ID = 6; // Bayer 04 Leverkusen bei OpenLigaDB
@@ -2828,6 +2835,7 @@ const BADGES=[
   ["time","Zeitreisender","12 Punkte beim Zeitstrahl","⏳",()=>hs("hsTime"),12],
   ["hang","Namensfuchs","5 Namen in Folge erraten","🔤",()=>hs("hsHang"),5],
   ["lucky","Glückspilz","3 Glückssterne am Glücksrad","🍀",()=>load("stars")||0,3],
+  ["kit","Trikot-Kenner","24 Punkte in der Trikot-Zeitreise","👕",()=>hs("hsKit"),24],
   ["daily","Tages-Held","7 Tage in Folge die Tages-Challenge","🔥",()=>dailyState().streak||0,7]
 ];
 function badge(){
@@ -3470,12 +3478,13 @@ document.addEventListener("click",e=>{
   const z=e.target.closest("[data-pkz]"); if(z){ penZone(+z.dataset.pkz); return; }
   const m=e.target.closest("[data-penmode]"); if(m&&pen&&!pen.busy){ store("penMode",m.dataset.penmode); startPen(); }
 });
-window.__stopGames=()=>{ pen=null; keep=null; mem=null; try{ run=null; hilo=null; tl=null; rs=null; hg=null; elf=null; }catch(e){} if(puz&&puz.timer) clearInterval(puz.timer); puz=null; };
+window.__stopGames=()=>{ pen=null; keep=null; mem=null; try{ run=null; hilo=null; tl=null; rs=null; hg=null; elf=null; kq=null; }catch(e){} if(puz&&puz.timer) clearInterval(puz.timer); puz=null; };
 
 /* ---------- Fanzone: Spieleliste, Fan-Punkte, Tages-Challenge ---------- */
 const GAMES=[
   ["run","r","Butti-Sprint","Spring über Grätschen, sammle Bälle",()=>`Rekord ${hs("hsRun")} m`,'<path d="M13 4a2 2 0 1 0 0 .01M8 21l3-6 3 2v5M6 12l3-3 4 1 3 3 3 1"/>'],
   ["pen","e","Elfer-König","Schieß gegen Torwart Butti",()=>`Rekord ${hs("hsPen")}`,'<circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>'],
+  ["kit","t2","Trikot-Zeitreise","Aus welcher Saison ist das Trikot?",()=>`Rekord ${hs("hsKit")} Pkt.`,'<path d="M8 3l-5 3 2 4 2-1v12h10V9l2 1 2-4-5-3a4 4 0 0 1-8 0z"/>'],
   ["hilo","h","Höher oder tiefer?","Wer hat mehr Punkte, Tore, Spiele?",()=>`Rekord ${hs("hsHilo")}`,'<path d="M7 14l5-5 5 5M7 20l5-5 5 5"/>'],
   ["time","z","Zeitstrahl","Bring die Vereinsgeschichte in Ordnung",()=>`Rekord ${hs("hsTime")}/15`,'<path d="M3 12h18M7 8v8M12 6v12M17 9v6"/>'],
   ["result","g","Wie ging's aus?","Rate Ergebnisse legendärer Spiele",()=>`Rekord ${hs("hsResult")} Pkt.`,'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M12 6v12M8 10v4M16 10v4"/>'],
@@ -3501,7 +3510,8 @@ const DAILY_TASKS=[
   ["puzzle",1,"Löse ein Foto-Puzzle","puzzle"],
   ["elf",8,"Finde mindestens 8 Spieler der Startelf","elf"],
   ["memory",1,"Schaffe ein Wappen-Memory","memory"],
-  ["quiz",7,"Beantworte im Werkself-Quiz 7 Fragen richtig","quiz"]
+  ["quiz",7,"Beantworte im Werkself-Quiz 7 Fragen richtig","quiz"],
+  ["kit",18,"Hol 18 Punkte in der Trikot-Zeitreise","kit"]
 ];
 function dayNum(d){ d=d||new Date(); return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()))/86400e3); }
 function todayTask(){ return DAILY_TASKS[dayNum()%DAILY_TASKS.length]; }
@@ -3531,6 +3541,7 @@ function buttiLine(c){
   add(res?`Dein Rekord bei „Wie ging's aus?“: ${res} Punkte. Weißt du noch, wie das Finale 2002 ausging?`:"Erinnerst du dich an die legendären Spiele der Werkself? Rate die Ergebnisse!","result",null,"Ergebnisse raten");
   add(hang?`${hang} Namen in Folge erraten – ich schwitze schon beim Zuschauen!`:"Ich denk mir einen Spielernamen aus. Errätst du ihn, bevor ich ins Schwitzen komme?","hang",null,"Namen raten");
   add("Wer stand im letzten Spiel in der Startelf? Ich weiß es – du auch?","elf",null,"Elf des Tages");
+  if((window.KITS||[]).length) add(hs("hsKit")?`${hs("hsKit")} Punkte in der Trikot-Zeitreise! Erkennst du auch das Auswärtstrikot von 2006?`:"Ich hab den ganzen Trikotschrank durchwühlt: Errätst du, aus welcher Saison die Trikots sind?","kit",null,"Trikots raten");
   add(keep?`${keep} Ballkontakte beim Jonglieren – nicht schlecht für einen Menschen!`:"Kannst du jonglieren? Ich schaff's mit meinem Schwanz!","keep",null,"Jonglieren");
   add(mem?`Wappen-Memory in ${mem} Zügen – geht's noch schneller?`:"Ein Memory mit allen Bundesliga-Wappen – wie gut ist dein Gedächtnis?","memory",null,"Memory");
   add("Ich hab ein paar neue Fotos fürs Puzzle bekommen – Legenden, die BayArena und mich!","puzzle",null,"Zum Puzzle");
@@ -3859,6 +3870,39 @@ function elfGo(){
 }
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-elf]"); if(b&&!b.disabled){ elfTap(+b.dataset.elf); return; } if(e.target.closest("#elfGo")) elfGo(); });
 
+/* ---------- Trikot-Zeitreise ---------- */
+let kq=null;
+function startKit(){
+  const K=window.KITS||[];
+  if(K.length<5){ openSheetRaw(`<p class="qq" id="sheetTitle">Trikot-Zeitreise</p><div class="empty">Die Trikotbilder fehlen in dieser Version.</div>`); return; }
+  kq={list:shuffle(K).slice(0,10),i:0,pts:0}; kqRound();
+}
+function kqRound(){
+  const q=kq, g=q.list[q.i]; const all=[...new Set((window.KITS||[]).flatMap(k=>k.y))];
+  const ans=g.y[Math.floor(Math.random()*g.y.length)];
+  const near=shuffle(all.filter(y=>!g.y.includes(y)&&Math.abs(y-ans)<=8)); const opts=shuffle([ans].concat(near.slice(0,3)));
+  q.cur={g,opts,done:false};
+  const lab=y=>y+"/"+String((y+1)%100).padStart(2,"0");
+  openSheetRaw(`<div class="qhead"><span id="sheetTitle">Trikot-Zeitreise · ${q.i+1}/${q.list.length}</span><span>${q.pts} Punkte</span></div>
+    <div class="kitbox"><span class="chipc">${esc(g.kind)}trikot</span><img src="kits/${esc(g.file)}" alt="Trikot von Bayer 04"></div>
+    <p class="qq" style="margin:4px 0 10px;text-align:center">Aus welcher Saison stammt dieses Trikot?</p>
+    <div class="qa kitopts">${opts.map(y=>`<button type="button" data-kit="${y}">${lab(y)}</button>`).join("")}</div>
+    <div id="kitOut"></div>`);
+}
+function kqAnswer(y){
+  const q=kq, c=q&&q.cur; if(!c||c.done) return; c.done=true;
+  const exact=c.g.y.includes(y), close=!exact&&c.g.y.some(x=>Math.abs(x-y)===1), p=exact?3:close?1:0; q.pts+=p;
+  document.querySelectorAll("[data-kit]").forEach(b=>{ const v=+b.dataset.kit; b.disabled=true; if(c.g.y.includes(v)) b.classList.add("ok"); else if(v===y) b.classList.add("bad"); });
+  sfx(exact?"pair":close?"tap":"miss");
+  $("kitOut").innerHTML=`<div class="box rsres ${p?"ok":"bad"}"><p class="qq" style="margin:0">${exact?"Richtig! +3":close?"Knapp daneben: +1":"Leider falsch"}</p><p style="color:var(--fg)">${esc(c.g.kind)}trikot der Saison ${c.g.seasons.map(esc).join(" und ")}</p></div><button type="button" class="bigbtn" id="kitNext">${q.i<q.list.length-1?"Nächstes Trikot":"Ergebnis zeigen"}</button>`;
+}
+function kqNext(){
+  const q=kq; q.i++; if(q.i<q.list.length) return kqRound();
+  const r=setHs("hsKit",q.pts); bump("kit"); dailyProgress("kit",q.pts); const p=q.pts; kq=null;
+  endScreen("lion_run.webp",p>=24?"Wahnsinn – du kennst jeden Faden im Trikotschrank!":p>=15?"Starke Trikot-Kenntnisse!":"Die Trikots ändern sich jedes Jahr – gar nicht so einfach, oder?",`${p} von 30 Punkten`,r.rec,[[p,"Punkte"],[r.best,"Rekord"]],"kit");
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-kit]"); if(b&&!b.disabled){ kqAnswer(+b.dataset.kit); return; } if(e.target.closest("#kitNext")&&kq) kqNext(); });
+
 /* ---------- Glücksrad nach Siegen ---------- */
 const WHEEL=[["+10","⭐ +10 Fan-Punkte","#d6001c",{pts:10}],["Fakt","📜 Seltener Fakt","#1a1a1a",{fact:1}],["+25","⭐ +25 Fan-Punkte","#d6001c",{pts:25}],["Jubel","🦁 Butti-Jubel (+5)","#1a1a1a",{pts:5,cheer:1}],
   ["+10","⭐ +10 Fan-Punkte","#d6001c",{pts:10}],["Stern","🌟 Glücksstern","#c58a00",{star:1}],["+50","💎 +50 Fan-Punkte","#1a1a1a",{pts:50}],["Fakt","📜 Seltener Fakt","#d6001c",{fact:1}]];
@@ -3894,7 +3938,7 @@ function wheelGo(){
 document.addEventListener("click",e=>{ if(e.target.closest("#wheelGo")) wheelGo(); });
 
 document.addEventListener("click",e=>{
-  const g=e.target.closest("[data-game]"); if(g){ window.__stopGames(); const f=({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges,puzzle:startPuzzle,memory:startMemory,keep:startKeep,run:startRun,hilo:startHilo,time:startTimeline,result:startResult,hang:startHang,elf:startElf,wheel:startWheel})[g.dataset.game]; if(f) f(); return; }
+  const g=e.target.closest("[data-game]"); if(g){ window.__stopGames(); const f=({quiz:startQuiz,pen:startPen,tipp:openTipps,who:startWho,week:startWeekQuiz,badges:openBadges,puzzle:startPuzzle,memory:startMemory,keep:startKeep,run:startRun,hilo:startHilo,time:startTimeline,result:startResult,hang:startHang,elf:startElf,wheel:startWheel,kit:startKit})[g.dataset.game]; if(f) f(); return; }
 });
 
 /* ---------- Benachrichtigungen (nur Android-App) ---------- */
