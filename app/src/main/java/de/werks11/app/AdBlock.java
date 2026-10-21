@@ -53,7 +53,9 @@ public class AdBlock {
     static boolean on(Context c) { return Notifier.prefs(c).getBoolean("adblock", true); }
 
     // Seiten, die mit Werbeblocker gar keine Inhalte zeigen (Adblock-Sperre) – dort bleibt der Blocker aus
-    static final String[] WALLS = {"bild.de", "welt.de", "businessinsider.de", "computerbild.de", "autobild.de"};
+    // Ergebnis des Seiten-Tests (Okt. 2026): BILD sperrt mit Blocker, bei Yahoo fehlt mit Blocker rund die Hälfte des Inhalts.
+    // Alle anderen getesteten Quellen funktionieren mit Blocker. Weitere Sperren erkennt die App automatisch.
+    static final String[] WALLS = {"bild.de", "yahoo.com"};
 
     static java.util.Set<String> allowSet(Context c) {
         return new HashSet<>(Notifier.prefs(c).getStringSet("abAllow", new HashSet<>()));
