@@ -1,0 +1,36 @@
+name: Werbeblocker-Test
+
+on:
+  push:
+    paths:
+      - 'tools/probe_sites.py'
+      - '.github/workflows/probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Playwright installieren
+        run: |
+          pip install playwright==1.47.0
+          python -m playwright install --with-deps chromium
+      - name: Seiten testen
+        run: python tools/probe_sites.py || true
+      - name: Ergebnis veröffentlichen
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: adblock-probe
+          name: Werbeblocker-Test (intern)
+          body: Interner Testlauf des Werbeblockers – keine App-Version.
+          prerelease: true
+          make_latest: false
+          files: probe/results.json
+          overwrite_files: true

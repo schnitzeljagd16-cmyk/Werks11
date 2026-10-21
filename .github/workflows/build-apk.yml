@@ -2,6 +2,9 @@ name: APK bauen
 
 on:
   push:
+    paths-ignore:
+      - 'tools/probe_sites.py'
+      - '.github/workflows/probe.yml'
   workflow_dispatch:
 
 permissions:
