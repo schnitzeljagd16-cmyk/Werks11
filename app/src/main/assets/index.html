@@ -618,9 +618,21 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
 .pk-post.l{left:0}.pk-post.r{right:0}
 .pk-bar{position:absolute;left:0;right:0;top:0;height:5%;min-height:4px;background:linear-gradient(#fff,#d5d5d5);box-shadow:0 2px 6px rgba(0,0,0,.4);z-index:3}
 .pk-gk{position:absolute;left:50%;bottom:0;height:88%;aspect-ratio:369/450;transform:translateX(-50%);transform-origin:50% 100%;z-index:2;will-change:transform}
-.pk-gk img{display:block;width:100%;height:100%;transform-origin:50% 100%;animation:gkIdle 1.5s ease-in-out infinite;pointer-events:none}
-.pk-gk.act img{animation:none}
-@keyframes gkIdle{0%,100%{transform:translateX(-3%) rotate(-1.2deg) scaleY(1)}25%{transform:translateX(0) scaleY(.975)}50%{transform:translateX(3%) rotate(1.2deg) scaleY(1)}75%{transform:translateX(0) scaleY(.975)}}
+.pk-rig{position:absolute;inset:0;transform-origin:50% 100%;animation:gkIdle 1.6s ease-in-out infinite}
+.pk-gk.act .pk-rig,.pk-gk.act .gl{animation:none}
+.gl{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;-webkit-user-drag:none}
+.gl.tail{transform-origin:36.9% 68%;animation:gkTail .9s ease-in-out infinite alternate}
+.gl.head{transform-origin:62.9% 38.2%;animation:gkHead 2.6s ease-in-out infinite}
+.gl.blink{transform-origin:62.9% 38.2%;opacity:0;animation:gkHead 2.6s ease-in-out infinite,gkBlink 3.7s steps(1) infinite}
+.gl.armL{transform-origin:33.1% 42.2%;animation:gkArmL 4.2s ease-in-out infinite}
+.gl.armR{transform-origin:86.2% 44%;animation:gkArmR 4.2s ease-in-out infinite}
+.pk-gk.act .gl.blink{opacity:0}
+@keyframes gkIdle{0%,100%{transform:translateX(-3%) rotate(-1deg) scaleY(1)}25%{transform:translateX(0) scaleY(.97)}50%{transform:translateX(3%) rotate(1deg) scaleY(1)}75%{transform:translateX(0) scaleY(.97)}}
+@keyframes gkTail{from{transform:rotate(-7deg)}to{transform:rotate(12deg)}}
+@keyframes gkHead{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3.5deg)}}
+@keyframes gkBlink{0%,93%{opacity:0}94%,97%{opacity:1}98%{opacity:0}}
+@keyframes gkArmL{0%,70%,100%{transform:rotate(0)}35%{transform:rotate(7deg)}80%{transform:rotate(-22deg)}85%{transform:rotate(-4deg)}90%{transform:rotate(-22deg)}95%{transform:rotate(0)}}
+@keyframes gkArmR{0%,70%,100%{transform:rotate(0)}35%{transform:rotate(-7deg)}80%{transform:rotate(22deg)}85%{transform:rotate(4deg)}90%{transform:rotate(22deg)}95%{transform:rotate(0)}}
 .pk-gshadow{position:absolute;left:50%;bottom:-3%;width:30%;height:7%;border-radius:50%;background:rgba(0,0,0,.35);transform:translateX(-50%);filter:blur(2px);z-index:1}
 .pk-ball{position:absolute;left:50%;top:80%;width:10%;aspect-ratio:1;transform:translate(-50%,-50%);z-index:5;filter:drop-shadow(0 3px 4px rgba(0,0,0,.4));pointer-events:none}
 .pk-ball svg{width:100%;height:100%;display:block}
@@ -3039,7 +3051,7 @@ function startPen(){
       <div class="pk-grass"></div><div class="pk-box"></div><div class="pk-box2"></div><div class="pk-spot"></div>
       <div class="pk-goal" id="pkGoal"><div class="pk-net" id="pkNet"></div>
         <div class="pk-gshadow" id="pkGs"></div>
-        <div class="pk-gk" id="pkGk"><img src="lion_keeper.webp" alt="Torwart Butti" draggable="false"></div>
+        <div class="pk-gk" id="pkGk" role="img" aria-label="Torwart Butti"><div class="pk-rig" id="pkRig"><img class="gl tail" id="gkTail" src="gk_tail.webp" alt=""><img class="gl body" src="gk_body.webp" alt=""><img class="gl armL" id="gkArmL" src="gk_armL.webp" alt=""><img class="gl armR" id="gkArmR" src="gk_armR.webp" alt=""><img class="gl head" id="gkHead" src="gk_head.webp" alt=""><img class="gl blink" src="gk_blink.webp" alt=""></div></div>
         <div class="pk-post l"></div><div class="pk-post r"></div><div class="pk-bar"></div></div>
       <div class="pk-aim" id="pkAim"></div>
       <div class="pk-bshadow" id="pkBs"></div><div class="pk-ball" id="pkBall">${BALL_SVG}</div>
@@ -3080,13 +3092,47 @@ function penKeeperAnim(p, dur){
     kf=[{transform:T(0,0,0)},{transform:T(p.X*.05,7,p.side*-.06,1.04,.88),offset:.18},{transform:T(p.X*.75,p.Y*1.1-6,p.rot*.8),offset:.55},{transform:T(p.X,p.Y,p.rot),offset:.72},{transform:T(p.X+p.side*8,Math.min(land,p.Y*0.25+land),r90*.98),offset:.9},{transform:T(p.X+p.side*10,land,r90),offset:1}]; }
   gk.getAnimations().forEach(a=>a.cancel());
   gk.animate(kf,{duration:dur,easing:"cubic-bezier(.25,.7,.35,1)",fill:"forwards"});
+  gkLimbs(p.kind==="block"?"block":"reach",dur,p.side||Math.sign(p.X)||1);
   gs.getAnimations().forEach(a=>a.cancel());
   gs.animate([{transform:"translateX(-50%) scale(1)",opacity:.35},{transform:`translateX(calc(-50% + ${p.X}px)) scale(${p.kind==="jump"?.6:1.3},1)`,opacity:p.kind==="jump"?.15:.35}],{duration:dur*.8,easing:"ease-out",fill:"forwards"});
+}
+// Arme, Kopf und Schwanz einzeln bewegen
+function gkAnim(id,frames,opts){ const e=$(id); if(!e) return; e.getAnimations().forEach(a=>a.cancel()); return e.animate(frames.map(f=>typeof f==="number"?{transform:`rotate(${f}deg)`}:f),Object.assign({fill:"forwards",easing:"ease-out"},opts)); }
+function gkLimbs(mode,dur,side){
+  $("pkGk").classList.add("act");
+  if(mode==="reach"){ // Arme hoch, zum Ball strecken
+    gkAnim("gkArmL",[{transform:"rotate(0deg)"},{transform:"rotate(-18deg)",offset:.18},{transform:"rotate(150deg)",offset:.55},{transform:"rotate(168deg)",offset:.8},{transform:"rotate(160deg)"}],{duration:dur});
+    gkAnim("gkArmR",[{transform:"rotate(0deg)"},{transform:"rotate(18deg)",offset:.18},{transform:"rotate(-150deg)",offset:.55},{transform:"rotate(-168deg)",offset:.8},{transform:"rotate(-160deg)"}],{duration:dur});
+    gkAnim("gkHead",[0,{transform:`rotate(${-side*4}deg)`,offset:.2},{transform:`rotate(${side*14}deg)`}],{duration:dur*.7});
+    gkAnim("gkTail",[0,{transform:"rotate(30deg)",offset:.3},{transform:"rotate(-25deg)",offset:.7},{transform:"rotate(-10deg)"}],{duration:dur});
+  } else if(mode==="block"){ // Hände zusammen, Ball abfangen
+    gkAnim("gkArmL",[0,{transform:"rotate(-30deg)",offset:.5},{transform:"rotate(-38deg)"}],{duration:dur*.6});
+    gkAnim("gkArmR",[0,{transform:"rotate(30deg)",offset:.5},{transform:"rotate(38deg)"}],{duration:dur*.6});
+    gkAnim("gkHead",[0,{transform:"rotate(0deg) translateY(2%)"}],{duration:dur*.5});
+    gkAnim("gkTail",[0,25,-15],{duration:dur});
+  } else if(mode==="cheer"){ // Jubel nach einer Parade
+    const g=$("pkGk"); const cur=getComputedStyle(g).transform;
+    g.getAnimations().forEach(a=>a.cancel());
+    g.animate([{transform:cur==="none"?"translateX(-50%)":cur},{transform:"translate(-50%,0)",offset:.25},{transform:"translate(-50%,-14%) rotate(-3deg)",offset:.45},{transform:"translate(-50%,0) scale(1.04,.94)",offset:.62},{transform:"translate(-50%,-10%) rotate(3deg)",offset:.8},{transform:"translateX(-50%)"}],{duration:1100,easing:"ease-in-out",fill:"forwards"});
+    gkAnim("gkArmL",[160,175,140,178,150,175],{duration:1100,easing:"ease-in-out"});
+    gkAnim("gkArmR",[-160,-175,-140,-178,-150,-175],{duration:1100,easing:"ease-in-out"});
+    gkAnim("gkHead",[0,-8,8,-6,6,0],{duration:1100});
+    gkAnim("gkTail",[-20,25,-25,25,-25,15],{duration:1100,easing:"linear"});
+  } else if(mode==="sad"){ // Gegentor: Kopf schütteln, Schwanz hängen lassen
+    gkAnim("gkHead",[{transform:"rotate(0deg)"},{transform:"rotate(-11deg)"},{transform:"rotate(10deg)"},{transform:"rotate(-9deg)"},{transform:"rotate(7deg)"},{transform:"rotate(-3deg) translateY(3%)"}],{duration:900,easing:"ease-in-out"});
+    gkAnim("gkTail",[-10,40,35],{duration:700});
+  } else if(mode==="relief"){ // Daneben: Erleichterung
+    gkAnim("gkHead",[0,-6,10,-4,0],{duration:800,easing:"ease-in-out"});
+    gkAnim("gkTail",[0,25,-20,25,-20,0],{duration:900,easing:"linear"});
+    gkAnim("gkArmL",[0,-25,0,-25,0],{duration:800});
+    gkAnim("gkArmR",[0,25,0,25,0],{duration:800});
+  }
 }
 function penReset(){
   const gk=$("pkGk"), b=$("pkBall"), bs=$("pkBs"), gs=$("pkGs"); if(!gk) return;
   const cur=getComputedStyle(gk).transform;
   gk.getAnimations().forEach(a=>a.cancel());
+  ["gkArmL","gkArmR","gkHead","gkTail"].forEach(id=>{ const e=$(id); if(!e) return; const t=getComputedStyle(e).transform; e.getAnimations().forEach(a=>a.cancel()); e.animate([{transform:t==="none"?"rotate(0deg)":t},{transform:"rotate(0deg)"}],{duration:480,easing:"ease-in-out"}); });
   gk.animate([{transform:cur==="none"?"translateX(-50%)":cur},{transform:"translate(-50%,0) scale(1.02,.94)",offset:.7},{transform:"translateX(-50%)"}],{duration:520,easing:"ease-in-out"}).onfinish=()=>gk.classList.remove("act");
   gs.getAnimations().forEach(a=>a.cancel());
   [b,bs].forEach(x=>{ x.getAnimations().forEach(a=>a.cancel()); x.animate([{opacity:0,transform:"translate(-50%,-50%) scale(.6)"},{opacity:1,transform:"translate(-50%,-50%) scale(1)"}],{duration:300,easing:"ease-out"}); });
@@ -3122,17 +3168,19 @@ function penShoot(u,v){
   setTimeout(()=>penKeeperAnim(pose,620),40);
   const end=(ok,text,cls)=>{
     if(ok){ pen.streak++; $("pkStreak").textContent=pen.streak; setTimeout(()=>{ penReset(); pen&&(pen.busy=false); },1300); }
-    else setTimeout(()=>penOver(text),1500);
+    else setTimeout(()=>penOver(text),1900);
   };
   setTimeout(()=>{
     if(!pen) return;
     if(post){
       sfx("post"); penMsg(sv<0?"Latte!":"Pfosten!","bad");
       b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*.6,dy*.25,.75,800)},{transform:BT(dx*.4+(su<.5?-40:40),dy*.1,.85,900),opacity:0}],{duration:700,easing:"ease-out",fill:"forwards"});
+      setTimeout(()=>gkLimbs("relief"),350);
       end(false,"An den "+(sv<0?"Querbalken":"Pfosten")+"!");
     } else if(miss){
       sfx("miss"); penMsg(sv<-.05?"Drüber!":"Vorbei!","bad");
       b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*1.15,dy*1.08-20,.38,760),opacity:0}],{duration:420,easing:"ease-out",fill:"forwards"});
+      setTimeout(()=>gkLimbs("relief"),350);
       end(false,sv<-.05?"Der Ball flog übers Tor.":"Der Ball ging am Tor vorbei.");
     } else if(saved){
       const catchIt=pose.kind!=="dive"&&Math.random()<.6;
@@ -3140,12 +3188,13 @@ function penShoot(u,v){
       if(navigator.vibrate) navigator.vibrate([40,40,40]);
       if(catchIt) b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx,dy+6,.46,640),opacity:0}],{duration:500,delay:120,fill:"forwards"});
       else { const side=su<.5?-1:1; b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx+side*Gr.width*.35,dy-Gr.height*.5,.55,900),offset:.5},{transform:BT(dx+side*Gr.width*.55,dy+Gr.height*.1,.6,1100),opacity:0}],{duration:800,easing:"ease-out",fill:"forwards"}); }
+      setTimeout(()=>gkLimbs("cheer"),catchIt?250:450);
       end(false,catchIt?"Butti hat den Ball sicher gefangen.":"Butti hat den Schuss pariert.");
     } else {
       sfx("goal"); penMsg(pen.streak>=4&&Math.random()<.5?"Traumtor!":"Tor!","good"); $("pkNet").classList.add("bulge");
       b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*1.02,dy-8,.44,700),offset:.3},{transform:BT(dx*1.02,(Gr.bottom-Pk.top)-sy-10,.46,760)}],{duration:600,easing:"ease-in",fill:"forwards"});
       if(navigator.vibrate) navigator.vibrate([60,40,120]);
-      confetti($("pkFx"),70); end(true);
+      confetti($("pkFx"),70); setTimeout(()=>gkLimbs("sad"),450); end(true);
     }
   },flight);
 }
