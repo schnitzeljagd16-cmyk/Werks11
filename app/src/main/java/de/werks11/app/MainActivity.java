@@ -83,6 +83,11 @@ public class MainActivity extends Activity {
             i.removeExtra("daily_fact");
             deliverPending();
         }
+        if (i.hasExtra("open_match")) {
+            pendingJs = "window.openMatch && openMatch(" + i.getIntExtra("open_match", 0) + ")";
+            i.removeExtra("open_match");
+            deliverPending();
+        }
         if (i.hasExtra("open_tab")) {
             pendingJs = "window.openTabNative && window.openTabNative(" + org.json.JSONObject.quote(String.valueOf(i.getStringExtra("open_tab"))) + ")";
             i.removeExtra("open_tab");

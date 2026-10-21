@@ -49,6 +49,7 @@ public class DailyFact extends BroadcastReceiver {
         } else {
             // Neustart, App-Update oder Zeitumstellung: Wecker neu stellen
             schedule(c);
+            try { KickoffAlarm.scheduleAll(c); } catch (Exception ignored) { }
         }
     }
 

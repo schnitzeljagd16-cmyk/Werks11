@@ -3917,7 +3917,7 @@ function openNoti(){
     <div class="mgroup">Benachrichtigungen</div>
     ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
     ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
-    <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}${row("inj","Ausfälle","Wenn ein Spieler neu ausfällt oder zurückkehrt")}</div>
+    <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Genau eine Stunde vor jedem Spiel – mit Sender und einem Spruch von Butti zum Gegner")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}${row("inj","Ausfälle","Wenn ein Spieler neu ausfällt oder zurückkehrt")}</div>
     <div class="box"><div class="set"><div><b>🦁 Buttis Fakt des Tages</b><small>Jeden Tag um 19:04 Uhr ein spannender oder lustiger Fakt – mit eigenem Stadion-Jingle</small></div><label class="sw"><input type="checkbox" data-noti="daily" ${s.daily?"checked":""} ${native?"":"disabled"}><span></span></label></div>
       ${native?`<div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" id="playJingle" style="background:var(--surface-2);color:var(--fg)">🔊 Jingle anhören</button><button type="button" class="reveal" id="testDaily" style="background:var(--surface-2);color:var(--fg)">Fakt jetzt senden</button></div>`:""}</div>
     <div class="box"><div class="set"><div><b>Torjubel-Ton</b><small>Kurzer Jubel, wenn Bayer 04 trifft und die App offen ist</small></div><label class="sw"><input type="checkbox" data-noti="sound" ${s.sound!==false?"checked":""}><span></span></label></div></div>
@@ -3956,6 +3956,7 @@ function pushRead(){ const r=readPrefs(); if(NATIVE&&window.AndroidNet.setAdbloc
 document.addEventListener("change",e=>{ const c=e.target.closest("input[data-rpref]"); if(!c) return; const r=readPrefs(); r[c.dataset.rpref]=c.checked; store("reading",r); pushRead(); });
 function pushNoti(){
   const s=notiSettings(); store("noti",s); s.watch=Object.keys(watchList()).map(Number);
+  s.upcoming=(state.matches||[]).filter(m=>!m.finished&&m.t>Date.now()).slice(0,3).map(m=>({id:m.id,t:m.t,t1:short(m.t1),t2:short(m.t2),sc:m.sc,home:!!m.home}));
   if(NATIVE && typeof window.AndroidNet.setNotify==="function"){ try{ window.AndroidNet.setNotify(JSON.stringify(s)); }catch(e){} }
 }
 document.addEventListener("change",e=>{ const c=e.target.closest("[data-noti]"); if(!c) return; const s=notiSettings(); s[c.dataset.noti]=c.checked; store("noti",s); pushNoti(); setTimeout(renderNotiStatus,300); });
@@ -3988,7 +3989,7 @@ async function refresh(){
   const run=async(k,fn)=>{ try{ await fn(); state.ts[k]=Date.now(); }catch(e){ failed.push(k); } renderAll(); };
   await Promise.all([ run("news",loadNews).then(()=>run("squad",loadSquad)).then(()=>run("injuries",loadInjuries)), run("matches",loadMatches).then(()=>run("table",loadTable)).then(()=>run("transfers",loadTransfers)), run("stats",loadStats), run("videos",loadVideos) ]);
   await run("social",loadSocial);
-  store("cache",state);
+  store("cache",state); pushNoti();
   if(navigator.onLine){
     const names={social:"Social Media",news:"Nachrichten",matches:"Spiele",table:"Tabellen",squad:"Kader",injuries:"Ausfälle",stats:"Statistik",transfers:"Transfers",videos:"Videos"};
     const fl=failed.filter(k=>!["transfers","videos","social"].includes(k));

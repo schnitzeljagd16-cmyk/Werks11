@@ -38,6 +38,7 @@ public class Notifier {
     static final String CH_NEWS = "news";
     static final int JOB_ID = 1104;
     static final int TEAM_ID = 6;
+    static final long BEFORE_MS = 60 * 60 * 1000L;
 
     static final Pattern RUMOR = Pattern.compile("transfer|gerücht|interesse|wechsel|leihe|ablöse|buhl|kandidat|im visier|angebot|abgang|neuzugang|poker|kaufoption|klausel", Pattern.CASE_INSENSITIVE);
     static final Pattern RELEVANT = Pattern.compile("leverkusen|bayer 04|werkself", Pattern.CASE_INSENSITIVE);
@@ -58,6 +59,7 @@ public class Notifier {
         prefs(c).edit().putString("settings", json).apply();
         createChannels(c);
         try { DailyFact.schedule(c); } catch (Exception ignored) { }
+        try { KickoffAlarm.scheduleAll(c); } catch (Exception ignored) { }
         JobScheduler js = (JobScheduler) c.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         if (js == null) return;
         try {
@@ -362,13 +364,15 @@ public class Notifier {
             if (w != null) for (int k = 0; k < w.length(); k++) if (w.optInt(k) == id) watching = true;
 
             // Anpfiff-Erinnerung (ca. 1 Std. vorher)
-            if (s.optBoolean("kickoff") && !fin && t - now > 0 && t - now <= 80 * 60 * 1000L && !p.getBoolean("ko_" + id, false)) {
-                SimpleDateFormat hm = new SimpleDateFormat("HH:mm", Locale.GERMANY);
-                hm.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
-                String tvs = tv(lg, t);
-                show(c, 100000 + id % 100000, CH_MATCH, "Gleich geht's los! " + comp(lg),
-                        n1 + " – " + n2 + " um " + hm.format(new Date(t)) + " Uhr" + (tvs.isEmpty() ? "" : " · live bei " + tvs), null);
-                ed.putBoolean("ko_" + id, true);
+            // Ersatz, falls der Wecker eine Stunde vorher nicht gefeuert hat
+            if (s.optBoolean("kickoff") && !fin && t - now > 10 * 60 * 1000L && t - now <= 55 * 60 * 1000L && !p.getBoolean("ko_" + id, false)) {
+                JSONObject km = new JSONObject();
+                km.put("id", id); km.put("t", t); km.put("t1", n1); km.put("t2", n2); km.put("sc", lg); km.put("home", t1.optInt("teamId") == TEAM_ID);
+                KickoffAlarm.show(c, km);
+            } else if (s.optBoolean("kickoff") && !fin && t - now > BEFORE_MS) {
+                JSONObject km = new JSONObject();
+                km.put("id", id); km.put("t", t); km.put("t1", n1); km.put("t2", n2); km.put("sc", lg); km.put("home", t1.optInt("teamId") == TEAM_ID);
+                KickoffAlarm.schedule(c, km, true);
             }
 
             if (!s.optBoolean("goals") || t > now || now - t > 4 * 3600 * 1000L) continue;
