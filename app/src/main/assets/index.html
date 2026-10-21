@@ -648,6 +648,13 @@ nav.tabs .in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:re
 .pk-hud{position:absolute;left:10px;right:10px;bottom:10px;display:flex;justify-content:space-between;align-items:center;color:#fff;font:700 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;z-index:7;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .pk-hud b{font-size:20px;vertical-align:-2px}
 .pk-hud #pkTip{opacity:.75;font-size:11px}
+.pk-zones{position:absolute;inset:5% 2.2% 0 2.2%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:42% 58%;z-index:4}
+.pk-zones button{border:0;background:transparent;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,255,255,.45);position:relative;-webkit-tap-highlight-color:transparent}
+.pk-zones button::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px;border-radius:50%;border:2px solid rgba(255,255,255,.75)}
+.pk-zones button:active,.pk-zones button.hit{background:rgba(255,255,255,.22)}
+.pk-zones button.hit{animation:zoneHit .6s ease-out forwards}
+@keyframes zoneHit{0%{background:rgba(255,255,255,.45)}100%{background:transparent}}
+.pk.felder{cursor:default}
 .pk-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:8}
 
 /* ===== Foto-Puzzle ===== */
@@ -3043,26 +3050,29 @@ const BALL_SVG=`<svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradi
 /* ---------- Elfer-König gegen Torwart Butti ---------- */
 let pen=null;
 function startPen(){
-  pen={streak:0,busy:false,shots:0};
+  pen={streak:0,busy:false,shots:0,mode:load("penMode")||"felder"};
+  const fz=pen.mode==="felder";
   openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elfer-König</span><span>Rekord ${hs("hsPen")}</span></div>
-    <p class="legend" style="margin:6px 0 10px">Tippe ins Tor, wohin du schießen willst. Je näher am Pfosten, desto schwerer hat es Butti – aber desto leichter geht der Ball daneben. Butti wird mit jedem Treffer besser.</p>
-    <div class="pk" id="pk">
+    <div class="seg" style="margin:8px 0 6px"><button type="button" data-penmode="felder" aria-pressed="${fz}">6 Felder</button><button type="button" data-penmode="frei" aria-pressed="${!fz}">Frei zielen</button></div>
+    <p class="legend" style="margin:0 0 10px">${fz?"Tippe auf eines der 6 Felder. Springt Butti in dasselbe Feld, hält er – oben in den Ecken aber nicht immer. Butti wird mit jedem Treffer besser.":"Tippe ins Tor, wohin du schießen willst. Je näher am Pfosten, desto schwerer hat es Butti – aber desto leichter geht der Ball daneben. Butti wird mit jedem Treffer besser."}</p>
+    <div class="pk${fz?" felder":""}" id="pk">
       <div class="pk-crowd"></div><div class="pk-lights"></div><div class="pk-ads"><span>WERKS11</span><span>BAYER 04</span><span>WERKSELF</span><span>WERKS11</span></div>
       <div class="pk-grass"></div><div class="pk-box"></div><div class="pk-box2"></div><div class="pk-spot"></div>
       <div class="pk-goal" id="pkGoal"><div class="pk-net" id="pkNet"></div>
         <div class="pk-gshadow" id="pkGs"></div>
         <div class="pk-gk" id="pkGk" role="img" aria-label="Torwart Butti"><div class="pk-rig" id="pkRig"><img class="gl tail" id="gkTail" src="gk_tail.webp" alt=""><img class="gl body" src="gk_body.webp" alt=""><img class="gl armL" id="gkArmL" src="gk_armL.webp" alt=""><img class="gl armR" id="gkArmR" src="gk_armR.webp" alt=""><img class="gl head" id="gkHead" src="gk_head.webp" alt=""><img class="gl blink" src="gk_blink.webp" alt=""></div></div>
-        <div class="pk-post l"></div><div class="pk-post r"></div><div class="pk-bar"></div></div>
+        <div class="pk-post l"></div><div class="pk-post r"></div><div class="pk-bar"></div>
+        ${fz?`<div class="pk-zones">${[0,1,2,3,4,5].map(z=>`<button type="button" data-pkz="${z}" aria-label="Schuss ${["oben links","oben Mitte","oben rechts","unten links","unten Mitte","unten rechts"][z]}"></button>`).join("")}</div>`:""}</div>
       <div class="pk-aim" id="pkAim"></div>
       <div class="pk-bshadow" id="pkBs"></div><div class="pk-ball" id="pkBall">${BALL_SVG}</div>
       <div class="pk-msg" id="pkMsg"></div>
-      <div class="pk-hud"><span>Serie <b id="pkStreak">0</b></span><span id="pkTip">Tippe ins Tor</span><span>Rekord <b>${hs("hsPen")}</b></span></div>
+      <div class="pk-hud"><span>Serie <b id="pkStreak">0</b></span><span id="pkTip">${fz?"Wähle ein Feld":"Tippe ins Tor"}</span><span>Rekord <b>${hs("hsPen")}</b></span></div>
       <canvas class="pk-fx" id="pkFx"></canvas>
     </div>`);
   $("pk").addEventListener("pointerdown",penAim);
 }
 function penAim(e){
-  if(!pen||pen.busy) return;
+  if(!pen||pen.busy||pen.mode==="felder") return;
   const G=$("pkGoal").getBoundingClientRect(), P=$("pk").getBoundingClientRect();
   const u=(e.clientX-G.left)/G.width, v=(e.clientY-G.top)/G.height;
   if(u<-.3||u>1.3||v<-.6||v>1.25) return; // nur in Tornähe
@@ -3079,7 +3089,7 @@ function penPose(ku,kv){
   }
   let th=Math.atan2(dx,Math.max(up,H*.05)); th=Math.max(-1.75,Math.min(1.75,th));
   let X=dx-L*Math.sin(th), Y=-(up-L*Math.cos(th));
-  X=Math.max(-W*.42,Math.min(W*.42,X)); Y=Math.min(0,Math.max(-H*.9,Y));
+  X=Math.max(-W*.3,Math.min(W*.3,X)); Y=Math.min(0,Math.max(-H*.9,Y));
   return {kind:"dive",X,Y,rot:th,side:Math.sign(dx),w};
 }
 function penKeeperAnim(p, dur){
@@ -3139,21 +3149,31 @@ function penReset(){
   $("pkMsg").className="pk-msg"; $("pkNet").classList.remove("bulge");
 }
 function penMsg(t,cls){ const m=$("pkMsg"); m.textContent=t; m.className="pk-msg show "+(cls||""); }
-function penShoot(u,v){
+const PKZ_U=[1/6,.5,5/6], PKZ_V=[.26,.72];
+function penZone(z){
+  if(!pen||pen.busy) return;
+  const el=document.querySelector(`[data-pkz="${z}"]`); if(el){ el.classList.remove("hit"); void el.offsetWidth; el.classList.add("hit"); }
+  penShoot(PKZ_U[z%3],PKZ_V[Math.floor(z/3)],z);
+}
+function penShoot(u,v,zone){
   pen.busy=true; pen.shots++;
-  // Schuss streut etwas – je weiter außen, desto riskanter
-  const su=u+gauss()*.035, sv=v+gauss()*.045;
-  const post=(su>=-.035&&su<0)||(su>1&&su<=1.035)||(sv>=-.05&&sv<0&&su>-.035&&su<1.035);
-  const miss=!post&&(su<-.035||su>1.035||sv<-.05);
+  const fz=zone!=null;
+  // Schuss streut etwas – je weiter außen, desto riskanter (bei 6 Feldern bleibt er im Feld)
+  let su=u+gauss()*(fz?.05:.035), sv=v+gauss()*(fz?.06:.045);
+  if(fz){ su=Math.max(u-.13,Math.min(u+.13,su)); sv=Math.max(v-.17,Math.min(v+.17,sv)); su=Math.max(.06,Math.min(.94,su)); sv=Math.max(.1,Math.min(.92,sv)); }
+  const post=!fz&&((su>=-.035&&su<0)||(su>1&&su<=1.035)||(sv>=-.05&&sv<0&&su>-.035&&su<1.035));
+  const miss=!fz&&!post&&(su<-.035||su>1.035||sv<-.05);
   // Torwart liest den Schuss – mit jedem Treffer öfter
   const read=Math.random()<Math.min(.62,.24+pen.streak*.035);
-  let ku,kv;
-  if(read){ ku=Math.max(.08,Math.min(.92,su+gauss()*.05)); kv=Math.max(.2,Math.min(.95,sv+gauss()*.05)); }
+  let ku,kv,kz=-1;
+  if(fz){ kz=read?zone:Math.floor(Math.random()*6); ku=PKZ_U[kz%3]+gauss()*.03; kv=PKZ_V[Math.floor(kz/3)]+gauss()*.03; }
+  else if(read){ ku=Math.max(.08,Math.min(.92,su+gauss()*.05)); kv=Math.max(.2,Math.min(.95,sv+gauss()*.05)); }
   else { const opts=[[.12,.82],[.15,.35],[.5,.25],[.5,.85],[.88,.82],[.85,.35]]; [ku,kv]=opts[Math.floor(Math.random()*opts.length)]; ku+=gauss()*.04; kv+=gauss()*.04; }
   const G=$("pkGoal"), W=G.clientWidth, H=G.clientHeight, ratio=W/H;
   const near=Math.hypot((su-ku)*ratio, sv-kv)<.36 || (Math.abs(ku-.5)<.13 && Math.abs(su-ku)<.17 && sv>.22);
   const cornerTop=(su<.1||su>.9)&&sv<.22;
-  const saved=!post&&!miss&&near&&!(cornerTop&&Math.random()<.75);
+  const saved=fz ? (kz===zone && !((zone===0||zone===2)&&Math.random()<.35))
+    : (!post&&!miss&&near&&!(cornerTop&&Math.random()<.75));
   const pose=penPose(saved?su:ku, saved?sv:kv);
   // Ball fliegen lassen
   const Pk=$("pk").getBoundingClientRect(), Gr=G.getBoundingClientRect(), b=$("pkBall"), bs=$("pkBs");
@@ -3344,6 +3364,10 @@ function keepOver(){
       <div class="qscore"><div><b>${n}</b><small>Kontakte</small></div><div><b>${Math.max(best,n)}</b><small>Rekord</small></div></div>
       <button type="button" class="bigbtn" data-game="keep">Nochmal</button><button type="button" class="bigbtn sec" data-close>Fertig</button>`); renderFan(); },700);
 }
+document.addEventListener("click",e=>{
+  const z=e.target.closest("[data-pkz]"); if(z){ penZone(+z.dataset.pkz); return; }
+  const m=e.target.closest("[data-penmode]"); if(m&&pen&&!pen.busy){ store("penMode",m.dataset.penmode); startPen(); }
+});
 window.__stopGames=()=>{ pen=null; keep=null; mem=null; if(puz&&puz.timer) clearInterval(puz.timer); puz=null; };
 
 document.addEventListener("click",e=>{
