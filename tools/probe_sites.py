@@ -65,6 +65,47 @@ def blocked(url, page_host):
     third = page_host and not h.endswith(base(page_host))
     return bool(third and PATH.search(urlparse(url).path or ""))
 
+DOMAINS = {"kicker": "kicker.de", "Bayer 04 (offiziell)": "bayer04.de", "RP Online": "rp-online.de", "Kölner Stadt-Anzeiger": "ksta.de",
+    "Express": "express.de", "BILD": "bild.de", "Sport1": "sport1.de", "Sky Sport": "sport.sky.de", "Sportschau": "sportschau.de", "WDR": "wdr.de",
+    "ZDF": "zdf.de", "Transfermarkt": "transfermarkt.de", "LigaInsider": "ligainsider.de", "90min": "90min.de", "SPOX": "spox.com", "GOAL": "goal.com",
+    "t-online": "t-online.de", "Sportbuzzer": "sportbuzzer.de", "fussballtransfers": "fussballtransfers.com", "fussballeuropa": "fussballeuropa.com",
+    "ran": "ran.de", "n-tv": "n-tv.de", "Spiegel": "spiegel.de", "FAZ": "faz.net", "Süddeutsche": "sueddeutsche.de", "Welt": "welt.de",
+    "Bulinews": "bulinews.com", "Yahoo": "de.sports.yahoo.com", "ESPN": "espn.com", "Get German Football News": "getfootballnewsgermany.com",
+    "Merkur / tz": "tz.de", "Kölnische Rundschau": "rundschau-online.de", "Sport Bild": "sportbild.bild.de", "Focus": "focus.de", "Stern": "stern.de",
+    "RTL / ntv Sport": "rtl.de", "Fußball.de": "fussball.de", "Bundesliga.com": "bundesliga.com"}
+
+def article_url(br, dom):
+    """Holt über Google News einen echten, aktuellen Artikel der Seite."""
+    import urllib.request, urllib.parse
+    q = urllib.parse.quote("Leverkusen site:" + dom + " when:30d")
+    try:
+        req = urllib.request.Request("https://news.google.com/rss/search?q=" + q + "&hl=de&gl=DE&ceid=DE:de", headers={"User-Agent": UA, "Cookie": "CONSENT=YES+; SOCS=CAI"})
+        x = urllib.request.urlopen(req, timeout=25).read().decode("utf-8", "ignore")
+        links = re.findall(r"<item>.*?<link>(.*?)</link>", x, re.S)
+        if not links: return None
+        ctx = br.new_context(user_agent=UA, locale="de-DE")
+        pg = ctx.new_page()
+        pg.goto(links[0], wait_until="domcontentloaded", timeout=40000)
+        for _ in range(20):
+            if "news.google" not in pg.url: break
+            pg.wait_for_timeout(500)
+        u = pg.url; ctx.close()
+        return u if "news.google" not in u else None
+    except Exception as e:
+        print("kein Artikel:", dom, e); return None
+
+CONSENT = re.compile(r"^(alle )?(akzeptieren|zustimmen|einverstanden|annehmen|accept( all)?|agree|zustimmen und weiter|alle akzeptieren|ok)$", re.I)
+def accept_consent(page):
+    for fr in [page.main_frame] + page.frames:
+        try:
+            for b in fr.query_selector_all("button, a[role=button], [role=button]")[:200]:
+                t = (b.inner_text() or "").strip()
+                if CONSENT.match(t) and b.is_visible():
+                    b.click(timeout=2000); page.wait_for_timeout(2500); return True
+        except Exception:
+            pass
+    return False
+
 def visit(ctx, url, block):
     page = ctx.new_page()
     host = urlparse(url).hostname
@@ -78,11 +119,13 @@ def visit(ctx, url, block):
     res = {"ok": False}
     try:
         page.goto(url, wait_until="domcontentloaded", timeout=45000)
-        page.wait_for_timeout(9000)
+        page.wait_for_timeout(5000)
+        accept_consent(page)
+        page.wait_for_timeout(6000)
         txt = page.evaluate("document.body ? document.body.innerText : ''") or ""
         title = page.title() or ""
         res = {"ok": True, "len": len(txt), "title": title[:90], "wall": bool(WALL.search(title + " " + txt[:6000])), "blocked": n["blocked"],
-               "snippet": re.sub(r"\s+", " ", txt[:160])}
+               "snippet": re.sub(r"\s+", " ", txt[:160]), "wallhit": (WALL.search(title + " " + txt[:6000]).group(0) if WALL.search(title + " " + txt[:6000]) else "")}
     except Exception as e:
         res = {"ok": False, "err": str(e)[:160]}
     page.close()
@@ -92,6 +135,8 @@ out = {}
 with sync_playwright() as p:
     br = p.chromium.launch()
     for name, url in SITES.items():
+        art = article_url(br, DOMAINS.get(name, ""))
+        if art: url = art
         r = {}
         for mode in ("ohne", "mit"):
             ctx = br.new_context(user_agent=UA, locale="de-DE", viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
@@ -105,7 +150,8 @@ with sync_playwright() as p:
         else: verdict = "ok"
         r["url"] = url; r["urteil"] = verdict; r["host"] = base(urlparse(url).hostname)
         out[name] = r
-        print(f"{verdict:16} {name:26} ohne={a.get('len')} mit={b.get('len')} blockiert={b.get('blocked')} {b.get('title','')[:50]}", flush=True)
+        print(f"{verdict:16} {name:26} ohne={a.get('len')} mit={b.get('len')} blockiert={b.get('blocked')} {b.get('title','')[:50]} {url[:80]}", flush=True)
+        if b.get("wall"): print("   Sperre-Text:", (WALL.search(b.get("title","")+" "+b.get("full",""))), flush=True)
     br.close()
 os.makedirs("probe", exist_ok=True)
 json.dump(out, open("probe/results.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
