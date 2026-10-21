@@ -3516,15 +3516,41 @@ function dailyProgress(kind,val){
   addFanPts(20); sfx("win"); toast(`🔥 Tages-Challenge geschafft! +20 Fan-Punkte · ${s.streak} ${s.streak===1?"Tag":"Tage"} in Folge`); setTimeout(badge,300); renderFan();
 }
 function wheelWins(){ const spun=load("wheelSpun")||[]; return (state.matches||[]).filter(m=>outcome(m)==="w" && !spun.includes(m.id) && Date.now()-m.t<14*86400e3).sort((a,b)=>b.t-a.t); }
+// Butti spricht jedes Mal über etwas anderes
+let buttiSeed=Math.floor(Math.random()*1000), buttiCache=null;
+function buttiLine(c){
+  if(buttiCache&&buttiCache.seed===buttiSeed) return buttiCache.line;
+  const L=[], add=(t,g,img,btn)=>L.push({t,g,img,btn});
+  const pen=hs("hsPen"), run=hs("hsRun"), hilo=hs("hsHilo"), time=hs("hsTime"), res=hs("hsResult"), hang=hs("hsHang"), keep=hs("hsKeep"), quiz=hs("hsQuiz"), mem=hs("hsMem");
+  if(!c.done) add(`Deine Tages-Challenge heute: ${c.ttxt}.${c.streak?` Du hast schon ${c.streak} ${c.streak===1?"Tag":"Tage"} in Folge geschafft – nicht abreißen lassen!`:""}`,c.tgame,null,"Zur Challenge");
+  if(c.ww.length) add(`Wir haben gegen ${short(c.ww[0].home?c.ww[0].t2:c.ww[0].t1)} gewonnen! Dreh am Glücksrad, vielleicht gibt's einen seltenen Fakt.`,"wheel",null,"Glücksrad");
+  add(pen?`Dein Elfer-Rekord gegen mich: ${pen} in Folge. Ich hab trainiert – schaffst du mehr?`:"Traust du dich gegen mich ins Elfmeterschießen?","pen","lion_keeper.webp","Zum Elfmeter");
+  add(run?`Dein bester Sprint: ${run} Meter. Ich wette, heute läufst du weiter!`:"Lust auf einen Sprint durch die BayArena? Aber Vorsicht vor den Grätschen!","run",null,"Zum Sprint");
+  add(hilo?`${hilo} richtige Antworten in Folge bei „Höher oder tiefer?“ – kennst du die Tabelle wirklich so gut?`:"Weißt du, wer mehr Punkte hat? Teste dich bei „Höher oder tiefer?“","hilo",null,"Spielen");
+  add(time?`Beim Zeitstrahl hast du ${time} von 15 Punkten. Ich kenne die Vereinsgeschichte auswendig – du auch?`:"Gründung, UEFA-Pokal, Phantomtor … kannst du das in die richtige Reihenfolge bringen?","time",null,"Zum Zeitstrahl");
+  add(res?`Dein Rekord bei „Wie ging's aus?“: ${res} Punkte. Weißt du noch, wie das Finale 2002 ausging?`:"Erinnerst du dich an die legendären Spiele der Werkself? Rate die Ergebnisse!","result",null,"Ergebnisse raten");
+  add(hang?`${hang} Namen in Folge erraten – ich schwitze schon beim Zuschauen!`:"Ich denk mir einen Spielernamen aus. Errätst du ihn, bevor ich ins Schwitzen komme?","hang",null,"Namen raten");
+  add("Wer stand im letzten Spiel in der Startelf? Ich weiß es – du auch?","elf",null,"Elf des Tages");
+  add(keep?`${keep} Ballkontakte beim Jonglieren – nicht schlecht für einen Menschen!`:"Kannst du jonglieren? Ich schaff's mit meinem Schwanz!","keep",null,"Jonglieren");
+  add(mem?`Wappen-Memory in ${mem} Zügen – geht's noch schneller?`:"Ein Memory mit allen Bundesliga-Wappen – wie gut ist dein Gedächtnis?","memory",null,"Memory");
+  add("Ich hab ein paar neue Fotos fürs Puzzle bekommen – Legenden, die BayArena und mich!","puzzle",null,"Zum Puzzle");
+  add(quiz?`Dein Quiz-Rekord: ${quiz} Punkte. Ich hab mir neue Fragen ausgedacht!`:"Wie viel weißt du über Bayer 04? Probier mein Quiz!","quiz",null,"Zum Quiz");
+  const nm=nextMatch&&nextMatch();
+  if(nm){ const opp=short(nm.home?nm.t2:nm.t1), d=Math.ceil((nm.t-Date.now())/86400e3);
+    if(!tips()[nm.id]) add(`Gegen ${opp} ${d<=1?"geht's schon bald los":`geht's in ${d} Tagen`}. Hast du schon getippt?`,"tipp",null,"Jetzt tippen");
+    else add(`Noch ${d<=1?"weniger als einen Tag":d+" Tage"} bis ${opp}. Ich bin schon ganz heiß – du auch?`,null); }
+  if(fanPts()) add(`Du hast schon ${fanPts()} Fan-Punkte gesammelt. Weiter so!`,null);
+  const gotB=Object.keys(load("badgesGot")||{}).length; add(gotB?`${gotB} von ${BADGES.length} Abzeichen hast du schon. Schau mal, was noch fehlt!`:`Es gibt ${BADGES.length} Abzeichen zu sammeln – schau mal, welches du dir als Erstes holst!`,"badges",null,"Meine Saison");
+  const line=L[buttiSeed%L.length]; buttiCache={seed:buttiSeed,line}; return line;
+}
 function renderFan(){
   if($("fanBox")) $("fanBox").innerHTML="";
   const box=$("funBox"); if(!box) return;
   const h=new Date().getHours(); const hi=h<11?"Guten Morgen":h<18?"Servus":"N'Abend";
-  const pen=hs("hsPen"), tips=tipTotal().p;
-  const line=pen?`Dein Elfer-Rekord gegen mich: ${pen} in Folge. Schaffst du mehr?`:"Traust du dich gegen mich ins Elfmeterschießen?";
   const [tk,tgoal,ttxt,tgame]=todayTask(), ds=dailyState(), done=ds.day===dayNum()&&ds.done, streak=(ds.last>=dayNum()-1)?ds.streak:0;
   const ww=wheelWins();
-  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(line)}${tips?` Im Tippspiel hast du schon ${tips} Punkte.`:""}</p></div><img class="lion" src="lion_keeper.webp" alt="Butti im Torwarttrikot" width="369" height="450" data-game="pen"></div>
+  const bl=buttiLine({tgame,ttxt,done,streak,ww});
+  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(bl.t)}</p>${bl.g?`<div class="acts"><span></span><button type="button" data-game="${bl.g}">${esc(bl.btn||"Los geht's")} →</button></div>`:""}</div><img class="lion" src="${bl.img||"lion_run.webp"}" alt="Butti" ${bl.g?`data-game="${bl.g}"`:""}></div>
     <div class="daily${done?" done":""}"><div class="dh"><span class="chipc">Tages-Challenge</span><span class="streak">🔥 ${streak} ${streak===1?"Tag":"Tage"}</span></div>
       <p>${done?"✅ Geschafft! Morgen wartet eine neue Aufgabe.":esc(ttxt)}</p>
       <div class="dr"><span>⭐ ${fanPts()} Fan-Punkte</span>${done?"":`<button type="button" class="reveal" data-game="${tgame}">Los geht's</button>`}</div></div>
@@ -3943,6 +3969,7 @@ let current="news";
 const TAB_ORDER=["news","rumors","games","table","squad","fun"];
 function showTab(name){
   const dir=TAB_ORDER.indexOf(name)>=TAB_ORDER.indexOf(current)?"from-right":"from-left";
+  if(name==="fun"&&current!=="fun"){ buttiSeed++; renderFan(); }
   current=name;
   document.querySelectorAll("[data-view]").forEach(s=>{ s.hidden=s.dataset.view!==name; s.classList.remove("from-right","from-left"); if(!s.hidden){ void s.offsetWidth; s.classList.add(dir); } });
   document.querySelectorAll("[data-tab]").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===name)));
