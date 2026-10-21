@@ -10,8 +10,8 @@ android {
         applicationId "de.werks11.app"
         minSdk 24
         targetSdk 34
-        versionCode 19
-        versionName "2.3"
+        versionCode 20
+        versionName "2.3.1"
     }
 
     // Feste Unterschrift, damit sich Updates über die alte Version installieren lassen

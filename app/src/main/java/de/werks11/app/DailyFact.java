@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-/** Jeden Tag um 19:04 Uhr: Brians Fakt des Tages – mit eigenem Jingle. */
+/** Jeden Tag um 19:04 Uhr: Buttis Fakt des Tages – mit eigenem Jingle. */
 public class DailyFact extends BroadcastReceiver {
 
     static final String ACTION_FIRE = "de.werks11.app.DAILY_FACT";
@@ -116,7 +116,7 @@ public class DailyFact extends BroadcastReceiver {
             }
         }
         if (dayText != null) {
-            title = "🦁 Brian erinnert sich";
+            title = "🦁 Butti erinnert sich";
             text = dayText;
         } else {
             SharedPreferences p = Notifier.prefs(c);
@@ -134,7 +134,7 @@ public class DailyFact extends BroadcastReceiver {
             p.edit().putString("dailyOrder", new JSONArray(order).toString()).putInt("dailyPos", pos + 1).apply();
             JSONArray f = facts.getJSONArray(idx);
             boolean funny = f.getString(0).toLowerCase(Locale.GERMAN).contains("anekdote");
-            title = funny ? "😂 Brians Anekdote des Tages" : "🦁 Brians Fakt des Tages";
+            title = funny ? "😂 Buttis Anekdote des Tages" : "🦁 Buttis Fakt des Tages";
             text = f.getString(1);
             more = f.optString(2, "");
         }

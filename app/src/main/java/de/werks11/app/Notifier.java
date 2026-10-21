@@ -86,7 +86,7 @@ public class Notifier {
         NotificationChannel n = new NotificationChannel(CH_NEWS, "Nachrichten & Gerüchte", NotificationManager.IMPORTANCE_DEFAULT);
         n.setDescription("Neue Meldungen rund um Bayer 04");
         nm.createNotificationChannel(n);
-        NotificationChannel f = new NotificationChannel(DailyFact.CH_FACT, "Brians Fakt des Tages", NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel f = new NotificationChannel(DailyFact.CH_FACT, "Buttis Fakt des Tages", NotificationManager.IMPORTANCE_HIGH);
         f.setDescription("Jeden Tag um 19:04 Uhr ein Fakt oder eine Anekdote");
         f.setSound(DailyFact.jingle(c), new android.media.AudioAttributes.Builder()
                 .setUsage(android.media.AudioAttributes.USAGE_NOTIFICATION)

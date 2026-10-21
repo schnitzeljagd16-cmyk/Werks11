@@ -991,7 +991,7 @@ const FACT_MORE = [
   ["Das Tor fiel am 14. Juni 2021 in Glasgow beim 2:0-Sieg Tschechiens. Schick sah den schottischen Torwart weit vor dem Tor und schoss von kurz hinter der Mittellinie. Es wurde zum Tor des Turniers gewählt.","Patrik Schick"],
   ["Alonso kam am 5. Oktober 2022 für Gerardo Seoane, Bayer stand auf Platz 17. Am Saisonende wurde Leverkusen Sechster, in der Saison darauf folgten Meisterschaft und Pokalsieg. 2025 wechselte er zu Real Madrid.","Xabi Alonso"],
   ["Das Stadion wurde 1958 eröffnet und nach dem früheren Bayer-Generaldirektor Ulrich Haberland benannt. Bis 2009 wurde es grundlegend modernisiert und vergrößert.","BayArena"],
-  ["Brian begleitet die Mannschaft bei den Heimspielen in der BayArena und ist bei vielen Aktionen für junge Fans im Einsatz.","Bayer 04 Leverkusen"],
+  ["Brian begleitet die Mannschaft bei den Heimspielen in der BayArena und ist bei vielen Aktionen für junge Fans im Einsatz. Der Löwe in dieser App ist übrigens ein eigener Kumpel: Er heißt Butti – benannt nach Torwart Hans-Jörg Butt, der auch Elfmeter schoss.","Bayer 04 Leverkusen"],
   ["Im Vereinswappen steht das Bayer-Kreuz, das Logo des Unternehmens. Rot und Schwarz prägen auch die Heimtrikots.","Bayer 04 Leverkusen"],
   ["Leverkusen und Köln liegen direkt nebeneinander am Rhein. Dass Florian Wirtz einst aus der Kölner Jugend nach Leverkusen wechselte, sorgt bis heute für zusätzliche Brisanz.","Bayer 04 Leverkusen"],
   ["Xhaka hatte zuvor schon für Borussia Mönchengladbach in der Bundesliga gespielt. Nach zwei Jahren und dem Double in Leverkusen wechselte er 2025 in die Premier League zum AFC Sunderland.","Granit Xhaka"],
@@ -2796,8 +2796,8 @@ function endQuiz(){
 }
 document.addEventListener("click",e=>{ const a=e.target.closest("[data-ans]"); if(a&&!a.disabled&&quiz) answer(a.dataset.ans); });
 
-/* ---------- Maskottchen Brian ---------- */
-const MASCOT="Brian";
+/* ---------- Maskottchen Butti ---------- */
+const MASCOT="Butti";
 const MASCOT_INTRO=["Wusstest du schon?","Pass auf, das ist spannend:","Kleiner Fakt von mir:","Hör mal zu:","Brüll! Das musst du wissen:"];
 const MASCOT_FUNNY=["Das ist echt passiert:","Ich lach mich immer noch schlapp:","Kurios, aber wahr:"];
 function isFunny(cat){ return /anekdote|kurios/i.test(cat||""); }
@@ -2808,7 +2808,7 @@ function renderFact(){
     <div class="bubble"><div class="k"><span class="chipc">${fun?"😂 ":""}${esc(cat)}</span><span class="who">${MASCOT} erzählt</span></div>
       <p data-fact="${factIdx}" role="button" tabindex="0"><span class="intro">${esc(intro)}</span> ${esc(txt)}</p>
       <div class="acts"><button type="button" data-fact="${factIdx}">Mehr dazu</button><button type="button" id="nextFact">Nächster Fakt →</button></div></div>
-    <img class="lion" src="lion_run.webp" alt="Maskottchen Brian, der Löwe" width="543" height="629" data-fact="${factIdx}">
+    <img class="lion" src="lion_run.webp" alt="Maskottchen Butti, der Löwe" width="543" height="629" data-fact="${factIdx}">
   </div>`;
 }
 function openFact(i){ bump("fact");
@@ -2826,7 +2826,7 @@ window.openTabNative=(t)=>{ if(document.querySelector(`[data-tab="${t}"]`)){ clo
 
 /* ---------- Fanzone (eigener Reiter) ---------- */
 const GAMES=[
-  ["pen","e","Elfer-König","Schieß gegen Torwart Brian",()=>`Rekord ${hs("hsPen")}`,'<circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>'],
+  ["pen","e","Elfer-König","Schieß gegen Torwart Butti",()=>`Rekord ${hs("hsPen")}`,'<circle cx="12" cy="12" r="10"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>'],
   ["puzzle","p","Foto-Puzzle","Schieb die Teile zurecht",()=>`Bestzeit ${puzBest(3)}`,'<path d="M4 4h6v3a2 2 0 1 0 4 0V4h6v6h-3a2 2 0 1 0 0 4h3v6h-6v-3a2 2 0 1 0-4 0v3H4z"/>'],
   ["memory","m","Wappen-Memory","Finde alle Vereinspaare",()=>`Rekord ${hs("hsMem")||"–"} Züge`,'<rect x="3" y="4" width="8" height="11" rx="2"/><rect x="13" y="9" width="8" height="11" rx="2"/>'],
   ["keep","j","Jonglieren","Halte den Ball in der Luft",()=>`Rekord ${hs("hsKeep")}`,'<circle cx="12" cy="7" r="4"/><path d="M6 21c1-3 3-5 6-5s5 2 6 5"/>'],
@@ -2842,7 +2842,7 @@ function renderFan(){
   const h=new Date().getHours(); const hi=h<11?"Guten Morgen":h<18?"Servus":"N'Abend";
   const pen=hs("hsPen"), tips=tipTotal().p;
   const line=pen?`Dein Elfer-Rekord gegen mich: ${pen} in Folge. Schaffst du mehr?`:"Traust du dich gegen mich ins Elfmeterschießen?";
-  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(line)}${tips?` Im Tippspiel hast du schon ${tips} Punkte.`:""}</p></div><img class="lion" src="lion_keeper.webp" alt="Brian im Torwarttrikot" width="369" height="450" data-game="pen"></div>
+  box.innerHTML=`<div class="mascot hello"><div class="bubble"><div class="k"><span class="who">${MASCOT}</span></div><p><b>${hi}!</b> ${esc(line)}${tips?` Im Tippspiel hast du schon ${tips} Punkte.`:""}</p></div><img class="lion" src="lion_keeper.webp" alt="Butti im Torwarttrikot" width="369" height="450" data-game="pen"></div>
     <div class="sec-h" style="margin:18px 0 8px"><h2>Minispiele</h2></div>
     <div class="fan">${GAMES.map(([k,c,t,d,hsF,ic],i)=>`<button type="button" class="game ${c}" data-game="${k}" style="--i:${i}"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ic}</svg><span class="hs">${esc(hsF())}</span><span><b>${esc(t)}</b><br><small>${esc(d)}</small></span></button>`).join("")}</div>`;
 }
@@ -3028,18 +3028,18 @@ function confetti(cv, n){
 function gauss(){ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
 const BALL_SVG=`<svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="bg1" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#e9e9e9"/><stop offset="1" stop-color="#b9b9b9"/></radialGradient></defs><circle cx="50" cy="50" r="48" fill="url(#bg1)" stroke="#222" stroke-width="3"/><path d="M50 30l15 11-6 18H41l-6-18z" fill="#1a1a1a"/><path d="M50 30V8M65 41l20-8M59 59l13 17M41 59L28 76M35 41l-20-8" stroke="#1a1a1a" stroke-width="3"/><path d="M50 2l9 6-9 6-9-6zM92 30l-2 11-10-3 1-10zM80 86l-11 2-2-10 10-3zM20 86l-8-6 6-9 9 6zM8 30l10-2 2 10-10 4z" fill="#1a1a1a"/></svg>`;
 
-/* ---------- Elfer-König gegen Torwart Brian ---------- */
+/* ---------- Elfer-König gegen Torwart Butti ---------- */
 let pen=null;
 function startPen(){
   pen={streak:0,busy:false,shots:0};
   openSheetRaw(`<div class="qhead"><span id="sheetTitle">Elfer-König</span><span>Rekord ${hs("hsPen")}</span></div>
-    <p class="legend" style="margin:6px 0 10px">Tippe ins Tor, wohin du schießen willst. Je näher am Pfosten, desto schwerer hat es Brian – aber desto leichter geht der Ball daneben. Brian wird mit jedem Treffer besser.</p>
+    <p class="legend" style="margin:6px 0 10px">Tippe ins Tor, wohin du schießen willst. Je näher am Pfosten, desto schwerer hat es Butti – aber desto leichter geht der Ball daneben. Butti wird mit jedem Treffer besser.</p>
     <div class="pk" id="pk">
       <div class="pk-crowd"></div><div class="pk-lights"></div><div class="pk-ads"><span>WERKS11</span><span>BAYER 04</span><span>WERKSELF</span><span>WERKS11</span></div>
       <div class="pk-grass"></div><div class="pk-box"></div><div class="pk-box2"></div><div class="pk-spot"></div>
       <div class="pk-goal" id="pkGoal"><div class="pk-net" id="pkNet"></div>
         <div class="pk-gshadow" id="pkGs"></div>
-        <div class="pk-gk" id="pkGk"><img src="lion_keeper.webp" alt="Torwart Brian" draggable="false"></div>
+        <div class="pk-gk" id="pkGk"><img src="lion_keeper.webp" alt="Torwart Butti" draggable="false"></div>
         <div class="pk-post l"></div><div class="pk-post r"></div><div class="pk-bar"></div></div>
       <div class="pk-aim" id="pkAim"></div>
       <div class="pk-bshadow" id="pkBs"></div><div class="pk-ball" id="pkBall">${BALL_SVG}</div>
@@ -3140,7 +3140,7 @@ function penShoot(u,v){
       if(navigator.vibrate) navigator.vibrate([40,40,40]);
       if(catchIt) b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx,dy+6,.46,640),opacity:0}],{duration:500,delay:120,fill:"forwards"});
       else { const side=su<.5?-1:1; b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx+side*Gr.width*.35,dy-Gr.height*.5,.55,900),offset:.5},{transform:BT(dx+side*Gr.width*.55,dy+Gr.height*.1,.6,1100),opacity:0}],{duration:800,easing:"ease-out",fill:"forwards"}); }
-      end(false,catchIt?"Brian hat den Ball sicher gefangen.":"Brian hat den Schuss pariert.");
+      end(false,catchIt?"Butti hat den Ball sicher gefangen.":"Butti hat den Schuss pariert.");
     } else {
       sfx("goal"); penMsg(pen.streak>=4&&Math.random()<.5?"Traumtor!":"Tor!","good"); $("pkNet").classList.add("bulge");
       b.animate([{transform:BT(dx,dy,.5,620)},{transform:BT(dx*1.02,dy-8,.44,700),offset:.3},{transform:BT(dx*1.02,(Gr.bottom-Pk.top)-sy-10,.46,760)}],{duration:600,easing:"ease-in",fill:"forwards"});
@@ -3152,7 +3152,7 @@ function penShoot(u,v){
 function penOver(why){
   if(!pen) return; const best=hs("hsPen"), rec=pen.streak>best; if(rec) store("hsPen",pen.streak); setTimeout(badge,1200);
   const n=pen.streak;
-  const say=n===0?"Kopf hoch – nächstes Mal knallt's!":n<3?"Nicht schlecht, aber da geht noch mehr.":n<6?"Starke Serie! Brian hat ganz schön geschwitzt.":n<10?"Wahnsinn – du bist ein echter Elfer-König!":"Unglaublich! Brian sucht sich einen neuen Job.";
+  const say=n===0?"Kopf hoch – nächstes Mal knallt's!":n<3?"Nicht schlecht, aber da geht noch mehr.":n<6?"Starke Serie! Butti hat ganz schön geschwitzt.":n<10?"Wahnsinn – du bist ein echter Elfer-König!":"Unglaublich! Butti sucht sich einen neuen Job.";
   openSheetRaw(`<div class="mascot-end"><img src="lion_keeper.webp" alt="" class="${rec?"cheer":"nod"}"><div class="bubble"><p>${esc(why)} ${esc(say)}</p></div></div>
     <p class="qq" id="sheetTitle" style="text-align:center;margin-top:4px">${n} ${n===1?"Treffer":"Treffer"} in Folge</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
     <div class="qscore"><div><b>${n}</b><small>Serie</small></div><div><b>${Math.max(best,n)}</b><small>Rekord</small></div></div>
@@ -3161,7 +3161,7 @@ function penOver(why){
 }
 
 /* ---------- Foto-Puzzle ---------- */
-const PUZZLE_PICS=[{t:"Brian im Stadion",src:"puzzle_lion.jpg"},{t:"BayArena",wiki:"BayArena"},{t:"Ulf Kirsten",wiki:"Ulf Kirsten"},{t:"Stefan Kießling",wiki:"Stefan Kießling"},{t:"Rudi Völler",wiki:"Rudi Völler"},{t:"Xabi Alonso",wiki:"Xabi Alonso"},{t:"Florian Wirtz",wiki:"Florian Wirtz"},{t:"Patrik Schick",wiki:"Patrik Schick"},{t:"Michael Ballack",wiki:"Michael Ballack"}];
+const PUZZLE_PICS=[{t:"Butti im Stadion",src:"puzzle_lion.jpg"},{t:"BayArena",wiki:"BayArena"},{t:"Ulf Kirsten",wiki:"Ulf Kirsten"},{t:"Stefan Kießling",wiki:"Stefan Kießling"},{t:"Rudi Völler",wiki:"Rudi Völler"},{t:"Xabi Alonso",wiki:"Xabi Alonso"},{t:"Florian Wirtz",wiki:"Florian Wirtz"},{t:"Patrik Schick",wiki:"Patrik Schick"},{t:"Michael Ballack",wiki:"Michael Ballack"}];
 const picCache={};
 async function puzzlePic(p){
   if(p.src) return p.src; if(picCache[p.wiki]) return picCache[p.wiki];
@@ -3289,7 +3289,7 @@ function keepLoop(now){
 function keepOver(){
   const n=keep.n, best=hs("hsKeep"), rec=n>best; if(rec) store("hsKeep",n); bump("keep"); sfx(n>=10?"win":"miss");
   setTimeout(()=>{ if(!keep) return; keep=null;
-    const say=n<5?"Der Ball ist rund – probier's gleich nochmal!":n<15?"Gute Ballkontrolle!":n<30?"Wow, du jonglierst wie ein Profi!":"Weltklasse! Das schafft nicht mal Brian.";
+    const say=n<5?"Der Ball ist rund – probier's gleich nochmal!":n<15?"Gute Ballkontrolle!":n<30?"Wow, du jonglierst wie ein Profi!":"Weltklasse! Das schafft nicht mal Butti.";
     openSheetRaw(`<div class="mascot-end"><img src="lion_run.webp" alt="" class="${rec?"cheer":"nod"}"><div class="bubble"><p>${esc(say)}</p></div></div>
       <p class="qq" id="sheetTitle" style="text-align:center;margin-top:4px">${n} Ballkontakte</p>${rec?'<div class="newrec">Neuer Rekord!</div>':""}
       <div class="qscore"><div><b>${n}</b><small>Kontakte</small></div><div><b>${Math.max(best,n)}</b><small>Rekord</small></div></div>
@@ -3319,7 +3319,7 @@ function openNoti(){
     ${native?"":`<div class="notice">Benachrichtigungen gibt es in der Android-App Werks11.</div>`}
     ${native&&!perm?`<div class="notice">Erlaube Werks11 in den Android-Einstellungen, Benachrichtigungen zu senden. Beim Einschalten fragt die App danach.</div>`:""}
     <div class="box">${row("goals","Tore &amp; Endstand","Tor-Alarm und Ergebnis bei Spielen von Bayer 04")}${row("kickoff","Anpfiff-Erinnerung","Etwa eine Stunde vor jedem Spiel, mit Sender")}${row("rumors","Transfergerüchte","Neue Gerüchte rund um die Werkself")}${row("news","Alle Nachrichten","Jede neue Meldung – kann viel werden")}${row("inj","Ausfälle","Wenn ein Spieler neu ausfällt oder zurückkehrt")}</div>
-    <div class="box"><div class="set"><div><b>🦁 Brians Fakt des Tages</b><small>Jeden Tag um 19:04 Uhr ein spannender oder lustiger Fakt – mit eigenem Stadion-Jingle</small></div><label class="sw"><input type="checkbox" data-noti="daily" ${s.daily?"checked":""} ${native?"":"disabled"}><span></span></label></div>
+    <div class="box"><div class="set"><div><b>🦁 Buttis Fakt des Tages</b><small>Jeden Tag um 19:04 Uhr ein spannender oder lustiger Fakt – mit eigenem Stadion-Jingle</small></div><label class="sw"><input type="checkbox" data-noti="daily" ${s.daily?"checked":""} ${native?"":"disabled"}><span></span></label></div>
       ${native?`<div class="btnrow" style="margin-top:10px"><button type="button" class="reveal" id="playJingle" style="background:var(--surface-2);color:var(--fg)">🔊 Jingle anhören</button><button type="button" class="reveal" id="testDaily" style="background:var(--surface-2);color:var(--fg)">Fakt jetzt senden</button></div>`:""}</div>
     <div class="box"><div class="set"><div><b>Torjubel-Ton</b><small>Kurzer Jubel, wenn Bayer 04 trifft und die App offen ist</small></div><label class="sw"><input type="checkbox" data-noti="sound" ${s.sound!==false?"checked":""}><span></span></label></div></div>
     ${native?`<button type="button" class="bigbtn sec" id="checkUpd">Nach Updates suchen</button>`:""}
